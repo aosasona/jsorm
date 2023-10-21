@@ -1,5 +1,12 @@
-import gleam/io
+import gleam/erlang
+import jsorm/database
+import migrant
 
 pub fn main() {
-  io.println("Hello from jsorm!")
+  let db = database.connect()
+
+  let assert Ok(priv_directory) = erlang.priv_directory("jsorm")
+  migrant.migrate(db, priv_directory <> "/migrations")
+
+  Nil
 }

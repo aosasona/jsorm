@@ -1,0 +1,3 @@
+[submodule "src/migrant"]
+	path = src/migrant
+	url = git@github.com:aosasona/migrant.git

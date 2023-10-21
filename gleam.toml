@@ -14,8 +14,13 @@ gleam_stdlib = "~> 0.31"
 plunk = "~> 1.0"
 wisp = "~> 0.6"
 nakai = "~> 0.8"
-simplifile = "~> 0.1"
 ids = "~> 0.10"
+sqlight = "~> 0.8"
+gleam_json = "~> 0.6"
+gleam_hackney = "~> 1.1"
+gleam_erlang = "~> 0.22"
+
+migrant = { path = "./src/migrant" }
 
 [dev-dependencies]
 gleeunit = "~> 0.10"
