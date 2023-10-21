@@ -1,0 +1,15 @@
+{
+  "name": "jsorm",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "watchexec -r -e toml,gleam gleam run",
+    "tw": "tailwindcss -i ./priv/static/src/css/main.css -o ./priv/static/dist/css/main.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.3.3"
+  }
+}

@@ -6,7 +6,7 @@ pub fn main() {
   let db = database.connect()
 
   let assert Ok(priv_directory) = erlang.priv_directory("jsorm")
-  migrant.migrate(db, priv_directory <> "/migrations")
+  let _ = migrant.migrate(db, priv_directory <> "/migrations")
 
   Nil
 }

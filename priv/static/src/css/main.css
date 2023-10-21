@@ -1,0 +1,10 @@
+@import url("https://fonts.cdnfonts.com/css/jetbrains-mono-2");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+	font-family: "JetBrains Mono", sans-serif;
+}

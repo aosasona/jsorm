@@ -19,8 +19,10 @@ sqlight = "~> 0.8"
 gleam_json = "~> 0.6"
 gleam_hackney = "~> 1.1"
 gleam_erlang = "~> 0.22"
+simplifile = "~> 0.1"
 
-migrant = { path = "./src/migrant" }
+# migrant = { path = "./src/migrant" }
+migrant = { path = "../migrant" }
 
 [dev-dependencies]
 gleeunit = "~> 0.10"
