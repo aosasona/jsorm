@@ -7,4 +7,9 @@
 html,
 body {
 	font-family: "JetBrains Mono", sans-serif;
+	@apply bg-stone-900 text-stone-100 text-sm;
+}
+
+a {
+	text-decoration: none;
 }

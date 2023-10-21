@@ -20,9 +20,9 @@ gleam_json = "~> 0.6"
 gleam_hackney = "~> 1.1"
 gleam_erlang = "~> 0.22"
 simplifile = "~> 0.1"
-
-# migrant = { path = "./src/migrant" }
-migrant = { path = "../migrant" }
+migrant = "~> 0.1"
+mist = "~> 0.14"
+gleam_http = "~> 3.5"
 
 [dev-dependencies]
 gleeunit = "~> 0.10"
