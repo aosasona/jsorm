@@ -11,6 +11,11 @@ version = "0.1.0"
 
 [dependencies]
 gleam_stdlib = "~> 0.31"
+plunk = "~> 1.0"
+wisp = "~> 0.6"
+nakai = "~> 0.8"
+simplifile = "~> 0.1"
+ids = "~> 0.10"
 
 [dev-dependencies]
 gleeunit = "~> 0.10"
