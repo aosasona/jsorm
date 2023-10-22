@@ -12,15 +12,21 @@ pub type As {
 }
 
 pub type Props(a) {
-  Props(variant: Variant, render_as: As, attrs: List(attrs.Attr(a)))
+  Props(
+    text: String,
+    variant: Variant,
+    render_as: As,
+    class: String,
+    attrs: List(attrs.Attr(a)),
+  )
 }
 
-pub fn component(label: String, props: Props(t)) -> html.Node(t) {
+pub fn component(props: Props(t)) -> html.Node(t) {
   let class = case props.variant {
     Primary ->
-      "bg-yellow-400 hover:bg-yellow-500 text-stone-900 font-bold py-2 px-5 rounded-md hover:scale-95 transiton-all"
+      "bg-yellow-400 hover:bg-yellow-500 text-stone-900 font-bold py-2 px-5 rounded-md hover:scale-95"
     Ghost ->
-      "bg-transparent hover:bg-yellow-400 text-yellow-400 font-bold py-2 px-5 rounded-md hover:scale-95 transiton-all"
+      "bg-transparent hover:bg-yellow-400 text-yellow-400 font-bold py-2 px-5 rounded-md hover:scale-95"
   }
 
   let el = case props.render_as {
@@ -28,5 +34,5 @@ pub fn component(label: String, props: Props(t)) -> html.Node(t) {
     Link -> html.a_text
   }
 
-  el([attrs.class(class), ..props.attrs], label)
+  el([attrs.class(class <> " " <> props.class), ..props.attrs], props.text)
 }

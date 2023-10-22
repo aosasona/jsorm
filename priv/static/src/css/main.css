@@ -4,12 +4,20 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+
 html,
 body {
 	font-family: "JetBrains Mono", sans-serif;
 	@apply bg-stone-900 text-stone-100 text-sm;
 }
 
-a {
+a,
+button {
 	text-decoration: none;
+	@apply transition-all duration-200 ease-in-out;
 }
