@@ -3,15 +3,12 @@ import jsorm/web.{Context}
 import gleam/http.{Get, Post}
 import wisp.{Request, Response}
 import nakai/html
-import nakai/html/attrs
 
 pub fn sign_in(req: Request, ctx: Context) -> Response {
   case req.method {
     Get -> render_signin(req)
     Post -> handle_signin(req, ctx)
-    _ ->
-      pages.error(405)
-      |> web.render(200)
+    _ -> wisp.method_not_allowed([Get, Post])
   }
 }
 
@@ -21,8 +18,9 @@ fn render_signin(req: Request) -> Response {
   |> web.render(200)
 }
 
-fn handle_signin(req: Request, ctx: Context) -> Response {
+fn handle_signin(req: Request, _ctx: Context) -> Response {
   use <- wisp.require_method(req, Post)
+  use _ <- wisp.require_form(req)
 
   html.Text("Hello, world!")
   |> web.render(200)

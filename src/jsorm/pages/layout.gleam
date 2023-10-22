@@ -44,7 +44,7 @@ fn header(title: String) -> Node(t) {
     html.meta([attrs.property("twitter:image"), attrs.content(meta_image)]),
     html.meta([attrs.property("twitter:url"), attrs.content(website_url)]),
     // styles and scripts
-    html.link([attrs.rel("stylesheet"), attrs.href("/assets/styles.css")]),
+    html.link([attrs.rel("stylesheet"), attrs.href("/assets/css/styles.css")]),
     html.link([
       attrs.rel("stylesheet"),
       attrs.href(
