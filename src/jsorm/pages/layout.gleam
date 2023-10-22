@@ -3,7 +3,7 @@ import nakai/html/attrs
 import jsorm/components/button
 import jsorm/components/link
 
-const description = "A minimal JSON formatting and exploration tool."
+const description = "A minimal JSON explorer & formatter"
 
 const meta_image = "/assets/images/meta.png"
 

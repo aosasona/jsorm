@@ -11,8 +11,8 @@ pub type QueryResult(t) =
 
 pub fn upsert_document(
   db: sqlight.Connection,
-  arguments: List(sqlight.Value),
-  decoder: dynamic.Decoder(a),
+  args arguments: List(sqlight.Value),
+  decoder decoder: dynamic.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "INSERT INTO documents
@@ -30,8 +30,8 @@ RETURNING *;
 
 pub fn upsert_auth_token(
   db: sqlight.Connection,
-  arguments: List(sqlight.Value),
-  decoder: dynamic.Decoder(a),
+  args arguments: List(sqlight.Value),
+  decoder decoder: dynamic.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "INSERT INTO auth_tokens
@@ -48,8 +48,8 @@ RETURNING token;
 
 pub fn insert_user(
   db: sqlight.Connection,
-  arguments: List(sqlight.Value),
-  decoder: dynamic.Decoder(a),
+  args arguments: List(sqlight.Value),
+  decoder decoder: dynamic.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "INSERT INTO users
@@ -65,8 +65,8 @@ ON CONFLICT (email) DO NOTHING
 
 pub fn insert_session_token(
   db: sqlight.Connection,
-  arguments: List(sqlight.Value),
-  decoder: dynamic.Decoder(a),
+  args arguments: List(sqlight.Value),
+  decoder decoder: dynamic.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "INSERT INTO session_tokens
@@ -74,6 +74,23 @@ pub fn insert_session_token(
 VALUES
   ($1, $2)
 RETURNING *;
+"
+  sqlight.query(query, db, arguments, decoder)
+  |> result.map_error(error.DatabaseError)
+}
+
+pub fn get_session_user(
+  db: sqlight.Connection,
+  args arguments: List(sqlight.Value),
+  decoder decoder: dynamic.Decoder(a),
+) -> QueryResult(a) {
+  let query =
+    "select u.*
+from session_tokens t
+left join users u on u.id = t.user_id
+where unixepoch(datetime()) - unixepoch(t.issued_at) < 604800 and t.token = $1
+limit 1
+;
 "
   sqlight.query(query, db, arguments, decoder)
   |> result.map_error(error.DatabaseError)

@@ -1,0 +1,25 @@
+import gleam/dynamic
+
+pub type User {
+  User(id: Int, email: String, created_at: Int, updated_at: Int)
+}
+
+pub fn db_decoder() -> dynamic.Decoder(User) {
+  dynamic.decode4(
+    User,
+    dynamic.element(0, dynamic.int),
+    dynamic.element(1, dynamic.string),
+    dynamic.element(2, dynamic.int),
+    dynamic.element(3, dynamic.int),
+  )
+}
+
+pub fn json_decoder() -> dynamic.Decoder(User) {
+  dynamic.decode4(
+    User,
+    dynamic.field("id", dynamic.int),
+    dynamic.field("email", dynamic.string),
+    dynamic.field("created_at", dynamic.int),
+    dynamic.field("updated_at", dynamic.int),
+  )
+}

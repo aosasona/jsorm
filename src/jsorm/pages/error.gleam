@@ -4,6 +4,8 @@ import jsorm/pages/layout
 
 fn get_message(code: Int) -> String {
   case code {
+    401 -> "Unauthorized"
+    403 -> "Forbidden"
     404 -> "Page not found"
     405 -> "Method not allowed"
     500 -> "Something went wrong"
@@ -13,6 +15,8 @@ fn get_message(code: Int) -> String {
 
 fn get_subtext(code: Int) -> String {
   case code {
+    401 -> "Looks like you're not logged in, please log in and try again"
+    403 -> "You're not allowed to view this page"
     404 -> "The page you're looking for doesn't exist"
     405 -> "You're not allowed to do that"
     500 -> "We're having some trouble on our end, please try again later"

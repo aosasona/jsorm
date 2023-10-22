@@ -44,8 +44,8 @@ fn generate_sql_function(file: String) -> Result(String, _) {
   let lines = [
     "pub fn " <> name <> "(",
     "  db: sqlight.Connection,",
-    "  arguments: List(sqlight.Value),",
-    "  decoder: dynamic.Decoder(a),",
+    "  args arguments: List(sqlight.Value),",
+    "  decoder decoder: dynamic.Decoder(a),",
     ") -> QueryResult(a) {",
     "  let query =",
     "    \"" <> escaped <> "\"",
