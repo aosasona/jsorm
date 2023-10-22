@@ -38,5 +38,5 @@ pub fn main() {
 fn get_port() -> Int {
   os.get_env("PORT")
   |> result.then(int.parse)
-  |> result.unwrap(9500)
+  |> result.unwrap(8080)
 }

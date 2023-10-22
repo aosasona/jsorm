@@ -540,6 +540,14 @@ video {
   margin-bottom: 0.75rem;
 }
 
+.mr-3{
+  margin-right: 0.75rem;
+}
+
+.ml-5{
+  margin-left: 1.25rem;
+}
+
 .flex{
   display: flex;
 }
@@ -647,6 +655,11 @@ video {
 .text-xs{
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-2xl{
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
 .font-bold{

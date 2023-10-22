@@ -1,7 +1,6 @@
 import nakai/html.{Node}
 import nakai/html/attrs
-import jsorm/components
-import jsorm/components/button.{Props as ButtonProps}
+import jsorm/components/button
 
 pub fn render(child: Node(t), title: String) -> Node(t) {
   let title = case title {
@@ -42,11 +41,34 @@ pub fn render(child: Node(t), title: String) -> Node(t) {
               ],
               "jsorm",
             ),
-            button.component(
-              label: "Login",
-              render_as: button.Link,
-              variant: button.Primary,
-              attrs: [attrs.href("/login")],
+            html.div(
+              [attrs.class("flex items-center")],
+              [
+                button.component(
+                  "Login",
+                  button.Props(
+                    render_as: button.Link,
+                    variant: button.Primary,
+                    attrs: [attrs.href("/login")],
+                  ),
+                ),
+                html.a(
+                  [
+                    attrs.href("https://github.com/aosasona/jsorm"),
+                    attrs.target("_blank"),
+                  ],
+                  [
+                    html.i_text(
+                      [
+                        attrs.class(
+                          "fa-brands fa-github text-2xl text-yellow-400 ml-5",
+                        ),
+                      ],
+                      "",
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),

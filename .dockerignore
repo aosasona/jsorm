@@ -1,0 +1,8 @@
+# flyctl launch added from .gitignore
+**/*.beam
+**/*.ez
+**/build
+**/erl_crash.dump
+**/.npmrc
+**/*.db
+**/*.sqlite*
