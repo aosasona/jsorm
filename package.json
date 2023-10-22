@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "watchexec -r -e toml,gleam gleam run",
+    "dev": "export $(grep -v '^#' .env | xargs) && watchexec -r -e toml,gleam gleam run",
     "tw": "tailwindcss -i ./priv/static/src/css/main.css -o ./priv/static/dist/css/styles.css --watch"
   },
   "keywords": [],
