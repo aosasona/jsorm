@@ -20,7 +20,7 @@ pub type Props(a) {
 fn get_classes(variant: Variant) -> String {
   case variant {
     Text | Email ->
-      "w-full bg-stone-800 px-3 py-2 border border-stone-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-sm text-stone-300 placeholder-stone-600"
+      "w-full bg-stone-800 px-3 py-2.5 border border-stone-700 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-yellow-400 focus:border-yellow-400 text-sm text-stone-300 placeholder-stone-600"
   }
 }
 

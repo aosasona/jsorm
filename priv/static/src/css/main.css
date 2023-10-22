@@ -17,7 +17,11 @@ body {
 }
 
 a,
-button {
-	text-decoration: none;
+button,
+input {
 	@apply transition-all duration-200 ease-in-out;
+}
+
+a:hover {
+	text-decoration: none;
 }

@@ -6,7 +6,11 @@ import jsorm/components/button
 
 pub fn login_form() {
   html.form(
-    [attrs.method("POST")],
+    [
+      attrs.Attr("hx-post", "/sign-in"),
+      attrs.Attr("hx-target", "this"),
+      attrs.Attr("hx-swap", "outerHTML"),
+    ],
     [
       input.component(input.Props(
         id: "email",
@@ -30,7 +34,7 @@ fn login_page() -> html.Node(a) {
   html.div(
     [
       attrs.class(
-        "h-[80dvh] md:h-[90vh] flex flex-col items-center justify-center",
+        "h-[80dvh] lg:h-[85vh] flex flex-col items-center justify-center",
       ),
     ],
     [

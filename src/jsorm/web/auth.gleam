@@ -2,6 +2,8 @@ import jsorm/pages
 import jsorm/web.{Context}
 import gleam/http.{Get, Post}
 import wisp.{Request, Response}
+import nakai/html
+import nakai/html/attrs
 
 pub fn sign_in(req: Request, ctx: Context) -> Response {
   case req.method {
@@ -22,5 +24,6 @@ fn render_signin(req: Request) -> Response {
 fn handle_signin(req: Request, ctx: Context) -> Response {
   use <- wisp.require_method(req, Post)
 
-  todo
+  html.Text("Hello, world!")
+  |> web.render(200)
 }
