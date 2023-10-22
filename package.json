@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "dev": "export $(grep -v '^#' .env | xargs) && watchexec -r -e toml,gleam gleam run",
-    "tw": "tailwindcss -i ./priv/static/src/css/main.css -o ./priv/static/dist/css/styles.css --watch"
+    "tw": "tailwindcss -i ./priv/static/src/css/main.css -o ./priv/static/dist/css/styles.css --watch",
+    "gen:sql": "gleam run -m sqlgen"
   },
   "keywords": [],
   "author": "",
