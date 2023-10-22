@@ -1,8 +1,7 @@
-DROP TABLE documents;
+DROP TABLE IF EXISTS documents;
 
 CREATE TABLE documents (
   id TEXT PRIMARY KEY NOT NULL,
-
   content TEXT NOT NULL DEFAULT '{}' CHECK (json_valid(content)),
   tags TEXT NOT NULL DEFAULT '[]' CHECK (json_valid(tags)),
   created_at INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP,
