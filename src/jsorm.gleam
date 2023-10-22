@@ -4,7 +4,8 @@ import gleam/result
 import gleam/int
 import jsorm/database
 import jsorm/mail
-import jsorm/router.{Context}
+import jsorm/router
+import jsorm/web.{Context}
 import migrant
 import mist
 import wisp

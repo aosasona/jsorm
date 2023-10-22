@@ -1,18 +1,7 @@
-import sqlight
-import plunk
 import wisp.{Request, Response}
-import nakai
-import nakai/html.{Node}
 import jsorm/pages
-
-pub type Context {
-  Context(
-    secret: String,
-    db: sqlight.Connection,
-    plunk: plunk.Instance,
-    dist_directory: String,
-  )
-}
+import jsorm/web.{Context, render}
+import jsorm/web/auth
 
 pub fn handle_request(req: Request, ctx: Context) -> Response {
   use <- wisp.log_request(req)
@@ -20,13 +9,7 @@ pub fn handle_request(req: Request, ctx: Context) -> Response {
   use <- wisp.serve_static(req, under: "/assets", from: ctx.dist_directory)
 
   case wisp.path_segments(req) {
-    ["sign-in"] -> render(pages.login(), 200)
+    ["sign-in"] -> auth.sign_in(req, ctx)
     _ -> render(pages.error(404), 404)
   }
-}
-
-fn render(page: Node(t), code: Int) {
-  page
-  |> nakai.to_string_builder
-  |> wisp.html_response(code)
 }
