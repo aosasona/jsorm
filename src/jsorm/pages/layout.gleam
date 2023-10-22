@@ -2,6 +2,13 @@ import nakai/html.{Node}
 import nakai/html/attrs
 import jsorm/components/button
 import jsorm/components/link
+import jsorm/lib/auth
+import jsorm/web.{Context}
+import wisp.{Request}
+
+pub type Props {
+  Props(title: String, request: Request, ctx: Context)
+}
 
 const description = "A minimal JSON explorer & formatter"
 
@@ -56,7 +63,19 @@ fn header(title: String) -> Node(t) {
   ])
 }
 
-fn nav() -> Node(t) {
+fn nav(req: Request, ctx: Context) -> Node(t) {
+  let auth_btn = case auth.get_auth_status(req, ctx.db) {
+    auth.LoggedOut | auth.InvalidToken ->
+      button.component(button.Props(
+        text: "Sign in",
+        render_as: button.Link,
+        variant: button.Primary,
+        attrs: [attrs.href("/sign-in")],
+        class: "",
+      ))
+    auth.LoggedIn(_) -> html.Nothing
+  }
+
   html.nav(
     [
       attrs.class(
@@ -74,13 +93,7 @@ fn nav() -> Node(t) {
       html.div(
         [attrs.class("flex items-center")],
         [
-          button.component(button.Props(
-            text: "Sign in",
-            render_as: button.Link,
-            variant: button.Primary,
-            attrs: [attrs.href("/sign-in")],
-            class: "",
-          )),
+          auth_btn,
           html.a(
             [
               attrs.href("https://github.com/aosasona/jsorm"),
@@ -121,11 +134,15 @@ fn footer() -> Node(t) {
   )
 }
 
-pub fn render(child: Node(t), title title: String) -> Node(t) {
-  let title = case title {
+pub fn render(child: Node(t), props: Props) -> Node(t) {
+  let title = case props.title {
     "" -> "Jsorm"
-    _ -> title
+    title -> title
   }
 
-  html.Fragment([header(title), html.Body([], [nav(), child]), footer()])
+  html.Fragment([
+    header(title),
+    html.Body([], [nav(props.request, props.ctx), child]),
+    footer(),
+  ])
 }

@@ -1,11 +1,9 @@
 import gleam/option.{None, Option, Some}
 import jsorm/generated/sql
 import jsorm/models/user
-import jsorm/web.{Context}
+import jsorm/lib/session.{auth_cookie}
 import sqlight
 import wisp.{Request}
-
-const auth_cookie = "__session_token"
 
 pub type AuthStatus {
   /// The token is not present in the request at all
@@ -16,12 +14,12 @@ pub type AuthStatus {
   InvalidToken
 }
 
-pub fn get_auth_status(req: Request, ctx: Context) -> AuthStatus {
+pub fn get_auth_status(req: Request, db: sqlight.Connection) -> AuthStatus {
   let cookie = wisp.get_cookie(req, auth_cookie, wisp.Signed)
 
   case cookie {
     Ok(session_token) ->
-      case verify_token(ctx, session_token) {
+      case verify_token(db, session_token) {
         Some(user) -> LoggedIn(user)
         None -> InvalidToken
       }
@@ -29,10 +27,10 @@ pub fn get_auth_status(req: Request, ctx: Context) -> AuthStatus {
   }
 }
 
-pub fn verify_token(ctx: Context, token: String) -> Option(user.User) {
+pub fn verify_token(db: sqlight.Connection, token: String) -> Option(user.User) {
   case
     sql.get_session_user(
-      ctx.db,
+      db,
       args: [sqlight.text(token)],
       decoder: user.db_decoder(),
     )
@@ -41,4 +39,8 @@ pub fn verify_token(ctx: Context, token: String) -> Option(user.User) {
     Ok(_) -> None
     Error(_) -> None
   }
+}
+
+pub fn create_guest_session() {
+  todo
 }

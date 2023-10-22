@@ -1,6 +1,5 @@
 import nakai/html
 import nakai/html/attrs
-import jsorm/pages/layout
 import jsorm/components/input
 import jsorm/components/button
 
@@ -55,5 +54,4 @@ fn login_page() -> html.Node(a) {
 
 pub fn page() -> html.Node(t) {
   login_page()
-  |> layout.render(title: "Login")
 }
