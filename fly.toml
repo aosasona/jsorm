@@ -19,4 +19,4 @@ primary_region = "lhr"
 
 [mounts]
   source="jsorm"
-  destination="/app"
+  destination="/app/data"

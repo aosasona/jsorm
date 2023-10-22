@@ -30,7 +30,7 @@ pub fn render(child: Node(t), title: String) -> Node(t) {
         html.nav(
           [
             attrs.class(
-              "w-full flex justify-between items-center border-b border-b-stone-800 py-3 lg:py-5 px-4 lg:px-6",
+              "w-full flex justify-between items-center border-b border-b-stone-800 py-4 lg:py-5 px-4 lg:px-6",
             ),
           ],
           [
@@ -61,7 +61,7 @@ pub fn render(child: Node(t), title: String) -> Node(t) {
                     html.i_text(
                       [
                         attrs.class(
-                          "fa-brands fa-github text-2xl text-yellow-400 ml-5",
+                          "fa-brands fa-github text-3xl text-yellow-400 ml-5",
                         ),
                       ],
                       "",

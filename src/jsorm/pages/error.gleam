@@ -20,9 +20,12 @@ pub fn page(code: Int) -> html.Node(t) {
   let message = get_message(code)
 
   html.div(
-    [attrs.class("min-h-screen flex flex-col items-center justify-center")],
+    [attrs.class("min-h-screen flex flex-col items-center justify-center px-6")],
     [
-      html.h1_text([attrs.class("text-4xl font-bold mb-3")], get_message(code)),
+      html.h1_text(
+        [attrs.class("max-w-2xl text-4xl font-bold mb-3")],
+        get_message(code),
+      ),
       html.p_text([attrs.class("text-base text-stone-500")], get_subtext(code)),
     ],
   )

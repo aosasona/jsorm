@@ -560,6 +560,10 @@ video {
   width: 100%;
 }
 
+.max-w-2xl{
+  max-width: 42rem;
+}
+
 .flex-col{
   flex-direction: column;
 }
@@ -633,6 +637,16 @@ video {
   padding-bottom: 2rem;
 }
 
+.px-6{
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.py-4{
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
 .text-center{
   text-align: center;
 }
@@ -660,6 +674,11 @@ video {
 .text-2xl{
   font-size: 1.5rem;
   line-height: 2rem;
+}
+
+.text-3xl{
+  font-size: 1.875rem;
+  line-height: 2.25rem;
 }
 
 .font-bold{

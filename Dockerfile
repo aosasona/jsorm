@@ -1,17 +1,17 @@
 FROM ghcr.io/gleam-lang/gleam:v0.31.0-erlang-alpine
 
 # Add project code
-COPY . /build/
+COPY . /source
 
 # Compile the Gleam application
-RUN cd /build \
-  && apk add gcc build-base \
+RUN cd /source \
+  && apk add --no-cache gcc build-base \
   && gleam export erlang-shipment \
   && mv build/erlang-shipment /app \
-  && rm -r /build \
+  && cd .. && rm -r /source \
   && apk del gcc build-base
 
-# Run the application
+# Run
 WORKDIR /app
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["run"]
