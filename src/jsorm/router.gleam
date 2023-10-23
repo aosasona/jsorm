@@ -28,6 +28,9 @@ fn default_responses(
   handle_request: fn() -> Response,
 ) -> Response {
   let res = handle_request()
+
+  // Do not intercept redirects
+  use <- bool.guard(when: res.status >= 300 && res.status < 400, return: res)
   use <- bool.guard(when: res.body != wisp.Empty, return: res)
   render(pages.error(req, ctx, res.status), res.status)
 }
