@@ -65,7 +65,8 @@ fn header(title: String) -> Node(t) {
 
 fn nav(req: Request, ctx: Context) -> Node(t) {
   let auth_btn = case auth.get_auth_status(req, ctx.db) {
-    auth.LoggedOut | auth.InvalidToken ->
+    auth.LoggedIn(_) -> html.Nothing
+    _ ->
       button.component(button.Props(
         text: "Sign in",
         render_as: button.Link,
@@ -73,7 +74,6 @@ fn nav(req: Request, ctx: Context) -> Node(t) {
         attrs: [attrs.href("/sign-in")],
         class: "",
       ))
-    auth.LoggedIn(_) -> html.Nothing
   }
 
   html.nav(

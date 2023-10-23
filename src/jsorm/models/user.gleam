@@ -1,4 +1,8 @@
+import gleam/io
+import jsorm/error.{SessionError}
+import jsorm/generated/sql
 import gleam/dynamic
+import sqlight
 
 pub type User {
   User(id: Int, email: String, created_at: Int, updated_at: Int)
@@ -22,4 +26,15 @@ pub fn json_decoder() -> dynamic.Decoder(User) {
     dynamic.field("created_at", dynamic.int),
     dynamic.field("updated_at", dynamic.int),
   )
+}
+
+pub fn create_guest_user(db: sqlight.Connection) -> Result(User, error.Error) {
+  case sql.insert_user(db, args: [sqlight.null()], decoder: db_decoder()) {
+    Ok([user]) -> Ok(user)
+    Ok(e) -> {
+      io.debug(e)
+      Error(SessionError("No user returned, but no error returned either."))
+    }
+    Error(e) -> Error(e)
+  }
 }

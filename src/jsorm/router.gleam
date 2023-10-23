@@ -26,8 +26,6 @@ fn default_responses(
   handle_request: fn() -> Response,
 ) -> Response {
   let res = handle_request()
-
   use <- bool.guard(when: res.body != wisp.Empty, return: res)
-
   render(pages.error(req, ctx, res.status), res.status)
 }

@@ -1,7 +1,9 @@
 import gleam/option.{None, Option, Some}
-import jsorm/generated/sql
+import gleam/result.{try}
+import jsorm/error
 import jsorm/models/user
-import jsorm/lib/session.{auth_cookie}
+import jsorm/lib/session.{SessionToken, auth_cookie}
+import jsorm/generated/sql
 import sqlight
 import wisp.{Request}
 
@@ -41,6 +43,11 @@ pub fn verify_token(db: sqlight.Connection, token: String) -> Option(user.User) 
   }
 }
 
-pub fn create_guest_session() {
-  todo
+pub fn signin_as_guest(
+  db: sqlight.Connection,
+) -> Result(#(SessionToken, user.User), error.Error) {
+  use user <- try(user.create_guest_user(db))
+  use token <- try(session.create_session(db, user.id))
+
+  Ok(#(token, user))
 }
