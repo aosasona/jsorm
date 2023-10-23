@@ -1,3 +1,4 @@
+import gleam/option.{Option}
 import gleam/dynamic
 
 pub type Document {
@@ -8,7 +9,7 @@ pub type Document {
     created_at: Int,
     updated_at: Int,
     user_id: Int,
-    parent_id: Int,
+    parent_id: Option(Int),
   )
 }
 
@@ -21,7 +22,7 @@ pub fn db_decoder() -> dynamic.Decoder(Document) {
     dynamic.element(3, dynamic.int),
     dynamic.element(4, dynamic.int),
     dynamic.element(5, dynamic.int),
-    dynamic.element(6, dynamic.int),
+    dynamic.element(6, dynamic.optional(dynamic.int)),
   )
 }
 
@@ -34,6 +35,6 @@ pub fn json_decoder() -> dynamic.Decoder(Document) {
     dynamic.field("created_at", dynamic.int),
     dynamic.field("updated_at", dynamic.int),
     dynamic.field("user_id", dynamic.int),
-    dynamic.field("issued_at", dynamic.int),
+    dynamic.field("parent_id", dynamic.optional(dynamic.int)),
   )
 }

@@ -4,6 +4,7 @@ import jsorm/pages
 import jsorm/web.{Context, render}
 import jsorm/web/auth
 import jsorm/web/editor
+import jsorm/web/home
 import wisp.{Request, Response}
 
 pub fn handle_request(req: Request, ctx: Context) -> Response {
@@ -13,8 +14,9 @@ pub fn handle_request(req: Request, ctx: Context) -> Response {
   use <- wisp.serve_static(req, under: "/assets", from: ctx.dist_directory)
 
   case wisp.path_segments(req) {
-    [] | ["editor"] -> editor.render_editor(req, ctx, None)
-    ["editor", document_id] -> editor.render_editor(req, ctx, Some(document_id))
+    [] -> home.render_index(req, ctx)
+    ["e"] -> editor.render_editor(req, ctx, None)
+    ["e", document_id] -> editor.render_editor(req, ctx, Some(document_id))
     ["sign-in"] -> auth.sign_in(req, ctx)
     _ -> wisp.not_found()
   }
