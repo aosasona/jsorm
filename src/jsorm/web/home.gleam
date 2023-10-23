@@ -6,7 +6,11 @@ import wisp.{Request, Response}
 
 pub fn render_index(req: Request, ctx: Context) -> Response {
   use <- wisp.require_method(req, Get)
-  pages.login()
-  |> layout.render(layout.Props(title: "Sign in", request: req, ctx: ctx))
+  pages.home()
+  |> layout.render(layout.Props(
+    title: "Jsorm - A minimal JSON explorer",
+    request: req,
+    ctx: ctx,
+  ))
   |> web.render(200)
 }

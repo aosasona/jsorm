@@ -6,11 +6,12 @@ import wisp.{Request}
 
 fn get_message(code: Int) -> String {
   case code {
+    code if code >= 200 && code < 300 -> "Success"
     401 -> "Unauthorized"
     403 -> "Forbidden"
     404 -> "Page not found"
     405 -> "Method not allowed"
-    500 -> "Something went wrong"
+    code if code >= 500 -> "Something went wrong"
     _ -> "Oof, something went wrong"
   }
 }

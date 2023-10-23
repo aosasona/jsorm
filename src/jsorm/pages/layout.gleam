@@ -79,7 +79,7 @@ fn nav(req: Request, ctx: Context) -> Node(t) {
   html.nav(
     [
       attrs.class(
-        "w-full flex justify-between items-center border-b border-b-stone-800 py-4 lg:py-5 px-4 lg:px-6",
+        "w-full fixed top-0 left-0 right-0 bg-stone-900/70 backdrop-blur-lg flex justify-between items-center border-b border-b-stone-800 py-4 lg:py-5 px-4 lg:px-6",
       ),
     ],
     [
@@ -142,7 +142,7 @@ pub fn render(child: Node(t), props: Props) -> Node(t) {
 
   html.Fragment([
     header(title),
-    html.Body([], [nav(props.request, props.ctx), child]),
+    html.Body([attrs.class("mt-[8vh]")], [nav(props.request, props.ctx), child]),
     footer(),
   ])
 }
