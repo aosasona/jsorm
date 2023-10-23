@@ -536,6 +536,40 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.container{
+  width: 100%;
+}
+
+@media (min-width: 640px){
+  .container{
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px){
+  .container{
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px){
+  .container{
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px){
+  .container{
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px){
+  .container{
+    max-width: 1536px;
+  }
+}
+
 .fixed{
   position: fixed;
 }
@@ -593,6 +627,22 @@ video {
   margin-top: 8vh;
 }
 
+.mt-\[9vh\]{
+  margin-top: 9vh;
+}
+
+.mt-16{
+  margin-top: 4rem;
+}
+
+.mt-64{
+  margin-top: 16rem;
+}
+
+.mb-12{
+  margin-bottom: 3rem;
+}
+
 .block{
   display: block;
 }
@@ -613,8 +663,17 @@ video {
   min-height: 100vh;
 }
 
+.min-h-\[60vh\]{
+  min-height: 60vh;
+}
+
 .w-full{
   width: 100%;
+}
+
+.w-max{
+  width: -moz-max-content;
+  width: max-content;
 }
 
 .max-w-2xl{
@@ -627,6 +686,10 @@ video {
 
 .max-w-xl{
   max-width: 36rem;
+}
+
+.max-w-3xl{
+  max-width: 48rem;
 }
 
 .select-none{
@@ -705,6 +768,11 @@ video {
 
 .bg-stone-900\/70{
   background-color: rgb(28 25 23 / 0.7);
+}
+
+.bg-white{
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
 .px-2{
@@ -831,6 +899,21 @@ video {
 
 .text-\[0\.6rem\]{
   font-size: 0.6rem;
+}
+
+.text-6xl{
+  font-size: 3.75rem;
+  line-height: 1;
+}
+
+.text-7xl{
+  font-size: 4.5rem;
+  line-height: 1;
+}
+
+.text-5xl{
+  font-size: 3rem;
+  line-height: 1;
 }
 
 .font-bold{
@@ -1070,5 +1153,10 @@ a:hover {
   .lg\:py-5{
     padding-top: 1.25rem;
     padding-bottom: 1.25rem;
+  }
+
+  .lg\:text-7xl{
+    font-size: 4.5rem;
+    line-height: 1;
   }
 }

@@ -142,7 +142,7 @@ pub fn render(child: Node(t), props: Props) -> Node(t) {
 
   html.Fragment([
     header(title),
-    html.Body([attrs.class("mt-[8vh]")], [nav(props.request, props.ctx), child]),
+    html.Body([attrs.class("mt-[9vh]")], [nav(props.request, props.ctx), child]),
     footer(),
   ])
 }

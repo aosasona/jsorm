@@ -2,7 +2,7 @@ import gleam/io
 import jsorm/generated/sql
 import jsorm/models/session
 import jsorm/error.{SessionError}
-import ids/ulid
+import ids/nanoid
 import sqlight
 
 pub const auth_cookie = "__session_token"
@@ -12,7 +12,7 @@ pub type SessionToken {
 }
 
 fn generate_session_id() -> String {
-  ulid.generate()
+  nanoid.generate() <> nanoid.generate() <> nanoid.generate()
 }
 
 pub fn create_session(

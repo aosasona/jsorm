@@ -6,7 +6,7 @@ import gleam/dynamic
 import sqlight
 
 pub type User {
-  User(id: Int, email: Option(String), created_at: Int, updated_at: Int)
+  User(id: Int, email: Option(String), created_at: String, updated_at: String)
 }
 
 pub fn db_decoder() -> dynamic.Decoder(User) {
@@ -14,8 +14,8 @@ pub fn db_decoder() -> dynamic.Decoder(User) {
     User,
     dynamic.element(0, dynamic.int),
     dynamic.element(1, dynamic.optional(dynamic.string)),
-    dynamic.element(2, dynamic.int),
-    dynamic.element(3, dynamic.int),
+    dynamic.element(2, dynamic.string),
+    dynamic.element(3, dynamic.string),
   )
 }
 
@@ -24,8 +24,8 @@ pub fn json_decoder() -> dynamic.Decoder(User) {
     User,
     dynamic.field("id", dynamic.int),
     dynamic.field("email", dynamic.optional(dynamic.string)),
-    dynamic.field("created_at", dynamic.int),
-    dynamic.field("updated_at", dynamic.int),
+    dynamic.field("created_at", dynamic.string),
+    dynamic.field("updated_at", dynamic.string),
   )
 }
 

@@ -18,11 +18,25 @@ pub fn upsert_document(
     "INSERT INTO documents
   (id, content, tags, user_id, parent_id)
 VALUES
-  ($1, $2, $3, $4)
+  ($1, $2, $3, $4, $5)
 ON CONFLICT (id) DO UPDATE
-  -- We don't want to update the user_id or parent_id here EVER
   SET content = $2, tags = $3
 RETURNING *;
+"
+  sqlight.query(query, db, arguments, decoder)
+  |> result.map_error(error.DatabaseError)
+}
+
+pub fn get_document_by_id_and_user(
+  db: sqlight.Connection,
+  args arguments: List(sqlight.Value),
+  decoder decoder: dynamic.Decoder(a),
+) -> QueryResult(a) {
+  let query =
+    "select *
+from documents
+where id = $1 and user_id = $2
+;
 "
   sqlight.query(query, db, arguments, decoder)
   |> result.map_error(error.DatabaseError)
@@ -57,7 +71,7 @@ pub fn insert_user(
 VALUES
   ($1)
 ON CONFLICT (email) DO NOTHING
-  RETURNING id;
+  RETURNING *;
 "
   sqlight.query(query, db, arguments, decoder)
   |> result.map_error(error.DatabaseError)
@@ -73,7 +87,7 @@ pub fn insert_session_token(
   (user_id, token)
 VALUES
   ($1, $2)
-RETURNING *;
+RETURNING id, user_id, token, unixepoch(issued_at) as issued_at;
 "
   sqlight.query(query, db, arguments, decoder)
   |> result.map_error(error.DatabaseError)

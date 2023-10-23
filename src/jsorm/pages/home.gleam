@@ -1,13 +1,31 @@
+import jsorm/components/button
 import nakai/html.{Node}
 import nakai/html/attrs.{class}
 
+// TODO: add screenshot here
 pub fn page() -> Node(t) {
   html.div(
-    [class("max-w-xl mx-auto")],
+    [class("w-full min-h-[60vh] container mx-auto")],
     [
       html.h1(
         [class("text-4xl font-bold text-center")],
-        [html.Text("Hello, world!")],
+        [
+          html.h1_text(
+            [
+              class(
+                "text-center text-5xl lg:text-7xl font-bold max-w-2xl mx-auto mt-64 mb-12",
+              ),
+            ],
+            "A minimal JSON explorer",
+          ),
+          button.component(button.Props(
+            text: "Launch explorer",
+            render_as: button.Link,
+            variant: button.Primary,
+            attrs: [attrs.href("/e")],
+            class: "block w-max mx-auto",
+          )),
+        ],
       ),
     ],
   )

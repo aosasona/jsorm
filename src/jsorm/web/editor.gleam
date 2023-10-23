@@ -18,7 +18,7 @@ pub fn render_editor(
   ctx: Context,
   document_id: Option(String),
 ) -> Response {
-  let #(opt_user, response_fn) = case auth.get_auth_status(req, ctx.db) {
+  let #(opt_user, set_cookie) = case auth.get_auth_status(req, ctx.db) {
     LoggedIn(user) -> #(Some(user), fn(res: Response) { res })
     _ -> {
       case auth.signin_as_guest(ctx.db) {
@@ -35,18 +35,19 @@ pub fn render_editor(
             )
           },
         )
-        Error(_) -> #(None, fn(res) { res })
+        Error(e) -> {
+          io.debug(e)
+          #(None, fn(res) { res })
+        }
       }
     }
   }
 
   use user <- user_from_option(opt_user)
-  use _document <- load_or_create_document(ctx.db, user, document_id)
+  use resp <- load_or_create_document(ctx.db, user, document_id)
 
-  // pass the document, request and context to the page to be rendered
-
-  wisp.ok()
-  |> response_fn
+  resp
+  |> set_cookie
 }
 
 fn user_from_option(user: Option(User), next: fn(User) -> Response) -> Response {
@@ -61,12 +62,13 @@ fn load_or_create_document(
   db: sqlight.Connection,
   user: User,
   document_id: Option(String),
-  next: fn(Document) -> Response,
+  next: fn(Response) -> Response,
 ) -> Response {
   case document_id {
     Some(doc_id) -> {
       case document.find_by_id_and_user(db, doc_id, user.id) {
-        Ok(doc) -> next(doc)
+        // TODO: render editor here
+        Ok(_doc) -> next(wisp.ok())
         Error(e) -> {
           wisp.log_error(case e {
             error.MatchError(msg) -> msg
@@ -82,7 +84,7 @@ fn load_or_create_document(
     }
     None -> {
       case document.create(db, user.id, None) {
-        Ok(doc) -> wisp.redirect("/e/" <> doc.id)
+        Ok(doc) -> next(wisp.redirect("/e/" <> doc.id))
         Error(e) -> {
           wisp.log_error(case e {
             error.MatchError(msg) -> msg

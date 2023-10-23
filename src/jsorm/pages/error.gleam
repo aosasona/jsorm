@@ -18,6 +18,8 @@ fn get_message(code: Int) -> String {
 
 fn get_subtext(code: Int) -> String {
   case code {
+    code if code >= 200 && code < 300 ->
+      "You're all good, you are seeing this page because this page is not implemented yet"
     401 -> "Looks like you're not logged in, please log in and try again"
     403 -> "You're not allowed to view this page"
     404 -> "The page you're looking for doesn't exist"
