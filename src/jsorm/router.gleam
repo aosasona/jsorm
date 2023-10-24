@@ -8,6 +8,7 @@ import jsorm/web/home
 import wisp.{Request, Response}
 
 pub fn handle_request(req: Request, ctx: Context) -> Response {
+  let req = wisp.method_override(req)
   use <- wisp.log_request(req)
   use ctx <- web.extract_user(req, ctx)
   use <- default_responses(ctx)

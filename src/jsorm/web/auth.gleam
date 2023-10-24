@@ -1,11 +1,14 @@
 import jsorm/pages
 import jsorm/web.{Context}
+import jsorm/components/status_box
 import jsorm/pages/layout
 import jsorm/pages/login
 import jsorm/lib/auth
 import jsorm/mail
 import ids/ulid
+import gleam/io
 import gleam/string
+import gleam/list
 import gleam/option.{None, Some}
 import gleam/http.{Get, Post}
 import wisp.{Request, Response}
@@ -56,18 +59,54 @@ fn send_otp(req: Request, ctx: Context) -> Response {
     ulid.generate()
     |> string.slice(at_index: -6, length: 6)
 
-  // use <- fn(next: fn () -> Response) { case mail.send_otp(ctx.plunk, email, code) {
-  //     Ok(_) -> next()
-  //     Error(err) -> {
-  //       html.div([], [
-  //         html.div()
-  //         login.form_component()
-  //       ])
-  //       |> web.render(200)
-  //     }
-  //   }
-  // }()
+  use email <- fn(next: fn(String) -> Response) {
+    case list.key_find(formdata.values, "email") {
+      Ok(email) -> {
+        case email == "" {
+          True ->
+            sign_in_error("Email address is required")
+            |> web.render(200)
+          False -> next(email)
+        }
+      }
+      Error(_) ->
+        sign_in_error("Email address is required")
+        |> web.render(200)
+    }
+  }()
+
+  use <- fn(next: fn() -> Response) {
+    case mail.send_otp(ctx.plunk, email, code) {
+      Ok(_) -> next()
+      Error(err) -> {
+        io.debug(err)
+
+        html.div(
+          [],
+          [
+            sign_in_error("Failed to send OTP, please try again later"),
+            login.form_component(),
+          ],
+        )
+        |> web.render(200)
+      }
+    }
+  }()
 
   html.Text("Hello, world!")
   |> web.render(200)
+}
+
+fn sign_in_error(msg: String) {
+  html.div(
+    [],
+    [
+      status_box.component(status_box.Props(
+        message: msg,
+        status: status_box.Failure,
+        class: "mb-4",
+      )),
+      login.form_component(),
+    ],
+  )
 }

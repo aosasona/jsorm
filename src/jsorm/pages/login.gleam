@@ -5,11 +5,7 @@ import jsorm/components/button
 
 pub fn form_component() {
   html.form(
-    [
-      attrs.Attr("hx-post", "/sign-in"),
-      attrs.Attr("hx-target", "this"),
-      attrs.Attr("hx-swap", "outerHTML"),
-    ],
+    [attrs.Attr("hx-post", "/sign-in")],
     [
       input.component(input.Props(
         id: "email",
@@ -42,10 +38,17 @@ fn login_page() -> html.Node(a) {
     ],
     [
       html.div(
-        [attrs.class("w-full max-w-xs md:max-w-sm")],
+        [attrs.class("w-full container max-w-sm md:max-w-md")],
         [
           html.h1_text([attrs.class("text-2xl font-bold mb-6")], "Sign in"),
-          form_component(),
+          html.div(
+            [
+              attrs.id("#form-container"),
+              attrs.Attr("hx-target", "this"),
+              attrs.Attr("hx-swap", "innerHTML"),
+            ],
+            [form_component()],
+          ),
         ],
       ),
     ],
