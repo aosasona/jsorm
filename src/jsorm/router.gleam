@@ -9,9 +9,9 @@ import wisp.{Request, Response}
 
 pub fn handle_request(req: Request, ctx: Context) -> Response {
   use <- wisp.log_request(req)
+  use ctx <- web.extract_user(req, ctx)
   use <- default_responses(ctx)
   use <- wisp.rescue_crashes
-  use ctx <- web.extract_user(req, ctx)
   use <- wisp.serve_static(req, under: "/assets", from: ctx.dist_directory)
 
   case wisp.path_segments(req) {

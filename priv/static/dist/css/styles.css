@@ -603,6 +603,10 @@ video {
   margin-bottom: 1.5rem;
 }
 
+.mr-5{
+  margin-right: 1.25rem;
+}
+
 .mt-2{
   margin-top: 0.5rem;
 }
@@ -617,14 +621,6 @@ video {
 
 .mt-\[9vh\]{
   margin-top: 9vh;
-}
-
-.mr-4{
-  margin-right: 1rem;
-}
-
-.mr-5{
-  margin-right: 1.25rem;
 }
 
 .block{
@@ -739,11 +735,6 @@ video {
   padding-right: 0.75rem;
 }
 
-.px-4{
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
 .px-5{
   padding-left: 1.25rem;
   padding-right: 1.25rem;
@@ -816,11 +807,6 @@ video {
 .text-xs{
   font-size: 0.75rem;
   line-height: 1rem;
-}
-
-.text-lg{
-  font-size: 1.125rem;
-  line-height: 1.75rem;
 }
 
 .font-bold{
@@ -943,6 +929,11 @@ a:hover {
   background-color: rgb(234 179 8 / var(--tw-bg-opacity));
 }
 
+.hover\:text-stone-950:hover{
+  --tw-text-opacity: 1;
+  color: rgb(12 10 9 / var(--tw-text-opacity));
+}
+
 .focus\:outline-none:focus{
   outline: 2px solid transparent;
   outline-offset: 2px;
@@ -985,19 +976,14 @@ a:hover {
     height: 85vh;
   }
 
-  .lg\:px-6{
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+  .lg\:px-8{
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 
   .lg\:py-5{
     padding-top: 1.25rem;
     padding-bottom: 1.25rem;
-  }
-
-  .lg\:px-8{
-    padding-left: 2rem;
-    padding-right: 2rem;
   }
 
   .lg\:text-7xl{

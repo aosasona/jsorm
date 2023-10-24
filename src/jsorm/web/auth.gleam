@@ -38,6 +38,7 @@ fn render_signin(req: Request, ctx: Context) -> Response {
   |> web.render(200)
 }
 
+// TODO: redirect to r query param if present
 fn verify_otp(req: Request, _ctx: Context) -> Response {
   use <- wisp.require_method(req, Post)
   use _ <- wisp.require_form(req)

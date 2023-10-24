@@ -4,9 +4,7 @@ import gleam/option.{None, Some}
 import jsorm/components/button
 import jsorm/components/tabler
 import jsorm/components/link
-import jsorm/lib/auth
 import jsorm/web.{Context}
-import wisp.{Request}
 
 pub type Props {
   Props(title: String, ctx: Context)
@@ -68,7 +66,14 @@ fn header(title: String) -> Node(t) {
 
 fn nav(ctx: Context) -> Node(t) {
   let auth_btn = case ctx.user {
-    Some(_) -> html.Nothing
+    Some(_) ->
+      button.component(button.Props(
+        text: "Sign out",
+        render_as: button.Link,
+        variant: button.Ghost,
+        attrs: [attrs.href("/sign-out")],
+        class: "mr-5",
+      ))
     None ->
       button.component(button.Props(
         text: "Sign in",
