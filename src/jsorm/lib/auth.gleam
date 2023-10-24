@@ -51,3 +51,11 @@ pub fn signin_as_guest(
 
   Ok(#(token, user))
 }
+
+pub fn send_otp() {
+  todo
+}
+
+pub fn verify_otp() {
+  todo
+}

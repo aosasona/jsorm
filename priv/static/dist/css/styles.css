@@ -655,6 +655,10 @@ video {
   display: contents;
 }
 
+.hidden{
+  display: none;
+}
+
 .h-\[80dvh\]{
   height: 80dvh;
 }
