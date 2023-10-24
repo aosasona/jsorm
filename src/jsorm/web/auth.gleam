@@ -4,10 +4,12 @@ import jsorm/components/status_box
 import jsorm/pages/layout
 import jsorm/pages/login
 import jsorm/lib/auth
+import jsorm/lib/validator
 import jsorm/mail
 import ids/ulid
 import gleam/io
 import gleam/string
+import gleam/result
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/http.{Get, Post}
@@ -62,16 +64,23 @@ fn send_otp(req: Request, ctx: Context) -> Response {
   use email <- fn(next: fn(String) -> Response) {
     case list.key_find(formdata.values, "email") {
       Ok(email) -> {
-        case email == "" {
-          True ->
-            sign_in_error("Email address is required")
-            |> web.render(200)
-          False -> next(email)
+        case
+          validator.validate_field(email, [validator.Required, validator.Email])
+        {
+          #(True, errors) ->
+            sign_in_error(
+              "Email address " <> {
+                list.first(errors)
+                |> result.unwrap("must be valid")
+              },
+            )
+            |> web.render(400)
+          #(False, _) -> next(email)
         }
       }
       Error(_) ->
         sign_in_error("Email address is required")
-        |> web.render(200)
+        |> web.render(400)
     }
   }()
 
@@ -88,7 +97,7 @@ fn send_otp(req: Request, ctx: Context) -> Response {
             login.form_component(),
           ],
         )
-        |> web.render(200)
+        |> web.render(400)
       }
     }
   }()
