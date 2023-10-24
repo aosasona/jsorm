@@ -3,7 +3,7 @@ import nakai/html/attrs
 import jsorm/components/input
 import jsorm/components/button
 
-pub fn login_form() {
+pub fn form_component() {
   html.form(
     [
       attrs.Attr("hx-post", "/sign-in"),
@@ -45,7 +45,7 @@ fn login_page() -> html.Node(a) {
         [attrs.class("w-full max-w-xs md:max-w-sm")],
         [
           html.h1_text([attrs.class("text-2xl font-bold mb-6")], "Sign in"),
-          login_form(),
+          form_component(),
         ],
       ),
     ],

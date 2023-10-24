@@ -1,5 +1,6 @@
 import nakai/html.{Node}
 import nakai/html/attrs
+import gleam/option.{None, Some}
 import jsorm/components/button
 import jsorm/components/tabler
 import jsorm/components/link
@@ -8,7 +9,7 @@ import jsorm/web.{Context}
 import wisp.{Request}
 
 pub type Props {
-  Props(title: String, request: Request, ctx: Context)
+  Props(title: String, ctx: Context)
 }
 
 const description = "A minimal JSON explorer & formatter"
@@ -65,23 +66,23 @@ fn header(title: String) -> Node(t) {
   ])
 }
 
-fn nav(req: Request, ctx: Context) -> Node(t) {
-  let auth_btn = case auth.get_auth_status(req, ctx.db) {
-    auth.LoggedIn(_) -> html.Nothing
-    _ ->
+fn nav(ctx: Context) -> Node(t) {
+  let auth_btn = case ctx.user {
+    Some(_) -> html.Nothing
+    None ->
       button.component(button.Props(
         text: "Sign in",
         render_as: button.Link,
         variant: button.Primary,
         attrs: [attrs.href("/sign-in")],
-        class: "",
+        class: "mr-5",
       ))
   }
 
   html.nav(
     [
       attrs.class(
-        "w-full fixed top-0 left-0 right-0 bg-stone-900/70 backdrop-blur-lg flex justify-between items-center border-b border-b-stone-800 py-4 lg:py-5 px-4 lg:px-6",
+        "w-full fixed top-0 left-0 right-0 bg-stone-900/70 backdrop-blur-lg flex justify-between items-center border-b border-b-stone-800 py-4 lg:py-5 px-5 lg:px-8",
       ),
     ],
     [
@@ -135,7 +136,7 @@ pub fn render(child: Node(t), props: Props) -> Node(t) {
 
   html.Fragment([
     header(title),
-    html.Body([attrs.class("mt-[9vh]")], [nav(props.request, props.ctx), child]),
+    html.Body([attrs.class("mt-[9vh]")], [nav(props.ctx), child]),
     footer(),
   ])
 }

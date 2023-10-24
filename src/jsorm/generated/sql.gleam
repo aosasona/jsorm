@@ -93,6 +93,20 @@ RETURNING id, user_id, token, unixepoch(issued_at) as issued_at;
   |> result.map_error(error.DatabaseError)
 }
 
+pub fn delete_session_token(
+  db: sqlight.Connection,
+  args arguments: List(sqlight.Value),
+  decoder decoder: dynamic.Decoder(a),
+) -> QueryResult(a) {
+  let query =
+    "delete from session_tokens
+where token = $1
+;
+"
+  sqlight.query(query, db, arguments, decoder)
+  |> result.map_error(error.DatabaseError)
+}
+
 pub fn get_session_user(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),

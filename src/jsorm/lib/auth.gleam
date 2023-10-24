@@ -1,19 +1,24 @@
 import gleam/option.{None, Option, Some}
+import gleam/dynamic
 import gleam/result.{try}
 import jsorm/error
 import jsorm/models/user
 import jsorm/lib/session.{SessionToken, auth_cookie}
 import jsorm/generated/sql
 import sqlight
-import wisp.{Request}
+import wisp.{Request, Response}
 
 pub type AuthStatus {
   /// The token is not present in the request at all
   LoggedOut
   /// The token is present, active and has a valid user associated with it
-  LoggedIn(user.User)
+  LoggedIn(#(user.User, String))
   /// The token is present but is invalid
   InvalidToken
+}
+
+pub fn set_auth_cookie(res: Response, req: Request, token: String) -> Response {
+  wisp.set_cookie(res, req, auth_cookie, token, wisp.Signed, 60 * 60 * 24 * 7)
 }
 
 pub fn get_auth_status(req: Request, db: sqlight.Connection) -> AuthStatus {
@@ -22,7 +27,7 @@ pub fn get_auth_status(req: Request, db: sqlight.Connection) -> AuthStatus {
   case cookie {
     Ok(session_token) ->
       case verify_token(db, session_token) {
-        Some(user) -> LoggedIn(user)
+        Some(user) -> LoggedIn(#(user, session_token))
         None -> InvalidToken
       }
     Error(_) -> LoggedOut
@@ -41,6 +46,17 @@ pub fn verify_token(db: sqlight.Connection, token: String) -> Option(user.User) 
     Ok(_) -> None
     Error(_) -> None
   }
+}
+
+pub fn remove_session_token(
+  db: sqlight.Connection,
+  token: String,
+) -> Result(_, error.Error) {
+  sql.delete_session_token(
+    db,
+    args: [sqlight.text(token)],
+    decoder: dynamic.int,
+  )
 }
 
 pub fn signin_as_guest(

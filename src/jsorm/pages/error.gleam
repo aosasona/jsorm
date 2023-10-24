@@ -2,7 +2,6 @@ import nakai/html
 import nakai/html/attrs
 import jsorm/pages/layout
 import jsorm/web.{Context}
-import wisp.{Request}
 
 fn get_message(code: Int) -> String {
   case code {
@@ -29,7 +28,7 @@ fn get_subtext(code: Int) -> String {
   }
 }
 
-pub fn page(req: Request, ctx: Context, code: Int) -> html.Node(t) {
+pub fn page(ctx: Context, code: Int) -> html.Node(t) {
   let message = get_message(code)
 
   html.div(
@@ -46,5 +45,5 @@ pub fn page(req: Request, ctx: Context, code: Int) -> html.Node(t) {
       html.p_text([attrs.class("text-base text-stone-500")], get_subtext(code)),
     ],
   )
-  |> layout.render(layout.Props(title: message, ctx: ctx, request: req))
+  |> layout.render(layout.Props(title: message, ctx: ctx))
 }

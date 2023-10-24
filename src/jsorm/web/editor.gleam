@@ -19,20 +19,14 @@ pub fn render_editor(
   document_id: Option(String),
 ) -> Response {
   let #(opt_user, set_cookie) = case auth.get_auth_status(req, ctx.db) {
-    LoggedIn(user) -> #(Some(user), fn(res: Response) { res })
+    LoggedIn(#(user, _)) -> #(Some(user), fn(res: Response) { res })
     _ -> {
       case auth.signin_as_guest(ctx.db) {
         Ok(#(token, u)) -> #(
           Some(u),
           fn(res: Response) {
             res
-            |> wisp.set_cookie(
-              req,
-              auth_cookie,
-              token.token,
-              wisp.Signed,
-              60 * 60 * 24 * 7,
-            )
+            |> auth.set_auth_cookie(req, token.token)
           },
         )
         Error(e) -> {
