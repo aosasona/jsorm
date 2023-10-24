@@ -1,6 +1,7 @@
 import nakai/html.{Node}
 import nakai/html/attrs
 import jsorm/components/button
+import jsorm/components/tabler
 import jsorm/components/link
 import jsorm/lib/auth
 import jsorm/web.{Context}
@@ -51,14 +52,15 @@ fn header(title: String) -> Node(t) {
     html.meta([attrs.property("twitter:image"), attrs.content(meta_image)]),
     html.meta([attrs.property("twitter:url"), attrs.content(website_url)]),
     // styles and scripts
-    html.link([attrs.rel("stylesheet"), attrs.href("/assets/css/styles.css")]),
     html.link([
       attrs.rel("stylesheet"),
       attrs.href(
-        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css",
+        "https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css",
       ),
     ]),
-    html.Element("script", [attrs.src("https://unpkg.com/htmx.org@1.9.6")], []),
+    html.link([attrs.rel("stylesheet"), attrs.href("/assets/css/styles.css")]),
+    html.Element("script", [attrs.src("/assets/js/htmx.min.js")], []),
+    html.Element("script", [attrs.src("/assets/js/app.js")], []),
     html.title(title),
   ])
 }
@@ -99,16 +101,7 @@ fn nav(req: Request, ctx: Context) -> Node(t) {
               attrs.href("https://github.com/aosasona/jsorm"),
               attrs.target("_blank"),
             ],
-            [
-              html.i_text(
-                [
-                  attrs.class(
-                    "fa-brands fa-github text-3xl text-yellow-400 ml-5",
-                  ),
-                ],
-                "",
-              ),
-            ],
+            [tabler.icon("brand-github", "text-yellow-400 text-xl")],
           ),
         ],
       ),
