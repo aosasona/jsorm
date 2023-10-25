@@ -98,7 +98,7 @@ fn send_otp(req: Request, ctx: Context) -> Response {
         [attrs.Attr("hx-post", "/sign-in/verify")],
         [
           html.div(
-            [attrs.class("mb-5")],
+            [attrs.class("mb-4")],
             [
               input.component(input.Props(
                 id: "email",
@@ -113,15 +113,6 @@ fn send_otp(req: Request, ctx: Context) -> Response {
                   attrs.readonly(),
                 ],
               )),
-              html.a_text(
-                [
-                  attrs.href("?email=" <> uri.encode(email)),
-                  attrs.class(
-                    "block text-sm text-yellow-400 underline text-right mt-2.5",
-                  ),
-                ],
-                "Wrong email address?",
-              ),
             ],
           ),
           input.component(input.Props(
@@ -147,23 +138,47 @@ fn send_otp(req: Request, ctx: Context) -> Response {
           )),
         ],
       ),
+      html.form(
+        [
+          attrs.Attr("hx-post", "/sign-in"),
+          attrs.Attr("hx-disabled-elt", "#resend-otp-btn"),
+        ],
+        [
+          input.component(input.Props(
+            id: "email",
+            name: "email",
+            label: "Email address",
+            variant: input.Hidden,
+            attrs: [attrs.value(email)],
+          )),
+          button.component(button.Props(
+            text: "Resend OTP",
+            render_as: button.Button,
+            variant: button.Ghost,
+            attrs: [
+              attrs.type_("submit"),
+              attrs.id("resend-otp-btn"),
+              attrs.Attr(
+                "_",
+                "init js setTimeout(() => { document.querySelector('#resend-otp-btn').removeAttribute('disabled') }, 65000)",
+              ),
+              attrs.disabled(),
+            ],
+            class: "w-full mt-4",
+          )),
+        ],
+      ),
+      html.a_text(
+        [
+          attrs.href("?email=" <> uri.encode(email)),
+          attrs.class(
+            "block text-sm text-yellow-400 underline text-center mt-4",
+          ),
+        ],
+        "Wrong email address?",
+      ),
     ],
   )
-  // html.form(
-  //   [
-  //     attrs.Attr("hx-post", "/sign-in"),
-  //     attrs.Attr("hx-disabled-elt", "#send-otp-btn"),
-  //   ],
-  //   [
-  //     button.component(button.Props(
-  //       text: "Resend OTP",
-  //       render_as: button.Button,
-  //       variant: button.Ghost,
-  //       attrs: [attrs.type_("submit"), attrs.id("#send-otp-btn")],
-  //       class: "w-full mt-4",
-  //     )),
-  //   ],
-  // ),
   |> web.render(200)
 }
 
@@ -176,7 +191,8 @@ fn log_token_request(
     Ok(_) -> next()
     Error(e) -> {
       io.debug(e)
-      wisp.internal_server_error()
+      sign_in_error("Something went wrong, please try again", "")
+      |> web.render(200)
     }
   }
 }
@@ -227,7 +243,8 @@ fn rate_limit(
     }
     Error(e) -> {
       io.debug(e)
-      wisp.internal_server_error()
+      sign_in_error("Something went wrong, please try again", email)
+      |> web.render(200)
     }
   }
 }

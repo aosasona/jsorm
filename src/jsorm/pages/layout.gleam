@@ -59,6 +59,11 @@ fn header(title: String) -> Node(t) {
     ]),
     html.link([attrs.rel("stylesheet"), attrs.href("/assets/css/styles.css")]),
     html.Element("script", [attrs.src("/assets/js/htmx.min.js")], []),
+    html.Element(
+      "script",
+      [attrs.src("https://unpkg.com/hyperscript.org@0.9.12")],
+      [],
+    ),
     html.Element("script", [attrs.src("/assets/js/app.js")], []),
     html.title(title),
   ])

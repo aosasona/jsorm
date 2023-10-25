@@ -4,6 +4,7 @@ import nakai/html/attrs
 import gleam/list
 
 pub type Variant {
+  Hidden
   Text
   Email
 }
@@ -24,6 +25,7 @@ fn get_classes(variant: Variant) -> String {
   case variant {
     Text | Email ->
       "block w-full bg-stone-800 px-3 py-2.5 rounded-md border-0 text-stone-100 shadow-sm outline-none focus:outline-none ring-1 ring-inset ring-stone-700 placeholder:text-stone-600 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm sm:leading-6"
+    Hidden -> ""
   } <> " " <> general_class
 }
 
@@ -31,7 +33,12 @@ pub fn component(props: Props(t)) -> html.Node(t) {
   let #(extra_classes, attrs) = component_utils.extract_class(props.attrs)
 
   html.div(
-    [],
+    [
+      attrs.class(case props.variant {
+        Hidden -> "hidden"
+        _ -> "p-1"
+      }),
+    ],
     [
       html.label(
         [attrs.for(props.name), attrs.class("text-sm text-stone-400 block")],
@@ -48,6 +55,7 @@ pub fn component(props: Props(t)) -> html.Node(t) {
               attrs.type_(case props.variant {
                 Text -> "text"
                 Email -> "email"
+                Hidden -> "hidden"
               }),
               attrs.class(get_classes(props.variant) <> " " <> extra_classes),
             ],
