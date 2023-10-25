@@ -36,7 +36,7 @@ pub fn component(props: Props(t)) -> html.Node(t) {
     [
       attrs.class(case props.variant {
         Hidden -> "hidden"
-        _ -> "p-1"
+        _ -> ""
       }),
     ],
     [

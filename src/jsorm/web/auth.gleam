@@ -74,7 +74,6 @@ pub fn verify_otp(req: Request, _ctx: Context) -> Response {
   |> web.render(200)
 }
 
-// TODO: make sure last OTP was sent at least 1 minute ago - ratelimiting
 fn send_otp(req: Request, ctx: Context) -> Response {
   use <- wisp.require_method(req, Post)
   use formdata <- wisp.require_form(req)

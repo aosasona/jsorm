@@ -615,6 +615,10 @@ video {
   margin-top: 0.5rem;
 }
 
+.mt-4{
+  margin-top: 1rem;
+}
+
 .mt-6{
   margin-top: 1.5rem;
 }
@@ -623,32 +627,12 @@ video {
   margin-top: 16rem;
 }
 
-.mt-\[9vh\]{
-  margin-top: 9vh;
-}
-
-.mt-1{
-  margin-top: 0.25rem;
-}
-
-.mt-4{
-  margin-top: 1rem;
-}
-
-.mt-3{
-  margin-top: 0.75rem;
-}
-
-.mt-2\.5{
-  margin-top: 0.625rem;
-}
-
-.mb-5{
-  margin-bottom: 1.25rem;
-}
-
 .mt-8{
   margin-top: 2rem;
+}
+
+.mt-\[9vh\]{
+  margin-top: 9vh;
 }
 
 .block{
@@ -829,10 +813,6 @@ video {
   text-align: center;
 }
 
-.text-right{
-  text-align: right;
-}
-
 .text-2xl{
   font-size: 1.5rem;
   line-height: 2rem;
@@ -846,10 +826,6 @@ video {
 .text-5xl{
   font-size: 3rem;
   line-height: 1;
-}
-
-.text-\[11px\]{
-  font-size: 11px;
 }
 
 .text-base{
@@ -993,38 +969,18 @@ a:hover {
   color: rgb(87 83 78 / var(--tw-text-opacity));
 }
 
-.hover\:scale-95:hover{
-  --tw-scale-x: .95;
-  --tw-scale-y: .95;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
 .hover\:scale-x-95:hover{
   --tw-scale-x: .95;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.hover\:bg-yellow-400:hover{
-  --tw-bg-opacity: 1;
-  background-color: rgb(250 204 21 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-yellow-500:hover{
-  --tw-bg-opacity: 1;
-  background-color: rgb(234 179 8 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-yellow-400\/40:hover{
-  background-color: rgb(250 204 21 / 0.4);
 }
 
 .hover\:bg-yellow-400\/20:hover{
   background-color: rgb(250 204 21 / 0.2);
 }
 
-.hover\:text-stone-950:hover{
-  --tw-text-opacity: 1;
-  color: rgb(12 10 9 / var(--tw-text-opacity));
+.hover\:bg-yellow-500:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(234 179 8 / var(--tw-bg-opacity));
 }
 
 .focus\:outline-none:focus{
@@ -1057,12 +1013,12 @@ a:hover {
           user-select: none;
 }
 
-.disabled\:opacity-50:disabled{
-  opacity: 0.5;
-}
-
 .disabled\:opacity-40:disabled{
   opacity: 0.4;
+}
+
+.disabled\:opacity-50:disabled{
+  opacity: 0.5;
 }
 
 .disabled\:focus\:outline-none:focus:disabled{
