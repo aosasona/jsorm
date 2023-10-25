@@ -9,6 +9,22 @@ import jsorm/error.{Error}
 pub type QueryResult(t) =
   Result(List(t), Error)
 
+pub fn get_user_by_email(
+  db: sqlight.Connection,
+  args arguments: List(sqlight.Value),
+  decoder decoder: dynamic.Decoder(a),
+) -> QueryResult(a) {
+  let query =
+    "select *
+from users
+where email = $1
+limit 1
+;
+"
+  sqlight.query(query, db, arguments, decoder)
+  |> result.map_error(error.DatabaseError)
+}
+
 pub fn upsert_document(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),

@@ -1,5 +1,5 @@
 import gleam/io
-import gleam/option.{Option}
+import gleam/option.{None, Option, Some}
 import jsorm/error.{SessionError}
 import jsorm/generated/sql
 import gleam/dynamic
@@ -27,6 +27,27 @@ pub fn json_decoder() -> dynamic.Decoder(User) {
     dynamic.field("created_at", dynamic.string),
     dynamic.field("updated_at", dynamic.string),
   )
+}
+
+pub fn find_by_email(db: sqlight.Connection, email: String) -> Option(User) {
+  case
+    sql.get_user_by_email(
+      db,
+      args: [sqlight.text(email)],
+      decoder: db_decoder(),
+    )
+  {
+    Ok([user]) -> Some(user)
+    Ok([]) -> None
+    Ok(e) -> {
+      io.debug(e)
+      None
+    }
+    Error(e) -> {
+      io.debug(e)
+      None
+    }
+  }
 }
 
 pub fn create(

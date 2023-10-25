@@ -5,7 +5,10 @@ import jsorm/components/button
 
 pub fn form_component(email: String) {
   html.form(
-    [attrs.Attr("hx-post", "/sign-in")],
+    [
+      attrs.Attr("hx-post", "/sign-in"),
+      attrs.Attr("hx-disabled-elt", "#send-otp-btn"),
+    ],
     [
       input.component(input.Props(
         id: "email",
@@ -23,7 +26,7 @@ pub fn form_component(email: String) {
         text: "Continue",
         render_as: button.Button,
         variant: button.Primary,
-        attrs: [attrs.type_("submit")],
+        attrs: [attrs.type_("submit"), attrs.id("send-otp-btn")],
         class: "w-full mt-6",
       )),
     ],

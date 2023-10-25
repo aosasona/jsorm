@@ -67,6 +67,7 @@ pub fn verify_otp(req: Request, _ctx: Context) -> Response {
   |> web.render(200)
 }
 
+// TODO: make sure last OTP was sent at least 1 minute ago - ratelimiting
 fn send_otp(req: Request, ctx: Context) -> Response {
   use <- wisp.require_method(req, Post)
   use formdata <- wisp.require_form(req)
@@ -81,30 +82,52 @@ fn send_otp(req: Request, ctx: Context) -> Response {
       status_box.component(status_box.Props(
         message: "Please check your email for the OTP",
         status: status_box.Success,
-        class: "mb-4",
+        class: "mb-6",
       )),
       html.form(
         [attrs.Attr("hx-post", "/sign-in/verify")],
         [
-          html.input([
-            attrs.type_("hidden"),
-            attrs.name("email"),
-            attrs.value(email),
-          ]),
+          html.div(
+            [attrs.class("mb-6")],
+            [
+              input.component(input.Props(
+                id: "email",
+                name: "email",
+                label: "Email address",
+                variant: input.Email,
+                attrs: [
+                  attrs.placeholder("john@example"),
+                  attrs.Attr("required", ""),
+                  attrs.value(email),
+                  attrs.disabled(),
+                  attrs.readonly(),
+                ],
+              )),
+              html.a_text(
+                [
+                  attrs.href("?email=" <> uri.encode(email)),
+                  attrs.class(
+                    "block text-sm text-yellow-400 underline text-right mt-2.5",
+                  ),
+                ],
+                "Wrong email address?",
+              ),
+            ],
+          ),
           input.component(input.Props(
             id: "otp",
             name: "otp",
             label: "One-time password",
             variant: input.Text,
-            attrs: [attrs.placeholder("xxxxxx"), attrs.Attr("required", "")],
-          )),
-          html.a_text(
-            [
-              attrs.href("?email=" <> uri.encode(email)),
-              attrs.class("text-sm underline text-right mt-1 mb-3"),
+            attrs: [
+              attrs.placeholder("xxxxxx"),
+              attrs.Attr("required", ""),
+              attrs.autocomplete("one-time-code"),
+              attrs.autofocus(),
+              attrs.Attr("minlength", "6"),
+              attrs.Attr("maxlength", "6"),
             ],
-            "Edit email address",
-          ),
+          )),
           button.component(button.Props(
             text: "Sign in",
             render_as: button.Button,
@@ -143,17 +166,22 @@ fn create_user_if_not_exists(
   email: String,
   next: fn(user.User) -> Response,
 ) {
-  case user.create(db, string.lowercase(email)) {
-    Ok(user) -> {
-      next(user)
-    }
-    Error(err) -> {
-      io.debug(err)
-      html.div(
-        [],
-        [sign_in_error("Failed to send OTP, please try again later", email)],
-      )
-      |> web.render(400)
+  case user.find_by_email(db, email) {
+    Some(user) -> next(user)
+    None -> {
+      case user.create(db, string.lowercase(email)) {
+        Ok(user) -> {
+          next(user)
+        }
+        Error(err) -> {
+          io.debug(err)
+          html.div(
+            [],
+            [sign_in_error("Failed to send OTP, please try again later", email)],
+          )
+          |> web.render(400)
+        }
+      }
     }
   }
 }

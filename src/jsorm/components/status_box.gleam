@@ -38,8 +38,8 @@ pub fn component(props: Props) -> Node(t) {
       ),
     ],
     [
-      tabler.icon(name: icon, class: "text-xl " <> text_color),
-      html.p_text([class(text_color <> " text-[11px]")], props.message),
+      tabler.icon(name: icon, class: "text-2xl " <> text_color),
+      html.p_text([class(text_color <> " text-sm")], props.message),
     ],
   )
 }

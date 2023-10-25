@@ -5,6 +5,8 @@ import gleam/dynamic
 import jsorm/error
 import sqlight
 
+// TODO: add retry column to keep track of how many times we've tried to send the email and disable retries after a certain number of attempts (maybe 3)
+
 pub type AuthToken {
   AuthToken(
     id: String,

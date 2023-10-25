@@ -21,13 +21,16 @@ pub type Props(a) {
   )
 }
 
+const shared_class = "disabled:opacity-50 disabled:cursor-not-allowed"
+
 pub fn component(props: Props(t)) -> html.Node(t) {
-  let class = case props.variant {
-    Primary ->
-      "bg-yellow-400 hover:bg-yellow-500 text-stone-900 font-bold py-2.5 px-5 rounded-md hover:scale-95 select-none"
-    Ghost ->
-      "bg-transparent hover:bg-yellow-400 text-yellow-400 hover:text-stone-950 font-bold py-2.5 px-5 rounded-md hover:scale-95 select-none"
-  }
+  let class =
+    case props.variant {
+      Primary ->
+        "bg-yellow-400 hover:bg-yellow-500 text-stone-900 font-bold py-2.5 px-5 rounded-md hover:scale-95 select-none"
+      Ghost ->
+        "bg-transparent hover:bg-yellow-400 text-yellow-400 hover:text-stone-950 font-bold py-2.5 px-5 rounded-md hover:scale-95 select-none"
+    } <> " " <> shared_class
 
   let el = case props.render_as {
     Button -> html.button_text
