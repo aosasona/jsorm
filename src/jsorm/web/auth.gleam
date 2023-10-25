@@ -6,6 +6,7 @@ import jsorm/components/status_box
 import jsorm/pages/layout
 import jsorm/pages/login
 import jsorm/models/user
+import jsorm/models/token_requests_log
 import jsorm/lib/auth
 import jsorm/lib/validator
 import jsorm/lib/uri
@@ -13,6 +14,7 @@ import jsorm/mail
 import ids/ulid
 import gleam/io
 import gleam/string
+import gleam/int
 import gleam/result
 import gleam/list
 import gleam/http/request
@@ -23,6 +25,11 @@ import wisp.{Request, Response}
 import nakai/html
 import nakai/html/attrs
 import sqlight
+
+type RatelimitType {
+  Throttle
+  HardLimit
+}
 
 pub fn sign_in(req: Request, ctx: Context) -> Response {
   case req.method {
@@ -72,9 +79,12 @@ fn send_otp(req: Request, ctx: Context) -> Response {
   use <- wisp.require_method(req, Post)
   use formdata <- wisp.require_form(req)
   use email <- validate_email(formdata)
-  use code <- try_send_otp(ctx.plunk, email)
   use user <- create_user_if_not_exists(ctx.db, email)
+  use <- rate_limit(ctx.db, Throttle, user.id, email)
+  use <- rate_limit(ctx.db, HardLimit, user.id, email)
+  use code <- try_send_otp(ctx.plunk, email)
   use <- auth.save_otp(ctx.db, user.id, code)
+  use <- log_token_request(ctx.db, user.id)
 
   html.div(
     [],
@@ -88,7 +98,7 @@ fn send_otp(req: Request, ctx: Context) -> Response {
         [attrs.Attr("hx-post", "/sign-in/verify")],
         [
           html.div(
-            [attrs.class("mb-6")],
+            [attrs.class("mb-5")],
             [
               input.component(input.Props(
                 id: "email",
@@ -133,13 +143,93 @@ fn send_otp(req: Request, ctx: Context) -> Response {
             render_as: button.Button,
             variant: button.Primary,
             attrs: [attrs.type_("submit")],
-            class: "w-full mt-6",
+            class: "w-full mt-8",
           )),
         ],
       ),
     ],
   )
+  // html.form(
+  //   [
+  //     attrs.Attr("hx-post", "/sign-in"),
+  //     attrs.Attr("hx-disabled-elt", "#send-otp-btn"),
+  //   ],
+  //   [
+  //     button.component(button.Props(
+  //       text: "Resend OTP",
+  //       render_as: button.Button,
+  //       variant: button.Ghost,
+  //       attrs: [attrs.type_("submit"), attrs.id("#send-otp-btn")],
+  //       class: "w-full mt-4",
+  //     )),
+  //   ],
+  // ),
   |> web.render(200)
+}
+
+fn log_token_request(
+  db: sqlight.Connection,
+  user_id: Int,
+  next: fn() -> Response,
+) -> Response {
+  case token_requests_log.create(db, user_id, token_requests_log.AuthToken) {
+    Ok(_) -> next()
+    Error(e) -> {
+      io.debug(e)
+      wisp.internal_server_error()
+    }
+  }
+}
+
+fn rate_limit(
+  db: sqlight.Connection,
+  ratelimit_type r_type: RatelimitType,
+  user_id user_id: Int,
+  email email: String,
+  next next: fn() -> Response,
+) -> Response {
+  let max = case r_type {
+    Throttle -> 1
+    HardLimit -> 5
+  }
+
+  let seconds = case r_type {
+    Throttle -> 60
+    HardLimit -> 60 * 60 * 6
+  }
+
+  let err_msg = case r_type {
+    Throttle ->
+      "You can only make " <> int.to_string(max) <> " request every " <> int.to_string(
+        seconds,
+      ) <> " seconds"
+    HardLimit ->
+      "You can only make " <> int.to_string(max) <> " requests every " <> int.to_string(
+        seconds / 60 / 60,
+      ) <> " hours"
+  }
+
+  case
+    token_requests_log.get_logs_in_duration(
+      db,
+      user_id: user_id,
+      seconds: seconds,
+    )
+  {
+    Ok(req_counts) -> {
+      case req_counts {
+        req_counts if req_counts >= max -> {
+          sign_in_error(err_msg, email)
+          |> web.render(200)
+        }
+        _ -> next()
+      }
+    }
+    Error(e) -> {
+      io.debug(e)
+      wisp.internal_server_error()
+    }
+  }
 }
 
 fn try_send_otp(p: plunk.Instance, email: String, next: fn(String) -> Response) {
@@ -156,7 +246,7 @@ fn try_send_otp(p: plunk.Instance, email: String, next: fn(String) -> Response) 
         [],
         [sign_in_error("Failed to send OTP, please try again later", email)],
       )
-      |> web.render(400)
+      |> web.render(200)
     }
   }
 }
@@ -179,7 +269,7 @@ fn create_user_if_not_exists(
             [],
             [sign_in_error("Failed to send OTP, please try again later", email)],
           )
-          |> web.render(400)
+          |> web.render(200)
         }
       }
     }
@@ -200,13 +290,13 @@ fn validate_email(formdata: wisp.FormData, next: fn(String) -> Response) {
             },
             "",
           )
-          |> web.render(400)
+          |> web.render(200)
         #(False, _) -> next(email)
       }
     }
     Error(_) ->
       sign_in_error("Email address is required", "")
-      |> web.render(400)
+      |> web.render(200)
   }
 }
 
