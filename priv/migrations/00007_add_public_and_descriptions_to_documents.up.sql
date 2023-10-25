@@ -1,0 +1,5 @@
+ALTER TABLE documents
+ADD COLUMN is_public BOOLEAN NOT NULL DEFAULT false;
+
+ALTER TABLE documents
+ADD COLUMN description TEXT NOT NULL DEFAULT '';

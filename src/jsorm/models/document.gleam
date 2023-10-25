@@ -16,11 +16,13 @@ pub type Document {
     updated_at: String,
     user_id: Int,
     parent_id: Option(String),
+    is_public: Bool,
+    description: Option(String),
   )
 }
 
 pub fn db_decoder() -> dynamic.Decoder(Document) {
-  dynamic.decode7(
+  dynamic.decode9(
     Document,
     dynamic.element(0, dynamic.string),
     dynamic.element(1, dynamic.string),
@@ -29,11 +31,13 @@ pub fn db_decoder() -> dynamic.Decoder(Document) {
     dynamic.element(4, dynamic.string),
     dynamic.element(5, dynamic.int),
     dynamic.element(6, dynamic.optional(dynamic.string)),
+    dynamic.element(7, sqlight.decode_bool),
+    dynamic.element(8, dynamic.optional(dynamic.string)),
   )
 }
 
 pub fn json_decoder() -> dynamic.Decoder(Document) {
-  dynamic.decode7(
+  dynamic.decode9(
     Document,
     dynamic.field("id", dynamic.string),
     dynamic.field("content", dynamic.string),
@@ -42,6 +46,8 @@ pub fn json_decoder() -> dynamic.Decoder(Document) {
     dynamic.field("updated_at", dynamic.string),
     dynamic.field("user_id", dynamic.int),
     dynamic.field("parent_id", dynamic.optional(dynamic.string)),
+    dynamic.field("is_public", sqlight.decode_bool),
+    dynamic.field("description", dynamic.optional(dynamic.string)),
   )
 }
 
@@ -51,7 +57,7 @@ pub fn find_by_id_and_user(
   user_id user_id: Int,
 ) -> Result(Document, error.Error) {
   case
-    sql.get_document_by_id_and_user(
+    sql.get_document_by_id(
       db,
       [sqlight.text(doc_id), sqlight.int(user_id)],
       db_decoder(),

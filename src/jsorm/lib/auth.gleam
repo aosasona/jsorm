@@ -3,6 +3,7 @@ import gleam/dynamic
 import gleam/result.{try}
 import jsorm/error
 import jsorm/models/user
+import jsorm/models/auth_token
 import jsorm/lib/session.{SessionToken, auth_cookie}
 import jsorm/generated/sql
 import sqlight
@@ -68,10 +69,14 @@ pub fn signin_as_guest(
   Ok(#(token, user))
 }
 
-pub fn send_otp() {
-  todo
-}
-
-pub fn verify_otp() {
-  todo
+pub fn save_otp(
+  db: sqlight.Connection,
+  user_id: Int,
+  otp: String,
+  next: fn() -> Response,
+) -> Response {
+  case auth_token.save_token(db, otp, user_id) {
+    Ok(_) -> next()
+    Error(_) -> wisp.internal_server_error()
+  }
 }

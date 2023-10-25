@@ -29,6 +29,20 @@ pub fn json_decoder() -> dynamic.Decoder(User) {
   )
 }
 
+pub fn create(
+  db: sqlight.Connection,
+  email: String,
+) -> Result(User, error.Error) {
+  case sql.insert_user(db, args: [sqlight.text(email)], decoder: db_decoder()) {
+    Ok([user]) -> Ok(user)
+    Ok(e) -> {
+      io.debug(e)
+      Error(SessionError("No user returned, but no error returned either."))
+    }
+    Error(e) -> Error(e)
+  }
+}
+
 pub fn create_guest_user(db: sqlight.Connection) -> Result(User, error.Error) {
   case sql.insert_user(db, args: [sqlight.null()], decoder: db_decoder()) {
     Ok([user]) -> Ok(user)

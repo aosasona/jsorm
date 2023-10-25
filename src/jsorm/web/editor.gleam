@@ -5,7 +5,6 @@ import jsorm/web.{Context}
 import jsorm/models/user.{User}
 import jsorm/models/document.{Document}
 import jsorm/lib/auth.{LoggedIn}
-import jsorm/lib/session.{auth_cookie}
 import gleam/http.{Get, Post}
 import gleam/option.{None, Option, Some}
 import nakai/html
@@ -18,9 +17,9 @@ pub fn render_editor(
   ctx: Context,
   document_id: Option(String),
 ) -> Response {
-  let #(opt_user, set_cookie) = case auth.get_auth_status(req, ctx.db) {
-    LoggedIn(#(user, _)) -> #(Some(user), fn(res: Response) { res })
-    _ -> {
+  let #(opt_user, set_cookie) = case ctx.user {
+    Some(user) -> #(Some(user), fn(res: Response) { res })
+    None -> {
       case auth.signin_as_guest(ctx.db) {
         Ok(#(token, u)) -> #(
           Some(u),

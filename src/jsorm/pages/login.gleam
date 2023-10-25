@@ -3,7 +3,7 @@ import nakai/html/attrs
 import jsorm/components/input
 import jsorm/components/button
 
-pub fn form_component() {
+pub fn form_component(email: String) {
   html.form(
     [attrs.Attr("hx-post", "/sign-in")],
     [
@@ -13,6 +13,7 @@ pub fn form_component() {
         label: "Email address",
         variant: input.Email,
         attrs: [
+          attrs.value(email),
           attrs.placeholder("john@example.com"),
           attrs.autocomplete("email"),
           attrs.Attr("required", ""),
@@ -29,7 +30,7 @@ pub fn form_component() {
   )
 }
 
-fn login_page() -> html.Node(a) {
+fn login_page(email: String) -> html.Node(a) {
   html.div(
     [
       attrs.class(
@@ -47,7 +48,7 @@ fn login_page() -> html.Node(a) {
               attrs.Attr("hx-target", "this"),
               attrs.Attr("hx-swap", "innerHTML"),
             ],
-            [form_component()],
+            [form_component(email)],
           ),
         ],
       ),
@@ -55,6 +56,6 @@ fn login_page() -> html.Node(a) {
   )
 }
 
-pub fn page() -> html.Node(t) {
-  login_page()
+pub fn page(default_email: String) -> html.Node(t) {
+  login_page(default_email)
 }

@@ -27,15 +27,15 @@ RETURNING *;
   |> result.map_error(error.DatabaseError)
 }
 
-pub fn get_document_by_id_and_user(
+pub fn get_auth_token_by_user_id(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),
   decoder decoder: dynamic.Decoder(a),
 ) -> QueryResult(a) {
   let query =
-    "select *
-from documents
-where id = $1 and user_id = $2
+    "select token, ttl_in_seconds, unixepoch(issued_at) as issued_at
+from auth_tokens
+where user_id = $1
 ;
 "
   sqlight.query(query, db, arguments, decoder)
@@ -77,6 +77,21 @@ ON CONFLICT (email) DO NOTHING
   |> result.map_error(error.DatabaseError)
 }
 
+pub fn get_document_by_id(
+  db: sqlight.Connection,
+  args arguments: List(sqlight.Value),
+  decoder decoder: dynamic.Decoder(a),
+) -> QueryResult(a) {
+  let query =
+    "select *
+from documents
+where id = $1 and (user_id = $2 or is_public = true)
+;
+"
+  sqlight.query(query, db, arguments, decoder)
+  |> result.map_error(error.DatabaseError)
+}
+
 pub fn insert_session_token(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),
@@ -101,6 +116,7 @@ pub fn delete_session_token(
   let query =
     "delete from session_tokens
 where token = $1
+returning id
 ;
 "
   sqlight.query(query, db, arguments, decoder)
