@@ -1,15 +1,13 @@
 import jsorm/pages
 import jsorm/web.{Context}
-import jsorm/components/button
-import jsorm/components/input
 import jsorm/components/status_box
 import jsorm/pages/layout
 import jsorm/pages/login
 import jsorm/models/user
+import jsorm/models/auth_token
 import jsorm/models/token_requests_log
 import jsorm/lib/auth
 import jsorm/lib/validator
-import jsorm/lib/uri
 import jsorm/mail
 import ids/ulid
 import gleam/io
@@ -65,13 +63,72 @@ fn render_signin(req: Request, ctx: Context) -> Response {
   |> web.render(200)
 }
 
-// TODO: redirect to r query param if present
-pub fn verify_otp(req: Request, _ctx: Context) -> Response {
+pub fn verify_otp(req: Request, ctx: Context) -> Response {
   use <- wisp.require_method(req, Post)
-  use _ <- wisp.require_form(req)
+  use formdata <- wisp.require_form(req)
+  use email <- validate_email(formdata)
 
-  html.Text("Hello, world!")
-  |> web.render(200)
+  let otp =
+    list.key_find(formdata.values, "otp")
+    |> result.unwrap("")
+
+  let uid = case user.find_by_email(ctx.db, email) {
+    Some(user) -> user.id
+    None -> 0
+  }
+
+  let target =
+    request.get_query(req)
+    |> result.unwrap([])
+    |> list.key_find("redirect")
+    |> result.unwrap("e")
+
+  case auth_token.find_by_user(ctx.db, uid) {
+    Ok(auth_token) -> {
+      case auth_token == otp {
+        True -> {
+          case auth.signin_as_user(ctx.db, uid) {
+            Ok(session_token) -> {
+              html.div(
+                [
+                  attrs.Attr(
+                    "_",
+                    "init js window.location.replace('/" <> target <> "')",
+                  ),
+                ],
+                [html.p_text([], "redirecting..")],
+              )
+              |> web.render(200)
+              |> auth.set_auth_cookie(req, session_token.token)
+            }
+            Error(e) -> {
+              io.println("signin as user")
+              io.debug(e)
+              sign_in_error("Something went wrong, please try again", email)
+              |> web.render(200)
+            }
+          }
+        }
+        False -> {
+          html.Fragment([
+            status_box.component(status_box.Props(
+              message: "Invalid one-time password, please try again or request a new one",
+              status: status_box.Failure,
+              class: "mb-4",
+            )),
+            login.otp_form_component(email),
+          ])
+          |> web.render(200)
+        }
+      }
+    }
+    Error(e) -> {
+      io.println("find_by_user ")
+      io.debug(e)
+      sign_in_error("Something went wrong, please try again", email)
+      |> web.render(200)
+    }
+  }
 }
 
 fn send_otp(req: Request, ctx: Context) -> Response {
@@ -93,89 +150,7 @@ fn send_otp(req: Request, ctx: Context) -> Response {
         status: status_box.Success,
         class: "mb-6",
       )),
-      html.form(
-        [attrs.Attr("hx-post", "/sign-in/verify")],
-        [
-          html.div(
-            [attrs.class("mb-4")],
-            [
-              input.component(input.Props(
-                id: "email",
-                name: "email",
-                label: "Email address",
-                variant: input.Email,
-                attrs: [
-                  attrs.placeholder("john@example"),
-                  attrs.Attr("required", ""),
-                  attrs.value(email),
-                  attrs.disabled(),
-                  attrs.readonly(),
-                ],
-              )),
-            ],
-          ),
-          input.component(input.Props(
-            id: "otp",
-            name: "otp",
-            label: "One-time password",
-            variant: input.Text,
-            attrs: [
-              attrs.placeholder("xxxxxx"),
-              attrs.Attr("required", ""),
-              attrs.autocomplete("one-time-code"),
-              attrs.autofocus(),
-              attrs.Attr("minlength", "6"),
-              attrs.Attr("maxlength", "6"),
-            ],
-          )),
-          button.component(button.Props(
-            text: "Sign in",
-            render_as: button.Button,
-            variant: button.Primary,
-            attrs: [attrs.type_("submit")],
-            class: "w-full mt-8",
-          )),
-        ],
-      ),
-      html.form(
-        [
-          attrs.Attr("hx-post", "/sign-in"),
-          attrs.Attr("hx-disabled-elt", "#resend-otp-btn"),
-        ],
-        [
-          input.component(input.Props(
-            id: "email",
-            name: "email",
-            label: "Email address",
-            variant: input.Hidden,
-            attrs: [attrs.value(email)],
-          )),
-          button.component(button.Props(
-            text: "Resend OTP",
-            render_as: button.Button,
-            variant: button.Ghost,
-            attrs: [
-              attrs.type_("submit"),
-              attrs.id("resend-otp-btn"),
-              attrs.Attr(
-                "_",
-                "init js setTimeout(() => { document.querySelector('#resend-otp-btn').removeAttribute('disabled') }, 65000)",
-              ),
-              attrs.disabled(),
-            ],
-            class: "w-full mt-4",
-          )),
-        ],
-      ),
-      html.a_text(
-        [
-          attrs.href("?email=" <> uri.encode(email)),
-          attrs.class(
-            "block text-sm text-yellow-400 underline text-center mt-4",
-          ),
-        ],
-        "Wrong email address?",
-      ),
+      login.otp_form_component(email),
     ],
   )
   |> web.render(200)

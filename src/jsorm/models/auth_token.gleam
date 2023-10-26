@@ -1,4 +1,5 @@
 import jsorm/generated/sql
+import gleam/io
 import gleam/int
 import gleam/list
 import gleam/dynamic
@@ -18,7 +19,7 @@ pub type AuthToken {
 }
 
 pub type FindTokenResult {
-  FindTokenResult(token: String, ttl_in_seconds: Int, issued_at: Int)
+  FindTokenResult(token: String, ttl_in_seconds: Int, created_at: Int)
 }
 
 pub fn db_decoder() -> dynamic.Decoder(AuthToken) {
@@ -64,23 +65,16 @@ pub fn save_token(
   }
 }
 
-pub fn find_by_user(
-  db: sqlight.Connection,
-  user_id: Int,
-) -> Result(FindTokenResult, _) {
+pub fn find_by_user(db: sqlight.Connection, user_id: Int) -> Result(String, _) {
   case
-    sql.get_document_by_id(
+    sql.get_auth_token_by_user_id(
       db,
       [sqlight.int(user_id)],
-      dynamic.decode3(
-        FindTokenResult,
-        dynamic.element(0, dynamic.string),
-        dynamic.element(1, dynamic.int),
-        dynamic.element(3, dynamic.int),
-      ),
+      dynamic.element(0, dynamic.string),
     )
   {
     Ok([doc]) -> Ok(doc)
+    Ok([]) -> Ok("")
     Ok(d) ->
       Error(error.MatchError(
         "Expected exactly one document, got " <> int.to_string(list.length(d)),

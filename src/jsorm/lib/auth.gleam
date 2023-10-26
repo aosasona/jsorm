@@ -60,6 +60,14 @@ pub fn remove_session_token(
   )
 }
 
+pub fn signin_as_user(
+  db: sqlight.Connection,
+  user_id: Int,
+) -> Result(SessionToken, error.Error) {
+  use token <- try(session.create_session(db, user_id))
+  Ok(token)
+}
+
 pub fn signin_as_guest(
   db: sqlight.Connection,
 ) -> Result(#(SessionToken, user.User), error.Error) {

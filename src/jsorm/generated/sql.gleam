@@ -49,9 +49,11 @@ pub fn get_auth_token_by_user_id(
   decoder decoder: dynamic.Decoder(a),
 ) -> QueryResult(a) {
   let query =
-    "select token, ttl_in_seconds, unixepoch(issued_at) as issued_at
+    "select token
 from auth_tokens
-where user_id = $1
+where
+    user_id = $1
+    and (((julianday('now') - julianday(created_at))) * 86400) <= ttl_in_seconds
 ;
 "
   sqlight.query(query, db, arguments, decoder)
@@ -69,7 +71,7 @@ pub fn upsert_auth_token(
 VALUES
   ($1, $2, 120)
 ON CONFLICT (user_id) DO UPDATE
-  SET token = $1, ttl_in_seconds = 120
+  SET token = $1, ttl_in_seconds = 120, created_at = datetime()
 RETURNING token;
 "
   sqlight.query(query, db, arguments, decoder)
