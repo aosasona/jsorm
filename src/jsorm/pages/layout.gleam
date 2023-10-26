@@ -16,7 +16,7 @@ const meta_image = "/assets/images/meta.png"
 
 const website_url = "https://jsorm.wyte.space"
 
-fn header(title: String) -> Node(t) {
+pub fn header(title: String) -> Node(t) {
   html.Head([
     html.meta([attrs.charset("utf-8")]),
     html.meta([
@@ -64,7 +64,11 @@ fn header(title: String) -> Node(t) {
       [attrs.src("https://unpkg.com/hyperscript.org@0.9.12")],
       [],
     ),
-    html.Element("script", [attrs.src("/assets/js/app.js")], []),
+    html.Element(
+      "script",
+      [attrs.src("/assets/js/app.js"), attrs.type_("module")],
+      [],
+    ),
     html.title(title),
   ])
 }
@@ -120,7 +124,7 @@ fn nav(ctx: Context) -> Node(t) {
   )
 }
 
-fn footer() -> Node(t) {
+pub fn footer() -> Node(t) {
   html.footer(
     [attrs.class("w-full")],
     [

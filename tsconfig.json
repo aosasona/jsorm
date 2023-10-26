@@ -20,7 +20,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
-    "module": "ESNext",
+    "module": "ES6",
     "esModuleInterop": true
   },
   "include": [

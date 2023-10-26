@@ -1,14 +1,11 @@
 import gleam/io
-import jsorm/pages
+import jsorm/pages/editor
 import jsorm/error
 import jsorm/web.{Context}
 import jsorm/models/user.{User}
-import jsorm/models/document.{Document}
-import jsorm/lib/auth.{LoggedIn}
-import gleam/http.{Get, Post}
+import jsorm/models/document
+import jsorm/lib/auth
 import gleam/option.{None, Option, Some}
-import nakai/html
-import nakai/html/attrs
 import sqlight
 import wisp.{Request, Response}
 
@@ -60,8 +57,11 @@ fn load_or_create_document(
   case document_id {
     Some(doc_id) -> {
       case document.find_by_id_and_user(db, doc_id, user.id) {
-        // TODO: render editor here
-        Ok(_doc) -> next(wisp.ok())
+        Ok(doc) ->
+          next(
+            editor.page(doc)
+            |> web.render(200),
+          )
         Error(e) -> {
           wisp.log_error(case e {
             error.MatchError(msg) -> msg

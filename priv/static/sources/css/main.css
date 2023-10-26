@@ -25,3 +25,7 @@ input {
 a:hover {
 	text-decoration: none;
 }
+
+.child {
+	@apply ml-4;
+}
