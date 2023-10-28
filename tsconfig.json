@@ -5,6 +5,8 @@
       "DOM",
       "ESNext"
     ],
+    "allowJs": true,
+    "checkJs": true,
     "outDir": "./priv/static/dist/js",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
