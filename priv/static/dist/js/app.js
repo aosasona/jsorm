@@ -4,9 +4,6 @@ window.onload = run;
 function run() {
     toast.init();
     editor = document.querySelector("#editor");
-    toast.error("This is another error", "3s");
-    toast.success("Hey, I passed!", "4s");
-    toast.warning("This is a warning", "5s");
     if (editor) {
         editor.addEventListener("keydown", (event) => {
             const e = event;
@@ -21,11 +18,21 @@ function interceptKeyPress(event, key, fn) {
     }
     fn();
 }
-// function updatePreview() {
-//   // const document = editor?.value;
-// }
-// function _safeJSONParse(text: string): Record<string, unknown> {
-//   return { hey: "" };
-// }
-//
-// function toMarkUp(doc: Record<string, unknown>) { }
+function updatePreview() {
+    const document = editor === null || editor === void 0 ? void 0 : editor.value;
+}
+function _safeJSONParse(text) {
+    try {
+        return JSON.parse(text);
+    }
+    catch (e) {
+        toast.error("Invalid JSON", "3s");
+        return {};
+    }
+}
+function toMarkUp(doc) {
+    let result = "";
+    for (const field in doc) {
+    }
+    return result;
+}

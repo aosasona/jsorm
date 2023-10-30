@@ -1,3 +1,4 @@
+import dot_env as dotenv
 import gleam/erlang/process
 import gleam/erlang/os
 import gleam/result
@@ -12,6 +13,7 @@ import mist
 import wisp
 
 pub fn main() {
+  dotenv.load()
   wisp.configure_logger()
 
   let db = database.connect()

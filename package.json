@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "concurrently -n server,typescript,tailwind \"pnpm watch:server\" \"pnpm watch:ts\" \"pnpm watch:tw\"",
-    "watch:server": "export $(grep -v '^#' .env | xargs) && watchexec -r -e toml,gleam gleam run",
+    "watch:server": "watchexec -r -e toml,gleam gleam run",
     "watch:tw": "tailwindcss -i ./priv/static/sources/css/main.css -o ./priv/static/dist/css/styles.css --watch",
     "watch:ts": "tsc -w",
     "gen:sql": "gleam run -m sqlgen"
@@ -14,8 +14,9 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^8.2.2",
-    "tailwindcss": "^3.3.3",
-    "tsc": "^2.0.4",
+    "tailwindcss": "^3.3.3"
+  },
+  "dependencies": {
     "typescript": "^5.2.2"
   }
 }
