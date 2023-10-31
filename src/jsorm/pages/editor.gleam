@@ -12,7 +12,7 @@ fn editor_component(document: Document) -> Node(t) {
       html.textarea_text(
         [
           class(
-            "h-full w-full text-yellow-400 bg-stone-900 resize-none focus:outline-none p-3",
+            "h-full w-full text-yellow-400 bg-stone-900 resize-none focus:outline-none p-4",
           ),
           id("editor"),
         ],
@@ -23,7 +23,7 @@ fn editor_component(document: Document) -> Node(t) {
 }
 
 fn preview_component() -> Node(t) {
-  html.div([class("w-full h-[50vh] md:h-auto p-3"), id("preview")], [])
+  html.div([class("w-full h-[50vh] md:h-auto p-4"), id("preview")], [])
 }
 
 pub fn page(document: Document) -> Node(t) {

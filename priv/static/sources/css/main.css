@@ -30,6 +30,13 @@ a:hover {
 	@apply ml-4;
 }
 
+.text-true {
+	@apply text-green-400;
+}
+.text-false {
+	@apply text-red-400;
+}
+
 .slide-up {
 	animation: slide-up 0.2s ease-in-out;
 }
