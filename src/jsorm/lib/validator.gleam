@@ -1,7 +1,7 @@
 import gleam/int
-import gleam/json.{Json, array, null, string}
+import gleam/json.{type Json, array, null, string}
 import gleam/list
-import gleam/option.{None, Option, Some}
+import gleam/option.{type Option, None, Some}
 import gleam/order
 import gleam/regex
 import gleam/string

@@ -1,5 +1,6 @@
 name = "jsorm"
 version = "0.1.0"
+gleam = ">= 0.32.0"
 
 # Fill out these fields if you intend to generate HTML documentation or publish
 # your project to the Hex package manager.
@@ -10,7 +11,7 @@ version = "0.1.0"
 # links = [{ title = "Website", href = "https://gleam.run" }]
 
 [dependencies]
-gleam_stdlib = "~> 0.31"
+gleam_stdlib = "~> 0.32"
 plunk = "~> 1.0"
 wisp = "~> 0.6"
 nakai = "~> 0.8"

@@ -1,5 +1,5 @@
 import jsorm/generated/sql
-import gleam/option.{Option}
+import gleam/option.{type Option}
 import gleam/dynamic
 import gleam/list
 import gleam/int

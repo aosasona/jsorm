@@ -1,12 +1,12 @@
-import gleam/option.{Option, Some}
-import jsorm/models/user.{User}
+import gleam/option.{type Option, Some}
+import jsorm/models/user.{type User}
 import jsorm/lib/auth
 import jsorm/lib/uri
 import nakai
-import nakai/html.{Node}
+import nakai/html.{type Node}
 import plunk
 import sqlight
-import wisp.{Request, Response}
+import wisp.{type Request, type Response}
 
 pub type Context {
   Context(

@@ -1,10 +1,10 @@
-import nakai/html.{Node}
+import nakai/html.{type Node}
 import nakai/html/attrs
 import gleam/option.{None, Some}
 import jsorm/components/button
 import jsorm/components/tabler
 import jsorm/components/link
-import jsorm/web.{Context}
+import jsorm/web.{type Context}
 
 pub type Props {
   Props(title: String, ctx: Context)

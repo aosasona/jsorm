@@ -1,5 +1,5 @@
 import jsorm/components/button
-import nakai/html.{Node}
+import nakai/html.{type Node}
 import nakai/html/attrs.{class}
 
 // TODO: add screenshot here

@@ -1,8 +1,8 @@
 import jsorm/pages
-import jsorm/web.{Context}
+import jsorm/web.{type Context}
 import jsorm/pages/layout
 import gleam/http.{Get}
-import wisp.{Request, Response}
+import wisp.{type Request, type Response}
 
 pub fn render_index(req: Request, ctx: Context) -> Response {
   use <- wisp.require_method(req, Get)

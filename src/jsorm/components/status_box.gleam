@@ -1,5 +1,5 @@
 import jsorm/components/tabler
-import nakai/html.{Node}
+import nakai/html.{type Node}
 import nakai/html/attrs.{class}
 
 pub type Status {

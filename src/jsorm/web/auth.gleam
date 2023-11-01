@@ -1,5 +1,5 @@
 import jsorm/pages
-import jsorm/web.{Context}
+import jsorm/web.{type Context}
 import jsorm/components/status_box
 import jsorm/pages/layout
 import jsorm/pages/login
@@ -19,7 +19,7 @@ import gleam/http/request
 import gleam/option.{None, Some}
 import gleam/http.{Get, Post}
 import plunk
-import wisp.{Request, Response}
+import wisp.{type Request, type Response}
 import nakai/html
 import nakai/html/attrs
 import sqlight

@@ -1,4 +1,4 @@
-import nakai/html.{Node}
+import nakai/html.{type Node}
 import nakai/html/attrs
 
 pub type Props {

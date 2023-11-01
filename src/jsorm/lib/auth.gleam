@@ -1,13 +1,13 @@
-import gleam/option.{None, Option, Some}
+import gleam/option.{type Option, None, Some}
 import gleam/dynamic
 import gleam/result.{try}
 import jsorm/error
 import jsorm/models/user
 import jsorm/models/auth_token
-import jsorm/lib/session.{SessionToken, auth_cookie}
+import jsorm/lib/session.{type SessionToken, auth_cookie}
 import jsorm/generated/sql
 import sqlight
-import wisp.{Request, Response}
+import wisp.{type Request, type Response}
 
 pub type AuthStatus {
   /// The token is not present in the request at all

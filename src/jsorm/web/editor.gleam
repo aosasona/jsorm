@@ -1,13 +1,13 @@
 import gleam/io
 import jsorm/pages/editor
 import jsorm/error
-import jsorm/web.{Context}
-import jsorm/models/user.{User}
+import jsorm/web.{type Context}
+import jsorm/models/user.{type User}
 import jsorm/models/document
 import jsorm/lib/auth
-import gleam/option.{None, Option, Some}
+import gleam/option.{type Option, None, Some}
 import sqlight
-import wisp.{Request, Response}
+import wisp.{type Request, type Response}
 
 pub fn render_editor(
   req: Request,

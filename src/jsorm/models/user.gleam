@@ -1,5 +1,5 @@
 import gleam/io
-import gleam/option.{None, Option, Some}
+import gleam/option.{type Option, None, Some}
 import jsorm/error.{SessionError}
 import jsorm/generated/sql
 import gleam/dynamic

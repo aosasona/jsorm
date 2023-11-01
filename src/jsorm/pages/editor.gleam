@@ -1,8 +1,8 @@
 import jsorm/pages/layout.{header}
-import jsorm/models/document.{Document}
+import jsorm/models/document.{type Document}
 import jsorm/components/button
 import jsorm/components/tabler
-import nakai/html.{Node}
+import nakai/html.{type Node}
 import nakai/html/attrs.{class, id}
 
 fn editor_component(document: Document) -> Node(t) {

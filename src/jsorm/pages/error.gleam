@@ -1,7 +1,7 @@
 import nakai/html
 import nakai/html/attrs
 import jsorm/pages/layout
-import jsorm/web.{Context}
+import jsorm/web.{type Context}
 
 fn get_message(code: Int) -> String {
   case code {

@@ -1,5 +1,5 @@
 import gleam/string
-import nakai/html.{Node}
+import nakai/html.{type Node}
 import nakai/html/attrs
 
 pub fn icon(name icon_name: String, class class: String) -> Node(a) {
