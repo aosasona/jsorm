@@ -7,7 +7,9 @@ function run() {
     if (editor) {
         editor.addEventListener("keydown", (event) => {
             const e = event;
-            interceptKeyPress(e, "Tab", () => { });
+            interceptKeyPress(e, "Tab", () => {
+                // TODO: insert 4 spaces
+            });
         });
         updatePreview();
     }
