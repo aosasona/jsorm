@@ -1,8 +1,13 @@
 import * as keymaps from "./keymaps.js";
 import * as toast from "./toast.js";
+import * as cmd from "./commands.js";
 
 let editor: HTMLTextAreaElement | null = null;
 window.onload = run;
+
+function $(selector: string): HTMLElement | null {
+	return document.querySelector(selector);
+}
 
 function run() {
 	toast.init();
@@ -10,10 +15,36 @@ function run() {
 
 	if (!editor) return;
 
-	keymaps.registerKeyIntercept("Tab", null, keymaps.handleTab(editor));
-	keymaps.registerHotKey(["Ctrl", "Enter"], "Format JSON", updatePreview);
+	keymaps.registerIntercept("Tab", null, keymaps.handleTab(editor));
+
+	keymaps.registerCombination(
+		[
+			["Ctrl", "Enter"],
+			["Meta", "Enter"],
+		],
+		"Format JSON",
+		updatePreview
+	);
+	keymaps.registerCombination(
+		[
+			["Ctrl", "s"],
+			["Meta", "s"],
+		],
+		"Save document",
+		() => console.log("Save")
+	);
+	keymaps.registerCombination(
+		[
+			["Ctrl", "k"],
+			["Meta", "k"],
+		],
+		"Toggle sidebar",
+		cmd.toggleSidebar
+	);
 
 	keymaps.init();
+
+	$("#sidebar-toggle")?.addEventListener("click", cmd.toggleSidebar);
 
 	updatePreview();
 }

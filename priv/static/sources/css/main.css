@@ -37,6 +37,18 @@ a:hover {
 	@apply text-red-400;
 }
 
+.sidebar {
+	@apply h-screen md:h-full whitespace-nowrap overflow-hidden  bg-stone-900 md:bg-stone-950 border-r border-r-stone-800 md:border-0 transition-all;
+}
+
+.sidebar-opened {
+	@apply w-2/3 sm:w-2/5 md:w-80  px-4 py-3 overflow-y-auto;
+}
+
+.sidebar-closed {
+	@apply w-0;
+}
+
 .slide-up {
 	animation: slide-up 0.2s ease-in-out;
 }

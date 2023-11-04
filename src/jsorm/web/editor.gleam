@@ -1,19 +1,38 @@
 import gleam/io
 import jsorm/pages/editor
 import jsorm/error
-import jsorm/web.{type Context}
-import jsorm/models/user.{type User}
+import jsorm/web
+import jsorm/models/user
 import jsorm/models/document
 import jsorm/lib/auth
-import gleam/option.{type Option, None, Some}
+import gleam/option.{None, Some}
+import gleam/http
 import sqlight
-import wisp.{type Request, type Response}
+import wisp
+
+// This is a hack to get around the current messy syntax highlighting in my editor
+type Context =
+  web.Context
+
+type User =
+  user.User
+
+type Option(a) =
+  option.Option(a)
+
+type Request =
+  wisp.Request
+
+type Response =
+  wisp.Response
 
 pub fn render_editor(
   req: Request,
   ctx: Context,
   document_id: Option(String),
 ) -> Response {
+  use <- wisp.require_method(req, http.Get)
+
   let #(opt_user, set_cookie) = case ctx.user {
     Some(user) -> #(Some(user), fn(res: Response) { res })
     None -> {
@@ -38,6 +57,11 @@ pub fn render_editor(
 
   resp
   |> set_cookie
+}
+
+pub fn save(req: Request, ctx: Context) -> Response {
+  use <- wisp.require_method(req, http.Post)
+  todo
 }
 
 fn user_from_option(user: Option(User), next: fn(User) -> Response) -> Response {

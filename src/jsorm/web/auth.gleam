@@ -1,5 +1,5 @@
 import jsorm/pages
-import jsorm/web.{type Context}
+import jsorm/web
 import jsorm/components/status_box as status
 import jsorm/pages/layout
 import jsorm/pages/login
@@ -19,10 +19,20 @@ import gleam/http/request
 import gleam/option.{None, Some}
 import gleam/http.{Get, Post}
 import plunk
-import wisp.{type Request, type Response}
+import wisp
 import nakai/html
 import nakai/html/attrs
 import sqlight
+
+// This is a hack to get around the current messy syntax highlighting in my editor
+type Context =
+  web.Context
+
+type Request =
+  wisp.Request
+
+type Response =
+  wisp.Response
 
 type RatelimitType {
   Throttle

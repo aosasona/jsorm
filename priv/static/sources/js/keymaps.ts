@@ -10,13 +10,19 @@ type KeyInterceptDefinition = { key: string; description: string | null; fn: () 
 type HotKeyDefinition = { keys: HotKey; description: string | null; fn: () => void };
 
 const keyIntercepts: KeyInterceptDefinition[] = [];
-export function registerKeyIntercept(key: string, description: string | null, fn: () => void) {
+export function registerIntercept(key: string, description: string | null, fn: () => void) {
   keyIntercepts.push({ key, description, fn });
 }
 
 const hotKeys: HotKeyDefinition[] = [];
-export function registerHotKey(keys: HotKey, description: string | null, fn: () => void) {
-  hotKeys.push({ keys, description, fn });
+export function registerCombination(keys: HotKey[], description: string | null, fn: () => void) {
+  for (const key of keys) {
+    if (key.length !== 2) {
+      throw new Error("An hot key mapping must be an array of length 2");
+    }
+
+    hotKeys.push({ keys: key, description, fn });
+  }
 }
 
 // All keypresses and hotkeys need to be registered before calling init()

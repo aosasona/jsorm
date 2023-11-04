@@ -3,12 +3,17 @@ export const Meta = "Meta";
 export const Alt = "Alt";
 export const Shift = "Shift";
 const keyIntercepts = [];
-export function registerKeyIntercept(key, description, fn) {
+export function registerIntercept(key, description, fn) {
     keyIntercepts.push({ key, description, fn });
 }
 const hotKeys = [];
-export function registerHotKey(keys, description, fn) {
-    hotKeys.push({ keys, description, fn });
+export function registerCombination(keys, description, fn) {
+    for (const key of keys) {
+        if (key.length !== 2) {
+            throw new Error("An hot key mapping must be an array of length 2");
+        }
+        hotKeys.push({ keys: key, description, fn });
+    }
 }
 // All keypresses and hotkeys need to be registered before calling init()
 export function init() {
