@@ -1,6 +1,6 @@
 import jsorm/pages
 import jsorm/web.{type Context}
-import jsorm/components/status_box
+import jsorm/components/status_box as status
 import jsorm/pages/layout
 import jsorm/pages/login
 import jsorm/models/user
@@ -104,29 +104,21 @@ pub fn verify_otp(req: Request, ctx: Context) -> Response {
             Error(e) -> {
               io.println("signin as user")
               io.debug(e)
-              sign_in_error("Something went wrong, please try again", email)
-              |> web.render(200)
+              render_error("Something went wrong, please try again", 500)
             }
           }
         }
-        False -> {
-          html.Fragment([
-            status_box.component(status_box.Props(
-              message: "Invalid one-time password, please try again or request a new one",
-              status: status_box.Failure,
-              class: "mb-4",
-            )),
-            login.otp_form_component(email),
-          ])
-          |> web.render(200)
-        }
+        False ->
+          render_error(
+            "Invalid one-time password, please try again or request a new one",
+            400,
+          )
       }
     }
     Error(e) -> {
       io.println("find_by_user ")
       io.debug(e)
-      sign_in_error("Something went wrong, please try again", email)
-      |> web.render(200)
+      render_error("Something went wrong, please try again", 500)
     }
   }
 }
@@ -136,8 +128,8 @@ fn send_otp(req: Request, ctx: Context) -> Response {
   use formdata <- wisp.require_form(req)
   use email <- validate_email(formdata)
   use user <- create_user_if_not_exists(ctx.db, email)
-  use <- rate_limit(ctx.db, Throttle, user.id, email)
-  use <- rate_limit(ctx.db, HardLimit, user.id, email)
+  use <- rate_limit(ctx.db, Throttle, user.id)
+  use <- rate_limit(ctx.db, HardLimit, user.id)
   use code <- try_send_otp(ctx.plunk, email)
   use <- auth.save_otp(ctx.db, user.id, code)
   use <- log_token_request(ctx.db, user.id)
@@ -145,9 +137,9 @@ fn send_otp(req: Request, ctx: Context) -> Response {
   html.div(
     [],
     [
-      status_box.component(status_box.Props(
+      status.component(status.Props(
         message: "Please check your email for the OTP",
-        status: status_box.Success,
+        status: status.Success,
         class: "mb-6",
       )),
       login.otp_form_component(email),
@@ -165,8 +157,7 @@ fn log_token_request(
     Ok(_) -> next()
     Error(e) -> {
       io.debug(e)
-      sign_in_error("Something went wrong, please try again", "")
-      |> web.render(200)
+      render_error("Something went wrong, please try again", 500)
     }
   }
 }
@@ -175,7 +166,6 @@ fn rate_limit(
   db: sqlight.Connection,
   ratelimit_type r_type: RatelimitType,
   user_id user_id: Int,
-  email email: String,
   next next: fn() -> Response,
 ) -> Response {
   let max = case r_type {
@@ -209,16 +199,14 @@ fn rate_limit(
     Ok(req_counts) -> {
       case req_counts {
         req_counts if req_counts >= max -> {
-          sign_in_error(err_msg, email)
-          |> web.render(200)
+          render_error(err_msg, 429)
         }
         _ -> next()
       }
     }
     Error(e) -> {
       io.debug(e)
-      sign_in_error("Something went wrong, please try again", email)
-      |> web.render(200)
+      render_error("Something went wrong, please try again", 500)
     }
   }
 }
@@ -232,12 +220,9 @@ fn try_send_otp(p: plunk.Instance, email: String, next: fn(String) -> Response) 
   case mail.send_otp(p, email, code) {
     Ok(_) -> next(code)
     Error(err) -> {
+      io.print_error("Failed to send OTP")
       io.debug(err)
-      html.div(
-        [],
-        [sign_in_error("Failed to send OTP, please try again later", email)],
-      )
-      |> web.render(200)
+      render_error("Failed to send OTP, please try again later", 500)
     }
   }
 }
@@ -256,11 +241,7 @@ fn create_user_if_not_exists(
         }
         Error(err) -> {
           io.debug(err)
-          html.div(
-            [],
-            [sign_in_error("Failed to send OTP, please try again later", email)],
-          )
-          |> web.render(200)
+          render_error("Failed to send OTP, please try again later", 500)
         }
       }
     }
@@ -274,33 +255,25 @@ fn validate_email(formdata: wisp.FormData, next: fn(String) -> Response) {
         validator.validate_field(email, [validator.Required, validator.Email])
       {
         #(True, errors) ->
-          sign_in_error(
+          render_error(
             "Email address " <> {
               list.first(errors)
               |> result.unwrap("must be valid")
             },
-            "",
+            400,
           )
-          |> web.render(200)
         #(False, _) -> next(email)
       }
     }
-    Error(_) ->
-      sign_in_error("Email address is required", "")
-      |> web.render(200)
+    Error(_) -> render_error("Email address is required", 400)
   }
 }
 
-fn sign_in_error(msg: String, email: String) {
-  html.div(
-    [],
-    [
-      status_box.component(status_box.Props(
-        message: msg,
-        status: status_box.Failure,
-        class: "mb-4",
-      )),
-      login.form_component(email),
-    ],
-  )
+fn render_error(msg: String, code: Int) {
+  status.component(status.Props(
+    message: msg,
+    status: status.Failure,
+    class: "mb-4",
+  ))
+  |> web.render(code)
 }

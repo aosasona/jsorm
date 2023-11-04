@@ -1,25 +1,28 @@
 import jsorm/lib/uri
-import nakai/html
-import nakai/html/attrs
+import nakai/html.{div, form, h1_text}
+import nakai/html/attrs.{
+  autocomplete, autofocus, class, disabled, id, placeholder, type_, value,
+}
 import jsorm/components/input
 import jsorm/components/button
 
 pub fn form_component(email: String) {
-  html.form(
+  form(
     [
       attrs.Attr("hx-post", "/sign-in"),
       attrs.Attr("hx-disabled-elt", "#send-otp-btn"),
     ],
     [
+      div([id("form-error")], []),
       input.component(input.Props(
         id: "email",
         name: "email",
         label: "Email address",
         variant: input.Email,
         attrs: [
-          attrs.value(email),
-          attrs.placeholder("john@example.com"),
-          attrs.autocomplete("email"),
+          value(email),
+          placeholder("john@example.com"),
+          autocomplete("email"),
           attrs.Attr("required", ""),
         ],
       )),
@@ -27,7 +30,7 @@ pub fn form_component(email: String) {
         text: "Continue",
         render_as: button.Button,
         variant: button.Primary,
-        attrs: [attrs.type_("submit"), attrs.id("send-otp-btn")],
+        attrs: [type_("submit"), id("send-otp-btn")],
         class: "w-full mt-6",
       )),
     ],
@@ -35,22 +38,18 @@ pub fn form_component(email: String) {
 }
 
 fn login_page(email: String) -> html.Node(a) {
-  html.div(
+  div(
+    [class("h-[80dvh] lg:h-[85vh] flex flex-col items-center justify-center")],
     [
-      attrs.class(
-        "h-[80dvh] lg:h-[85vh] flex flex-col items-center justify-center",
-      ),
-    ],
-    [
-      html.div(
-        [attrs.class("w-full container max-w-sm md:max-w-md")],
+      div(
+        [class("w-full container max-w-sm md:max-w-md")],
         [
-          html.h1_text([attrs.class("text-2xl font-bold mb-6")], "Sign in"),
-          html.div(
+          h1_text([class("text-2xl font-bold mb-6")], "Sign in"),
+          div(
             [
-              attrs.id("#form-container"),
+              id("#form-container"),
               attrs.Attr("hx-target", "this"),
-              attrs.Attr("hx-swap", "innerHTML"),
+              attrs.Attr("hx-target-error", "#form-error"),
             ],
             [form_component(email)],
           ),
@@ -60,28 +59,25 @@ fn login_page(email: String) -> html.Node(a) {
   )
 }
 
-pub fn page(default_email: String) -> html.Node(t) {
-  login_page(default_email)
-}
-
 pub fn otp_form_component(email: String) {
   html.Fragment([
-    html.form(
+    form(
       [attrs.Attr("hx-post", "/sign-in/verify")],
       [
-        html.div(
-          [attrs.class("mb-4")],
+        div(
+          [class("mb-4")],
           [
+            div([id("form-error")], []),
             input.component(input.Props(
               id: "email",
               name: "email",
               label: "Email address",
               variant: input.Email,
               attrs: [
-                attrs.placeholder("john@example"),
+                placeholder("john@example"),
                 attrs.Attr("required", ""),
-                attrs.value(email),
-                attrs.class(
+                value(email),
+                class(
                   "disabled:opacity-40 disabled:cursor-not-allowed disabled:select-none disabled:focus:ring-stone-600 disabled:focus:outline-none",
                 ),
                 attrs.readonly(),
@@ -95,10 +91,10 @@ pub fn otp_form_component(email: String) {
           label: "One-time password",
           variant: input.Text,
           attrs: [
-            attrs.placeholder("xxxxxx"),
+            placeholder("xxxxxx"),
             attrs.Attr("required", ""),
-            attrs.autocomplete("one-time-code"),
-            attrs.autofocus(),
+            autocomplete("one-time-code"),
+            autofocus(),
             attrs.Attr("minlength", "6"),
             attrs.Attr("maxlength", "6"),
           ],
@@ -130,13 +126,13 @@ pub fn otp_form_component(email: String) {
           render_as: button.Button,
           variant: button.Ghost,
           attrs: [
-            attrs.type_("submit"),
-            attrs.id("resend-otp-btn"),
+            type_("submit"),
+            id("resend-otp-btn"),
             attrs.Attr(
               "_",
               "init js setTimeout(() => { document.querySelector('#resend-otp-btn').removeAttribute('disabled') }, 60000)",
             ),
-            attrs.disabled(),
+            disabled(),
           ],
           class: "w-full mt-4",
         )),
@@ -150,4 +146,8 @@ pub fn otp_form_component(email: String) {
       "Wrong email address?",
     ),
   ])
+}
+
+pub fn page(default_email: String) -> html.Node(t) {
+  login_page(default_email)
 }

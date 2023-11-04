@@ -61,6 +61,11 @@ pub fn header(title: String) -> Node(t) {
     html.Element("script", [attrs.src("/assets/js/htmx.min.js")], []),
     html.Element(
       "script",
+      [attrs.src("/assets/js/ext/response-targets.js")],
+      [],
+    ),
+    html.Element(
+      "script",
       [attrs.src("https://unpkg.com/hyperscript.org@0.9.12")],
       [],
     ),
@@ -150,7 +155,10 @@ pub fn render(child: Node(t), props: Props) -> Node(t) {
 
   html.Fragment([
     header(title),
-    html.Body([attrs.class("mt-[9vh]")], [nav(props.ctx), child]),
+    html.Body(
+      [attrs.class("mt-[9vh]"), attrs.Attr("hx-ext", "response-targets")],
+      [nav(props.ctx), child],
+    ),
     footer(),
   ])
 }
