@@ -40,6 +40,20 @@ export function init() {
   });
 }
 
+export function destroy() {
+  document.removeEventListener("keydown", (event) => {
+    for (const { key, fn } of keyIntercepts) {
+      interceptKeyPress(event, key, fn);
+    }
+  });
+
+  document.removeEventListener("keydown", (event) => {
+    for (const hotKey of hotKeys) {
+      handleHotKey(event, hotKey);
+    }
+  });
+}
+
 function interceptKeyPress(event: KeyboardEvent, key: string, fn: () => void) {
   if (event.key === key) {
     event.preventDefault();
@@ -75,13 +89,11 @@ function isModifierKey(key: string) {
   return key === Ctrl || key === Alt || key === Meta || key === Shift;
 }
 
-export function handleTab(editor: HTMLTextAreaElement | null): () => void {
-  return () => {
-    const start = editor?.selectionStart;
-    const end = editor?.selectionEnd;
-    if (start && end && editor) {
-      editor.value = editor.value.substring(0, start) + "\t" + editor.value.substring(end);
-      editor.selectionStart = editor.selectionEnd = start + 1;
-    }
-  };
+export function handleTab(editor: HTMLTextAreaElement | null): void {
+  const start = editor?.selectionStart;
+  const end = editor?.selectionEnd;
+  if (start && end && editor) {
+    editor.value = editor.value.substring(0, start) + "\t" + editor.value.substring(end);
+    editor.selectionStart = editor.selectionEnd = start + 1;
+  }
 }

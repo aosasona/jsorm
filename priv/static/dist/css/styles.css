@@ -598,6 +598,10 @@ video {
   z-index: 9999;
 }
 
+.m-0{
+  margin: 0px;
+}
+
 .mx-auto{
   margin-left: auto;
   margin-right: auto;
@@ -651,8 +655,24 @@ video {
   margin-top: 9vh;
 }
 
+.-ml-2{
+  margin-left: -0.5rem;
+}
+
+.-ml-1{
+  margin-left: -0.25rem;
+}
+
+.mr-1{
+  margin-right: 0.25rem;
+}
+
 .block{
   display: block;
+}
+
+.inline-block{
+  display: inline-block;
 }
 
 .flex{
@@ -673,6 +693,10 @@ video {
 
 .h-\[50vh\]{
   height: 50vh;
+}
+
+.h-\[75dvh\]{
+  height: 75dvh;
 }
 
 .h-\[80dvh\]{
@@ -766,8 +790,21 @@ video {
   gap: 1rem;
 }
 
+.gap-x-2{
+  -moz-column-gap: 0.5rem;
+       column-gap: 0.5rem;
+}
+
 .overflow-hidden{
   overflow: hidden;
+}
+
+.overflow-y-auto{
+  overflow-y: auto;
+}
+
+.overflow-y-scroll{
+  overflow-y: scroll;
 }
 
 .rounded-md{
@@ -888,6 +925,25 @@ video {
   padding-bottom: 2rem;
 }
 
+.\!py-1{
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+}
+
+.\!py-2{
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.\!py-1\.5{
+  padding-top: 0.375rem !important;
+  padding-bottom: 0.375rem !important;
+}
+
+.pb-6{
+  padding-bottom: 1.5rem;
+}
+
 .text-center{
   text-align: center;
 }
@@ -910,6 +966,11 @@ video {
 .text-base{
   font-size: 1rem;
   line-height: 1.5rem;
+}
+
+.text-lg{
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 
 .text-sm{
@@ -974,8 +1035,32 @@ video {
   color: rgb(250 204 21 / var(--tw-text-opacity));
 }
 
+.text-stone-200{
+  --tw-text-opacity: 1;
+  color: rgb(231 229 228 / var(--tw-text-opacity));
+}
+
+.text-stone-300{
+  --tw-text-opacity: 1;
+  color: rgb(214 211 209 / var(--tw-text-opacity));
+}
+
+.text-yellow-600{
+  --tw-text-opacity: 1;
+  color: rgb(202 138 4 / var(--tw-text-opacity));
+}
+
+.text-yellow-500{
+  --tw-text-opacity: 1;
+  color: rgb(234 179 8 / var(--tw-text-opacity));
+}
+
 .underline{
   text-decoration-line: underline;
+}
+
+.opacity-90{
+  opacity: 0.9;
 }
 
 .shadow-lg{
@@ -1099,6 +1184,7 @@ a:hover {
 .sidebar-opened{
   width: 66.666667%;
   overflow-y: auto;
+  border-width: 0px;
   padding-left: 1rem;
   padding-right: 1rem;
   padding-top: 0.75rem;
@@ -1251,6 +1337,10 @@ a:hover {
     display: flex;
   }
 
+  .md\:h-\[80dvh\]{
+    height: 80dvh;
+  }
+
   .md\:h-auto{
     height: auto;
   }
@@ -1291,6 +1381,10 @@ a:hover {
 @media (min-width: 1024px){
   .lg\:h-\[85vh\]{
     height: 85vh;
+  }
+
+  .lg\:p-6{
+    padding: 1.5rem;
   }
 
   .lg\:px-6{

@@ -28,6 +28,18 @@ export function init() {
         }
     });
 }
+export function destroy() {
+    document.removeEventListener("keydown", (event) => {
+        for (const { key, fn } of keyIntercepts) {
+            interceptKeyPress(event, key, fn);
+        }
+    });
+    document.removeEventListener("keydown", (event) => {
+        for (const hotKey of hotKeys) {
+            handleHotKey(event, hotKey);
+        }
+    });
+}
 function interceptKeyPress(event, key, fn) {
     if (event.key === key) {
         event.preventDefault();
@@ -61,12 +73,10 @@ function isModifierKey(key) {
     return key === Ctrl || key === Alt || key === Meta || key === Shift;
 }
 export function handleTab(editor) {
-    return () => {
-        const start = editor === null || editor === void 0 ? void 0 : editor.selectionStart;
-        const end = editor === null || editor === void 0 ? void 0 : editor.selectionEnd;
-        if (start && end && editor) {
-            editor.value = editor.value.substring(0, start) + "\t" + editor.value.substring(end);
-            editor.selectionStart = editor.selectionEnd = start + 1;
-        }
-    };
+    const start = editor === null || editor === void 0 ? void 0 : editor.selectionStart;
+    const end = editor === null || editor === void 0 ? void 0 : editor.selectionEnd;
+    if (start && end && editor) {
+        editor.value = editor.value.substring(0, start) + "\t" + editor.value.substring(end);
+        editor.selectionStart = editor.selectionEnd = start + 1;
+    }
 }

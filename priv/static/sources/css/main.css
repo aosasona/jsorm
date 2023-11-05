@@ -38,11 +38,11 @@ a:hover {
 }
 
 .sidebar {
-	@apply h-screen md:h-full whitespace-nowrap overflow-hidden  bg-stone-900 md:bg-stone-950 border-r border-r-stone-800 md:border-0 transition-all;
+	@apply h-screen md:h-full whitespace-nowrap overflow-hidden bg-stone-900 md:bg-stone-950 border-r border-r-stone-800 md:border-0 transition-all;
 }
 
 .sidebar-opened {
-	@apply w-2/3 sm:w-2/5 md:w-80  px-4 py-3 overflow-y-auto;
+	@apply w-2/3 sm:w-2/5 md:w-80 border-0 px-4 py-3 overflow-y-auto;
 }
 
 .sidebar-closed {
