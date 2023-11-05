@@ -27,7 +27,7 @@ pub fn component(props: Props(t)) -> html.Node(t) {
   let class =
     case props.variant {
       Primary ->
-        "bg-yellow-400 hover:bg-yellow-500 text-stone-900 font-bold py-2.5 px-5 rounded-md select-none"
+        "bg-yellow-400 hover:bg-yellow-500 text-stone-900 font-bold py-2 px-5 rounded-md select-none"
       Ghost ->
         "bg-transparent hover:bg-yellow-400/20 text-yellow-400 hover:text-yelow-400 font-bold py-2.5 px-5 rounded-md select-none"
     } <> " " <> shared_class
