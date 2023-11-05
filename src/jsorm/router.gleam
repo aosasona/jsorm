@@ -1,11 +1,20 @@
 import gleam/bool
 import gleam/option.{None, Some}
 import jsorm/pages
-import jsorm/web.{type Context, render}
+import jsorm/web.{render}
 import jsorm/web/auth
 import jsorm/web/editor
 import jsorm/web/home
-import wisp.{type Request, type Response}
+import wisp
+
+type Context =
+  web.Context
+
+type Request =
+  wisp.Request
+
+type Response =
+  wisp.Response
 
 pub fn handle_request(req: Request, ctx: Context) -> Response {
   let req = wisp.method_override(req)
@@ -20,6 +29,7 @@ pub fn handle_request(req: Request, ctx: Context) -> Response {
     ["e"] | ["editor"] -> editor.render_editor(req, ctx, None)
     ["e", document_id] | ["editor", document_id] ->
       editor.render_editor(req, ctx, Some(document_id))
+    ["documents"] -> editor.save(req, ctx)
     ["sign-in"] -> auth.sign_in(req, ctx)
     ["sign-in", "verify"] -> auth.verify_otp(req, ctx)
     ["sign-out"] -> auth.sign_out(req, ctx)

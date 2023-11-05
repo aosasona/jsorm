@@ -21,9 +21,10 @@ fn editor_component(document: Document) -> Node(t) {
       textarea_text(
         [
           class(
-            "h-full w-full text-yellow-400 bg-stone-900 resize-none focus:outline-none p-4",
+            "h-full w-full text-yellow-400 bg-stone-900 resize-none focus:outline-none p-4 lg:px-6",
           ),
           id("editor"),
+          attrs.Attr("data-document-id", document.id),
         ],
         document.content,
       ),
@@ -32,7 +33,13 @@ fn editor_component(document: Document) -> Node(t) {
 }
 
 fn preview_component() -> html.Node(t) {
-  section([class("w-full h-[50vh] md:h-auto p-4"), id("preview")], [])
+  section(
+    [
+      class("w-full h-[50vh] md:h-auto p-4 lg:p-6 pb-6 overflow-y-auto"),
+      id("preview"),
+    ],
+    [],
+  )
 }
 
 fn header_component() -> html.Node(t) {
@@ -54,15 +61,33 @@ fn header_component() -> html.Node(t) {
             ],
             [tabler.icon(name: "layout-sidebar-left-expand", class: "")],
           ),
-          btn.component(btn.Props(
-            text: "Save",
-            class: "",
-            render_as: btn.Button,
-            variant: btn.Primary,
-            attrs: [],
-          )),
+          div(
+            [class("flex items-center justify-center gap-x-2")],
+            [
+              btn.component(btn.Props(
+                text: "Save",
+                class: "",
+                render_as: btn.Button,
+                variant: btn.Primary,
+                attrs: [id("save-document-btn")],
+              )),
+            ],
+          ),
         ],
       ),
+    ],
+  )
+}
+
+fn sidebar_section(
+  title title: String,
+  children children: List(html.Node(t)),
+) -> html.Node(t) {
+  section(
+    [class("w-full")],
+    [
+      h2_text([class("text-yellow-400 font-bold text-lg")], title),
+      div([class("w-full")], children),
     ],
   )
 }
@@ -70,7 +95,12 @@ fn header_component() -> html.Node(t) {
 fn sidebar_component() -> html.Node(t) {
   aside(
     [id("sidebar"), class("sidebar sidebar-closed ")],
-    [div([class("w-full")], [h2_text([], "Key Bindings")])],
+    [
+      div(
+        [class("w-full")],
+        [sidebar_section("Documents", []), sidebar_section("Key Bindings", [])],
+      ),
+    ],
   )
 }
 
