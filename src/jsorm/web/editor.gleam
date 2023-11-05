@@ -81,13 +81,11 @@ fn load_or_create_document(
             editor.page(doc)
             |> web.render(200),
           )
+
+        // There is a bug here if the document exists but the user does not have access to it (e.g. it is private)
         Error(e) -> {
           case e {
-            error.NotFoundError ->
-              document.new(user_id: user.id, parent_id: None)
-              |> editor.page
-              |> web.render(200)
-              |> next
+            error.NotFoundError -> wisp.not_found()
             _ -> {
               wisp.log_error(case e {
                 error.MatchError(msg) -> msg

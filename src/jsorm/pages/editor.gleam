@@ -1,7 +1,6 @@
 import jsorm/pages/layout
 import jsorm/models/document
 import jsorm/components/button as btn
-import jsorm/components/input
 import jsorm/components/tabler
 import gleam/option
 import nakai/html.{
