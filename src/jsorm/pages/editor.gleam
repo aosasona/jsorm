@@ -1,7 +1,9 @@
 import jsorm/pages/layout
 import jsorm/models/document
 import jsorm/components/button as btn
+import jsorm/components/input
 import jsorm/components/tabler
+import gleam/option
 import nakai/html.{
   aside, button, div, h2_text, main, nav, section, textarea_text,
 }
@@ -25,6 +27,10 @@ fn editor_component(document: Document) -> Node(t) {
           ),
           id("editor"),
           attrs.Attr("data-document-id", document.id),
+          attrs.Attr(
+            "data-description",
+            option.unwrap(document.description, ""),
+          ),
         ],
         document.content,
       ),
@@ -106,7 +112,7 @@ fn sidebar_component() -> html.Node(t) {
 
 pub fn page(document: Document) -> Node(t) {
   html.Fragment([
-    layout.header("Editor"),
+    layout.header(option.unwrap(document.description, "Editor")),
     html.Body(
       [class("md:h-screen flex overflow-hidden")],
       [

@@ -4,7 +4,7 @@
 import sqlight
 import gleam/result
 import gleam/dynamic
-import jsorm/error.{type Error}
+import jsorm/error.{Error}
 
 pub type QueryResult(t) =
   Result(List(t), Error)
@@ -32,11 +32,11 @@ pub fn upsert_document(
 ) -> QueryResult(a) {
   let query =
     "INSERT INTO documents
-  (id, content, tags, user_id, parent_id)
+  (id, content, description, tags, user_id, parent_id)
 VALUES
-  ($1, $2, $3, $4, $5)
+  ($1, $2, $3, $4, $5, $6)
 ON CONFLICT (id) DO UPDATE
-  SET content = $2, tags = $3
+  SET content = $2, description = $3, tags = $4, updated_at = datetime()
 RETURNING *;
 "
   sqlight.query(query, db, arguments, decoder)

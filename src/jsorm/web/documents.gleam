@@ -20,7 +20,11 @@ type Response =
   wisp.Response
 
 type SaveRequest {
-  SaveRequest(document_id: String, content: String)
+  SaveRequest(
+    document_id: String,
+    description: option.Option(String),
+    content: String,
+  )
 }
 
 pub fn handle_request(req: Request, ctx: Context) -> Response {
@@ -45,9 +49,10 @@ pub fn save(req: Request, ctx: Context) -> Response {
     }
 
   let decoder =
-    dynamic.decode2(
+    dynamic.decode3(
       SaveRequest,
       dynamic.field("document_id", dynamic.string),
+      dynamic.field("description", dynamic.optional(dynamic.string)),
       dynamic.field("content", dynamic.string),
     )
 
@@ -66,6 +71,7 @@ pub fn save(req: Request, ctx: Context) -> Response {
     document.upsert(
       ctx.db,
       doc_id: Some(data.document_id),
+      description: data.description,
       content: Some(data.content),
       tags: None,
       user_id: user.id,

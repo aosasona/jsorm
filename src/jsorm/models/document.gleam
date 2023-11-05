@@ -1,6 +1,6 @@
 import birl/time
 import jsorm/generated/sql
-import gleam/option.{None}
+import gleam/option.{Some}
 import gleam/dynamic
 import gleam/list
 import gleam/int
@@ -70,7 +70,7 @@ pub fn new(
     id: doc_id,
     content: "{}",
     tags: "[]",
-    description: None,
+    description: Some("Untitled " <> now),
     is_public: False,
     user_id: user_id,
     parent_id: parent_id,
@@ -106,17 +106,28 @@ pub fn upsert(
   db: sqlight.Connection,
   doc_id doc_id: Option(String),
   content content: Option(String),
+  description description: Option(String),
   tags tags: Option(List(String)),
   user_id user_id: Int,
   parent_id parent_id: Option(String),
 ) -> Result(Document, error.Error) {
   let doc_id = option.unwrap(doc_id, nanoid.generate())
+  let description =
+    option.unwrap(
+      description,
+      "Untitled " <> {
+        time.utc_now()
+        |> time.to_naive
+      },
+    )
+
   case
     sql.upsert_document(
       db,
       [
         sqlight.text(doc_id),
         sqlight.text(option.unwrap(content, "{}")),
+        sqlight.text(description),
         sqlight.text(
           option.unwrap(tags, [])
           |> json.array(json.string)

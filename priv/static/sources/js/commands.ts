@@ -47,13 +47,14 @@ export class Commands {
     const content = this.editor.value;
     if (!content) return toast.error("No content found!");
     if (!this.isValidJSON(content)) return toast.error("Invalid JSON");
+    const description = this.editor.dataset.description;
 
     fetch("/documents", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ document_id, content }),
+      body: JSON.stringify({ document_id, content, description }),
     })
       .then((res) => res.json())
       .then((data: SaveResponse) => {
