@@ -56,7 +56,7 @@ function run() {
 	$("#sidebar-toggle")?.addEventListener("click", cmd.toggleSidebar);
 	$("#save-document-btn")?.addEventListener("click", () => cmd.saveDocument());
 
-	cmd.updatePreview();
+	cmd.updatePreview({ showToast: false });
 
 	window.onbeforeunload = () => {
 		keymaps.destroy();

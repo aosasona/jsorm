@@ -25,6 +25,7 @@ migrant = "~> 0.1"
 mist = "~> 0.14"
 gleam_http = "~> 3.5"
 dot_env = "~> 0.1"
+birl = "~> 0.17"
 
 [dev-dependencies]
 gleeunit = "~> 0.10"

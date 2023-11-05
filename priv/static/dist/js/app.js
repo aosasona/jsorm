@@ -34,7 +34,7 @@ function run() {
     keymaps.init();
     (_a = $("#sidebar-toggle")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", cmd.toggleSidebar);
     (_b = $("#save-document-btn")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", () => cmd.saveDocument());
-    cmd.updatePreview();
+    cmd.updatePreview({ showToast: false });
     window.onbeforeunload = () => {
         keymaps.destroy();
     };

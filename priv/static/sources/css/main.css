@@ -26,6 +26,10 @@ a:hover {
 	text-decoration: none;
 }
 
+::selection {
+	@apply bg-stone-700;
+}
+
 .child {
 	@apply ml-4;
 }

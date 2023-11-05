@@ -1,5 +1,6 @@
+import birl/time
 import jsorm/generated/sql
-import gleam/option
+import gleam/option.{None}
 import gleam/dynamic
 import gleam/list
 import gleam/int
@@ -55,6 +56,29 @@ pub fn json_decoder() -> dynamic.Decoder(Document) {
   )
 }
 
+pub fn new(
+  user_id user_id: Int,
+  parent_id parent_id: Option(String),
+) -> Document {
+  let doc_id = nanoid.generate()
+
+  let now =
+    time.utc_now()
+    |> time.to_naive
+
+  Document(
+    id: doc_id,
+    content: "{}",
+    tags: "[]",
+    description: None,
+    is_public: False,
+    user_id: user_id,
+    parent_id: parent_id,
+    created_at: now,
+    updated_at: now,
+  )
+}
+
 pub fn find_by_id_and_user(
   db: sqlight.Connection,
   document_id doc_id: String,
@@ -67,6 +91,7 @@ pub fn find_by_id_and_user(
       db_decoder(),
     )
   {
+    Ok([]) -> Error(error.NotFoundError)
     Ok([doc]) -> Ok(doc)
     Ok(d) ->
       Error(error.MatchError(

@@ -46,12 +46,16 @@ export class Commands {
         })
             .then((res) => res.json())
             .then((data) => {
-            var _a;
+            var _a, _b;
             if (data === null || data === void 0 ? void 0 : data.ok) {
                 toast.success("Document saved");
                 if ((_a = data === null || data === void 0 ? void 0 : data.data) === null || _a === void 0 ? void 0 : _a.content)
                     this.editor.value = data.data.content;
                 this.updatePreview({ showToast: false });
+                // Update document ID in URL if it isn't already present (e.g. when creating a new document)
+                if (!window.location.href.includes((_b = data.data) === null || _b === void 0 ? void 0 : _b.document_id)) {
+                    window.history.replaceState(null, "", `/e/${data.data.document_id}`);
+                }
                 return;
             }
             toast.error((data === null || data === void 0 ? void 0 : data.error) || "An unknown error occurred");

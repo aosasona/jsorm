@@ -1,6 +1,16 @@
 import * as toast from "./toast.js";
 import * as markupfns from "./markup.js";
 
+type SaveResponse = {
+  ok: boolean;
+  error?: string;
+  data: {
+    document_id: string;
+    content: string;
+    updated_at: string;
+  };
+};
+
 export class Commands {
   private editor: HTMLTextAreaElement;
 
@@ -46,11 +56,15 @@ export class Commands {
       body: JSON.stringify({ document_id, content }),
     })
       .then((res) => res.json())
-      .then((data: { ok: boolean; error?: string; data: { document_id: string; content?: string } }) => {
+      .then((data: SaveResponse) => {
         if (data?.ok) {
           toast.success("Document saved");
           if (data?.data?.content) this.editor.value = data.data.content;
           this.updatePreview({ showToast: false });
+          // Update document ID in URL if it isn't already present (e.g. when creating a new document)
+          if (!window.location.href.includes(data.data?.document_id)) {
+            window.history.replaceState(null, "", `/e/${data.data.document_id}`);
+          }
           return;
         }
         toast.error(data?.error || "An unknown error occurred");

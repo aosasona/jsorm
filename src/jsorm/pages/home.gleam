@@ -1,9 +1,9 @@
 import jsorm/components/button
-import nakai/html.{type Node}
+import nakai/html
 import nakai/html/attrs.{class}
 
 // TODO: add screenshot here
-pub fn page() -> Node(t) {
+pub fn page() -> html.Node(t) {
   html.div(
     [class("w-full min-h-[60vh] container mx-auto")],
     [
@@ -22,7 +22,7 @@ pub fn page() -> Node(t) {
             text: "Launch explorer",
             render_as: button.Link,
             variant: button.Primary,
-            attrs: [attrs.href("/e")],
+            attrs: [attrs.href("/editor")],
             class: "block w-max mx-auto",
           )),
         ],

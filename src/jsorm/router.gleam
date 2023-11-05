@@ -4,6 +4,7 @@ import jsorm/pages
 import jsorm/web.{render}
 import jsorm/web/auth
 import jsorm/web/editor
+import jsorm/web/documents
 import jsorm/web/home
 import wisp
 
@@ -29,7 +30,7 @@ pub fn handle_request(req: Request, ctx: Context) -> Response {
     ["e"] | ["editor"] -> editor.render_editor(req, ctx, None)
     ["e", document_id] | ["editor", document_id] ->
       editor.render_editor(req, ctx, Some(document_id))
-    ["documents"] -> editor.save(req, ctx)
+    ["documents"] -> documents.handle_request(req, ctx)
     ["sign-in"] -> auth.sign_in(req, ctx)
     ["sign-in", "verify"] -> auth.verify_otp(req, ctx)
     ["sign-out"] -> auth.sign_out(req, ctx)
