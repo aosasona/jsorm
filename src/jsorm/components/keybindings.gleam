@@ -1,7 +1,9 @@
 import gleam/json
 import nakai/html
 
-pub type Binding
+pub type Binding {
+  Binding(name: String, hotkeys: List(#(String, String)))
+}
 
 pub fn bindings() -> List(Binding) {
   todo
