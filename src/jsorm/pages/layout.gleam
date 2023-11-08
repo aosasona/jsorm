@@ -1,13 +1,13 @@
-import nakai/html.{type Node}
+import nakai/html
 import nakai/html/attrs
 import gleam/option.{None, Some}
 import jsorm/components/button
 import jsorm/components/tabler
 import jsorm/components/link
-import jsorm/web.{type Context}
+import jsorm/web
 
 pub type Props {
-  Props(title: String, ctx: Context)
+  Props(title: String, ctx: web.Context)
 }
 
 const description = "A minimal JSON explorer & formatter"
@@ -16,7 +16,7 @@ const meta_image = "/assets/images/meta.png"
 
 const website_url = "https://jsorm.wyte.space"
 
-pub fn header(title: String) -> Node(t) {
+pub fn header(title: String) -> html.Node(t) {
   html.Head([
     html.meta([attrs.charset("utf-8")]),
     html.meta([
@@ -78,7 +78,7 @@ pub fn header(title: String) -> Node(t) {
   ])
 }
 
-fn nav(ctx: Context) -> Node(t) {
+fn nav(ctx: web.Context) -> html.Node(t) {
   let auth_btn = case ctx.user {
     Some(_) ->
       button.component(button.Props(
@@ -129,7 +129,7 @@ fn nav(ctx: Context) -> Node(t) {
   )
 }
 
-pub fn footer() -> Node(t) {
+pub fn footer() -> html.Node(t) {
   html.footer(
     [attrs.class("w-full")],
     [
@@ -147,7 +147,7 @@ pub fn footer() -> Node(t) {
   )
 }
 
-pub fn render(child: Node(t), props: Props) -> Node(t) {
+pub fn render(child: html.Node(t), props: Props) -> html.Node(t) {
   let title = case props.title {
     "" -> "Jsorm"
     title -> title

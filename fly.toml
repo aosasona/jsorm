@@ -17,7 +17,6 @@ primary_region = "lhr"
 [[mounts]]
   source = "jsorm"
   destination = "/app/data"
-
 [http_service]
   internal_port = 8080
   force_https = true

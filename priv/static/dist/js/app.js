@@ -8,8 +8,14 @@ function $(selector) {
     return document.querySelector(selector);
 }
 function run() {
-    var _a, _b, _c, _d;
     toast.init();
+    // If we're on the editor page, attach to the editor - /e/:id, /editor/:id, /editor or /e
+    if (location.pathname.match(/^\/(e|editor)(\/[a-zA-Z0-9]+)?$/)) {
+        attachToEditor();
+    }
+}
+function attachToEditor() {
+    var _a, _b, _c, _d;
     editor = document.querySelector("#editor");
     if (!editor) {
         console.error("Editor instance not found in DOM");
