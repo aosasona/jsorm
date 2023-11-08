@@ -32,7 +32,7 @@ function makeObjectMarkup(key, value, isNested) {
     let result = "";
     result += `<div class="${getIndentationClass(isNested)}" id="field-obj" data-expanded="1">
   <div class="flex items-center m-0 -ml-1" id="field-obj-title">
-    <i class="inline-block mr-1 text-lg text-yellow-400 ti ti-caret-right-filled" id="expanded-icon"></i>
+    <i class="inline-block mr-1 text-lg text-yellow-400 ti ti-caret-down-filled" id="expanded-icon"></i>
     <b>${key}</b>
   </div>
   `;
@@ -40,7 +40,7 @@ function makeObjectMarkup(key, value, isNested) {
     result += "</div>";
     return result;
 }
-function makeFieldMarkup(key, value, isNested = false) {
+function formatValue(value) {
     const t = typeof value;
     let displayValue = value;
     if (t === "boolean") {
@@ -52,6 +52,10 @@ function makeFieldMarkup(key, value, isNested = false) {
     else if (t === "number") {
         displayValue = `<span class="text-yellow-500">${value}</span>`;
     }
+    return displayValue === null || displayValue === void 0 ? void 0 : displayValue.toString();
+}
+function makeFieldMarkup(key, value, isNested = false) {
+    const displayValue = formatValue(value);
     return `<div class="${getIndentationClass(isNested)}"><b>${key}</b>: ${displayValue}</div>`;
 }
 function makeArrayMarkup(key, value, isNested) {
@@ -61,7 +65,7 @@ function makeArrayMarkup(key, value, isNested) {
             result += makeObjectMarkup(index.toString(), item, true);
             continue;
         }
-        result += `<div class="${getIndentationClass(true)}">${item}</div>`;
+        result += `<div class="${getIndentationClass(true)}">${formatValue(item)}</div>`;
     }
     result += "]</div>";
     return result;
