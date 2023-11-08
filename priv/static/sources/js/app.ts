@@ -1,6 +1,7 @@
 import * as keymaps from "./keymaps.js";
 import * as toast from "./toast.js";
 import { Commands } from "./commands.js";
+import { _safeJSONParse } from "./markup.js";
 
 let editor: HTMLTextAreaElement | null = null;
 window.onload = run;
@@ -23,37 +24,18 @@ function run() {
 	editor.setSelectionRange(editor.value.length, editor.value.length);
 
 	const cmd = new Commands(editor);
+	const bindings = _safeJSONParse($("#keymaps")?.innerHTML ?? "[]") as unknown as { description: string; combos: keymaps.HotKey[]; action: string }[];
 
 	keymaps.registerIntercept("Tab", null, () => keymaps.handleTab(editor));
 
-	keymaps.registerCombination(
-		[
-			["Ctrl", "Enter"],
-			["Meta", "Enter"],
-		],
-		"Update preview without saving",
-		() => cmd.updatePreview()
-	);
-	keymaps.registerCombination(
-		[
-			["Ctrl", "s"],
-			["Meta", "s"],
-		],
-		"Save document and update preview",
-		() => cmd.saveDocument()
-	);
-	keymaps.registerCombination(
-		[
-			["Ctrl", "k"],
-			["Meta", "k"],
-		],
-		"Toggle sidebar",
-		cmd.toggleSidebar
-	);
+	for (const binding of bindings) {
+		const fn = cmd.getCommandByAction(binding.action);
+		keymaps.registerCombination(binding.combos, binding.description, fn);
+	}
 
 	keymaps.init();
 
-	$("#sidebar-toggle")?.addEventListener("click", cmd.toggleSidebar);
+	$("#sidebar-toggle")?.addEventListener("click", cmd.toggleLeftSidebar);
 	$("#save-document-btn")?.addEventListener("click", () => cmd.saveDocument());
 
 	cmd.updatePreview({ showToast: false });

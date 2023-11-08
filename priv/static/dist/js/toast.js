@@ -62,14 +62,14 @@ function show(body, type, duration = "3s") {
     const appendedToast = toastContainer.appendChild(toast);
     setTimeout(() => {
         dismissToast(appendedToast);
-    }, durationToSeconds(duration) + 200);
+    }, durationToSeconds(duration) + 190);
 }
-export function error(body, duration = "3s") {
+export function error(body, duration = "4s") {
     show(body, "error", duration);
 }
-export function warning(body, duration = "3s") {
+export function warning(body, duration = "4s") {
     show(body, "warning", duration);
 }
-export function success(body, duration = "3s") {
+export function success(body, duration = "4s") {
     show(body, "success", duration);
 }

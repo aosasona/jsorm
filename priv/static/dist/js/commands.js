@@ -4,7 +4,25 @@ export class Commands {
     constructor(editor) {
         this.editor = editor;
     }
-    toggleSidebar() {
+    getCommandByAction(action) {
+        let fn;
+        switch (action) {
+            case "toggle-left-sidebar":
+                fn = this.toggleLeftSidebar;
+                break;
+            case "save-document":
+                fn = this.saveDocument;
+                break;
+            case "update-preview":
+                fn = this.updatePreview;
+                break;
+            default:
+                console.error(`Unknown binding action: ${action}`);
+                fn = () => { };
+        }
+        return fn.bind(this);
+    }
+    toggleLeftSidebar() {
         const sidebar = document.getElementById("sidebar");
         if (!sidebar)
             return;

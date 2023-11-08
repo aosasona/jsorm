@@ -2,6 +2,7 @@ import jsorm/pages/layout
 import jsorm/models/document
 import jsorm/components/button as btn
 import jsorm/components/tabler
+import jsorm/components/keybindings.{bindings}
 import gleam/option
 import nakai/html.{
   aside, button, div, h2_text, main, nav, section, textarea_text,
@@ -137,6 +138,10 @@ pub fn page(document: Document) -> Node(t) {
               ],
             ),
           ],
+        ),
+        div(
+          [id("keymaps"), class("hidden")],
+          [html.Text(keybindings.as_string(bindings()))],
         ),
       ],
     ),
