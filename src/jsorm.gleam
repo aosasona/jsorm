@@ -4,7 +4,6 @@ import gleam/erlang/os
 import gleam/result
 import gleam/option.{None}
 import gleam/int
-import gleam/io
 import jsorm/database
 import jsorm/mail
 import jsorm/router
