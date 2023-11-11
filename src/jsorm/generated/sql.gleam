@@ -4,7 +4,7 @@
 import sqlight
 import gleam/result
 import gleam/dynamic
-import jsorm/error.{Error}
+import jsorm/error.{type Error}
 
 pub type QueryResult(t) =
   Result(List(t), Error)
@@ -152,6 +152,22 @@ from session_tokens t
 left join users u on u.id = t.user_id
 where unixepoch(datetime()) - unixepoch(t.issued_at) < 604800 and t.token = $1
 limit 1
+;
+"
+  sqlight.query(query, db, arguments, decoder)
+  |> result.map_error(error.DatabaseError)
+}
+
+pub fn get_documents_by_user(
+  db: sqlight.Connection,
+  args arguments: List(sqlight.Value),
+  decoder decoder: dynamic.Decoder(a),
+) -> QueryResult(a) {
+  let query =
+    "select id, description
+from documents
+where user_id = $1 or is_public = true
+order by updated_at desc
 ;
 "
   sqlight.query(query, db, arguments, decoder)

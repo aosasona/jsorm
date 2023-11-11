@@ -47,6 +47,9 @@ export class Commands {
         }
     }
     saveDocument() {
+        const saveBtn = document.querySelector("#save-document-btn");
+        if (saveBtn === null || saveBtn === void 0 ? void 0 : saveBtn.hasAttribute("disabled"))
+            return;
         const document_id = this.editor.dataset.documentId;
         if (!document_id)
             return toast.error("No document ID found, please refresh the page and try again");
@@ -56,6 +59,8 @@ export class Commands {
         if (!this.isValidJSON(content))
             return toast.error("Invalid JSON");
         const description = this.editor.dataset.description;
+        saveBtn === null || saveBtn === void 0 ? void 0 : saveBtn.setAttribute("disabled", "true");
+        saveBtn === null || saveBtn === void 0 ? void 0 : saveBtn.textContent = "Saving...";
         fetch("/documents", {
             method: "PUT",
             headers: {
@@ -81,6 +86,10 @@ export class Commands {
         })
             .catch((err) => {
             toast.error(err);
+        })
+            .finally(() => {
+            saveBtn === null || saveBtn === void 0 ? void 0 : saveBtn.removeAttribute("disabled");
+            saveBtn === null || saveBtn === void 0 ? void 0 : saveBtn.textContent = "Save";
         });
     }
     updatePreview({ showToast } = { showToast: true }) {

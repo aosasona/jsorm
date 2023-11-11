@@ -1,24 +1,14 @@
 import gleam/io
 import jsorm/pages/editor
 import jsorm/error
-import jsorm/web
-import jsorm/models/user
+import jsorm/web.{type Context}
+import jsorm/models/user.{type User}
 import jsorm/models/document
 import jsorm/lib/auth
-import gleam/option.{None, Some}
+import gleam/option.{type Option, None, Some}
 import gleam/http
 import sqlight
 import wisp
-
-// This is a hack to get around the current messy syntax highlighting in my editor
-type Context =
-  web.Context
-
-type User =
-  user.User
-
-type Option(a) =
-  option.Option(a)
 
 type Request =
   wisp.Request
@@ -76,11 +66,19 @@ fn load_or_create_document(
   case document_id {
     Some(doc_id) -> {
       case document.find_by_id_and_user(db, doc_id, user.id) {
-        Ok(doc) ->
-          next(
-            editor.page(doc)
-            |> web.render(200),
-          )
+        Ok(doc) -> {
+          case document.find_by_user(db, user.id) {
+            Ok(docs) ->
+              next(
+                editor.page(doc, docs)
+                |> web.render(200),
+              )
+            Error(e) -> {
+              io.debug(e)
+              wisp.internal_server_error()
+            }
+          }
+        }
 
         // There is a bug here if the document exists but the user does not have access to it (e.g. it is private)
         Error(e) -> {
@@ -102,9 +100,16 @@ fn load_or_create_document(
       }
     }
     None ->
-      document.new(user_id: user.id, parent_id: None)
-      |> editor.page
-      |> web.render(200)
-      |> next
+      case document.find_by_user(db, user.id) {
+        Ok(docs) ->
+          document.new(user_id: user.id, parent_id: None)
+          |> editor.page(docs)
+          |> web.render(200)
+          |> next
+        Error(e) -> {
+          io.debug(e)
+          wisp.internal_server_error()
+        }
+      }
   }
 }

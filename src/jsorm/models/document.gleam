@@ -1,16 +1,13 @@
 import birl/time
 import jsorm/generated/sql
-import gleam/option.{Some}
+import gleam/option.{type Option, Some}
 import gleam/dynamic
 import gleam/list
 import gleam/int
 import gleam/json
-import jsorm/error
+import jsorm/error.{type Error}
 import ids/nanoid
-import sqlight
-
-type Option(a) =
-  option.Option(a)
+import sqlight.{type Connection}
 
 pub type Document {
   Document(
@@ -79,11 +76,36 @@ pub fn new(
   )
 }
 
+pub type SidebarListItem {
+  SidebarListItem(id: String, description: String)
+}
+
+pub fn find_by_user(
+  db: Connection,
+  user_id: Int,
+) -> Result(List(SidebarListItem), Error) {
+  case
+    sql.get_documents_by_user(
+      db,
+      [sqlight.int(user_id)],
+      dynamic.decode2(
+        SidebarListItem,
+        dynamic.element(0, dynamic.string),
+        dynamic.element(1, dynamic.string),
+      ),
+    )
+  {
+    Ok([]) -> Ok([])
+    Ok(docs) -> Ok(docs)
+    Error(e) -> Error(e)
+  }
+}
+
 pub fn find_by_id_and_user(
-  db: sqlight.Connection,
+  db: Connection,
   document_id doc_id: String,
   user_id user_id: Int,
-) -> Result(Document, error.Error) {
+) -> Result(Document, Error) {
   case
     sql.get_document_by_id(
       db,
@@ -103,14 +125,14 @@ pub fn find_by_id_and_user(
 
 /// Create a new document or update the document and its tags if it already exists.
 pub fn upsert(
-  db: sqlight.Connection,
+  db: Connection,
   doc_id doc_id: Option(String),
   content content: Option(String),
   description description: Option(String),
   tags tags: Option(List(String)),
   user_id user_id: Int,
   parent_id parent_id: Option(String),
-) -> Result(Document, error.Error) {
+) -> Result(Document, Error) {
   let doc_id = option.unwrap(doc_id, nanoid.generate())
   let description =
     option.unwrap(

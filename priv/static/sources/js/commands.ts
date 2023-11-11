@@ -32,7 +32,7 @@ export class Commands {
 				break;
 			default:
 				console.error(`Unknown binding action: ${action}`);
-				fn = () => {};
+				fn = () => { };
 		}
 
 		return fn.bind(this);
@@ -62,12 +62,18 @@ export class Commands {
 	}
 
 	public saveDocument() {
+		const saveBtn = document.querySelector("#save-document-btn");
+		if (saveBtn?.hasAttribute("disabled")) return;
+
 		const document_id = this.editor.dataset.documentId;
 		if (!document_id) return toast.error("No document ID found, please refresh the page and try again");
 		const content = this.editor.value;
 		if (!content) return toast.error("No content found!");
 		if (!this.isValidJSON(content)) return toast.error("Invalid JSON");
 		const description = this.editor.dataset.description;
+
+		saveBtn?.setAttribute("disabled", "true");
+		saveBtn?.textContent = "Saving...";
 
 		fetch("/documents", {
 			method: "PUT",
@@ -92,6 +98,10 @@ export class Commands {
 			})
 			.catch((err) => {
 				toast.error(err);
+			})
+			.finally(() => {
+				saveBtn?.removeAttribute("disabled");
+				saveBtn?.textContent = "Save";
 			});
 	}
 

@@ -1,20 +1,14 @@
 import jsorm/pages/layout
-import jsorm/models/document
+import jsorm/models/document.{type Document}
 import jsorm/components/button as btn
 import jsorm/components/tabler
 import jsorm/components/keybindings.{bindings}
 import gleam/option
+import gleam/list
 import nakai/html.{
-  aside, button, div, h2_text, main, nav, section, textarea_text,
+  type Node, aside, button, div, h2_text, main, nav, section, textarea_text,
 }
 import nakai/html/attrs.{class, id}
-
-// This is a hack to get around the current messy syntax highlighting in my editor
-type Document =
-  document.Document
-
-type Node(t) =
-  html.Node(t)
 
 fn editor_component(document: Document) -> Node(t) {
   section(
@@ -90,7 +84,7 @@ fn sidebar_section(
   children children: List(html.Node(t)),
 ) -> html.Node(t) {
   section(
-    [class("w-full")],
+    [class("w-full flex-1 grow")],
     [
       h2_text([class("text-yellow-400 font-bold text-lg")], title),
       div([class("w-full")], children),
@@ -98,25 +92,86 @@ fn sidebar_section(
   )
 }
 
-fn sidebar_component() -> html.Node(t) {
+fn sidebar_component(docs: List(document.SidebarListItem)) -> html.Node(t) {
   aside(
-    [id("sidebar"), class("sidebar sidebar-closed ")],
+    [id("sidebar"), class("sidebar sidebar-closed")],
     [
+      sidebar_section(
+        "Documents",
+        [
+          div(
+            [class("w-full h-max flex flex-col gap-3")],
+            make_markup(docs, []),
+          ),
+        ],
+      ),
       div(
-        [class("w-full")],
-        [sidebar_section("Documents", []), sidebar_section("Key Bindings", [])],
+        [class("py-5")],
+        [
+          html.button(
+            [
+              attrs.type_("button"),
+              attrs.Attr("_", "on click toggle .hidden on #keyboard-shortcuts"),
+            ],
+            [
+              tabler.icon(
+                name: "keyboard",
+                class: "text-yellow-400 text-2xl transition-all p-2 aspect-square hover:bg-stone-900 rounded-lg",
+              ),
+            ],
+          ),
+        ],
       ),
     ],
   )
 }
 
-pub fn page(document: Document) -> Node(t) {
+fn make_markup(
+  docs: List(document.SidebarListItem),
+  state: List(Node(t)),
+) -> List(Node(t)) {
+  case docs {
+    [head, ..tail] -> {
+      let state =
+        list.concat([
+          state,
+          [
+            div(
+              [
+                class(
+                  "truncate text-ellipsis py-2.5 px-4 rounded-lg bg-stone-900 hover:ring-1 hover:ring-yellow-400 ring-inset",
+                ),
+              ],
+              [
+                html.a(
+                  [attrs.href("/editor/" <> head.id), class("")],
+                  [
+                    div(
+                      [],
+                      [html.p_text([class("text-ellipsis")], head.description)],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ])
+      make_markup(tail, state)
+    }
+    [] -> state
+  }
+}
+
+pub fn page(
+  document: Document,
+  documents: List(document.SidebarListItem),
+) -> Node(t) {
   html.Fragment([
     layout.header(option.unwrap(document.description, "Editor")),
     html.Body(
       [class("md:h-screen flex overflow-hidden")],
       [
-        sidebar_component(),
+        sidebar_component(documents),
         main(
           [class("h-full flex-grow md:flex md:flex-col")],
           [
@@ -141,8 +196,9 @@ pub fn page(document: Document) -> Node(t) {
         ),
         div(
           [id("keymaps"), class("hidden")],
-          [html.Text(keybindings.as_string(bindings()))],
+          [html.Text(keybindings.as_json(bindings()))],
         ),
+        keybindings.component(),
       ],
     ),
   ])
