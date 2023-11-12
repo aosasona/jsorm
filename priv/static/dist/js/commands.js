@@ -59,8 +59,10 @@ export class Commands {
         if (!this.isValidJSON(content))
             return toast.error("Invalid JSON");
         const description = this.editor.dataset.description;
-        saveBtn === null || saveBtn === void 0 ? void 0 : saveBtn.setAttribute("disabled", "true");
-        saveBtn === null || saveBtn === void 0 ? void 0 : saveBtn.textContent = "Saving...";
+        if (saveBtn) {
+            saveBtn.setAttribute("disabled", "true");
+            saveBtn.textContent = "Saving...";
+        }
         fetch("/documents", {
             method: "PUT",
             headers: {
@@ -88,8 +90,10 @@ export class Commands {
             toast.error(err);
         })
             .finally(() => {
-            saveBtn === null || saveBtn === void 0 ? void 0 : saveBtn.removeAttribute("disabled");
-            saveBtn === null || saveBtn === void 0 ? void 0 : saveBtn.textContent = "Save";
+            if (!saveBtn)
+                return;
+            saveBtn.removeAttribute("disabled");
+            saveBtn.textContent = "Save";
         });
     }
     updatePreview({ showToast } = { showToast: true }) {

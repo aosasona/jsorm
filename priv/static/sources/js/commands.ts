@@ -72,8 +72,10 @@ export class Commands {
 		if (!this.isValidJSON(content)) return toast.error("Invalid JSON");
 		const description = this.editor.dataset.description;
 
-		saveBtn?.setAttribute("disabled", "true");
-		saveBtn?.textContent = "Saving...";
+		if (saveBtn) {
+			saveBtn.setAttribute("disabled", "true");
+			saveBtn.textContent = "Saving...";
+		}
 
 		fetch("/documents", {
 			method: "PUT",
@@ -100,8 +102,9 @@ export class Commands {
 				toast.error(err);
 			})
 			.finally(() => {
-				saveBtn?.removeAttribute("disabled");
-				saveBtn?.textContent = "Save";
+				if (!saveBtn) return;
+				saveBtn.removeAttribute("disabled");
+				saveBtn.textContent = "Save";
 			});
 	}
 
