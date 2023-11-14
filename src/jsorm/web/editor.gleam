@@ -8,13 +8,7 @@ import jsorm/lib/auth
 import gleam/option.{type Option, None, Some}
 import gleam/http
 import sqlight
-import wisp
-
-type Request =
-  wisp.Request
-
-type Response =
-  wisp.Response
+import wisp.{type Request, type Response}
 
 pub fn render_editor(
   req: Request,

@@ -1,21 +1,12 @@
 import gleam/bool
 import gleam/option.{None, Some}
 import jsorm/pages
-import jsorm/web.{render}
+import jsorm/web.{type Context, render}
 import jsorm/web/auth
 import jsorm/web/editor
 import jsorm/web/documents
 import jsorm/web/home
-import wisp
-
-type Context =
-  web.Context
-
-type Request =
-  wisp.Request
-
-type Response =
-  wisp.Response
+import wisp.{type Request, type Response}
 
 pub fn handle_request(req: Request, ctx: Context) -> Response {
   let req = wisp.method_override(req)
