@@ -137,7 +137,7 @@ pub fn component() -> html.Node(t) {
             [
               attrs.Attr(
                 "_",
-                "on click set localStorage.hasSeenKBList to false then remove #keyboard-shortcuts",
+                "on click set localStorage.hasSeenKBList to false then toggle .hidden on #keyboard-shortcuts",
               ),
             ],
             [tabler.icon(name: "x", class: "text-xl")],

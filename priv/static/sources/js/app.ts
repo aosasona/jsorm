@@ -35,7 +35,7 @@ function attachToEditor() {
 	const bindings = _safeJSONParse($("#keymaps")?.innerHTML ?? "[]") as unknown as { description: string; combos: keymaps.HotKey[]; action: string }[];
 
 	keymaps.registerIntercept("Tab", () => keymaps.handleTab(editor));
-	keymaps.registerIntercept("Escape", (e) => (cmd.isCommandPaletteOpen() ? cmd.toggleCommandPalette() : {}));
+	keymaps.registerIntercept("Escape", () => (cmd.isCommandPaletteOpen() ? cmd.toggleCommandPalette() : {}));
 
 	for (const binding of bindings) {
 		const fn = cmd.getCommandByAction(binding.action);
