@@ -32,7 +32,6 @@ export class Commands {
         return !commandPalette.classList.contains("hidden");
     }
     toggleCommandPalette() {
-        var _a;
         const commandPalette = document.getElementById("command-palette");
         if (!commandPalette)
             return;
@@ -42,7 +41,11 @@ export class Commands {
         else {
             commandPalette.classList.add("hidden");
         }
-        (_a = commandPalette.getElementsByTagName("input")[0]) === null || _a === void 0 ? void 0 : _a.focus();
+        const commandPaletteInput = commandPalette.getElementsByTagName("input")[0];
+        if (commandPaletteInput) {
+            commandPaletteInput.focus();
+            commandPaletteInput.value = "";
+        }
     }
     toggleLeftSidebar() {
         const sidebar = document.getElementById("sidebar");

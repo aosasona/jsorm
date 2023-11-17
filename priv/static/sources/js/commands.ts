@@ -56,7 +56,11 @@ export class Commands {
 			commandPalette.classList.add("hidden");
 		}
 
-		commandPalette.getElementsByTagName("input")[0]?.focus();
+		const commandPaletteInput = commandPalette.getElementsByTagName("input")[0];
+		if (commandPaletteInput) {
+			commandPaletteInput.focus();
+			commandPaletteInput.value = "";
+		}
 	}
 
 	public toggleLeftSidebar() {
