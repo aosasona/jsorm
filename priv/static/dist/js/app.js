@@ -26,7 +26,8 @@ function attachToEditor() {
     editor.setSelectionRange(editor.value.length, editor.value.length);
     const cmd = new Commands(editor);
     const bindings = _safeJSONParse((_b = (_a = $("#keymaps")) === null || _a === void 0 ? void 0 : _a.innerHTML) !== null && _b !== void 0 ? _b : "[]");
-    keymaps.registerIntercept("Tab", null, () => keymaps.handleTab(editor));
+    keymaps.registerIntercept("Tab", () => keymaps.handleTab(editor));
+    keymaps.registerIntercept("Escape", (e) => (cmd.isCommandPaletteOpen() ? cmd.toggleCommandPalette() : {}));
     for (const binding of bindings) {
         const fn = cmd.getCommandByAction(binding.action);
         keymaps.registerCombination(binding.combos, binding.description, fn);

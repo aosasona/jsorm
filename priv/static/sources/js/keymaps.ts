@@ -6,12 +6,12 @@ export const Shift = "Shift";
 type LeaderKey = typeof Ctrl | typeof Meta | typeof Alt | typeof Shift;
 export type HotKey = [LeaderKey, string];
 
-type KeyInterceptDefinition = { key: string; description: string | null; fn: () => void };
+type KeyInterceptDefinition = { key: string; fn: () => void };
 type HotKeyDefinition = { keys: HotKey; description: string | null; fn: () => void };
 
 const keyIntercepts: KeyInterceptDefinition[] = [];
-export function registerIntercept(key: string, description: string | null, fn: () => void) {
-	keyIntercepts.push({ key, description, fn });
+export function registerIntercept(key: string, fn: (e?: KeyboardEvent) => void) {
+	keyIntercepts.push({ key, fn });
 }
 
 const hotKeys: HotKeyDefinition[] = [];
@@ -54,11 +54,11 @@ export function destroy() {
 	});
 }
 
-function interceptKeyPress(event: KeyboardEvent, key: string, fn: () => void) {
+function interceptKeyPress(event: KeyboardEvent, key: string, fn: (e?: KeyboardEvent) => void) {
 	if (event.key === key) {
 		event.preventDefault();
 		event.stopPropagation();
-		fn();
+		fn(event);
 	}
 }
 

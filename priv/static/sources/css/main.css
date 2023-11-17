@@ -41,6 +41,15 @@ a:hover {
 	@apply text-red-400;
 }
 
+.command-palette {
+	transform: translate(-50%, -50%);
+	@apply w-[95%] max-w-[650px] h-[60vh] md:h-[35vh] md:max-h-[450px] fixed top-[50%] left-[50%] bg-stone-900 bg-opacity-60 backdrop-blur-xl text-stone-100 border border-stone-800 rounded-lg shadow-xl z-[999999] overflow-hidden;
+}
+
+.command-palette-item {
+	@apply px-4 py-2 hover:bg-stone-800;
+}
+
 .sidebar {
 	@apply h-screen md:h-full whitespace-nowrap overflow-hidden bg-stone-900 md:bg-stone-950 border-r border-r-stone-800 md:border-0 transition-all;
 }

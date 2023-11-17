@@ -10,6 +10,9 @@ export class Commands {
             case "toggle-left-sidebar":
                 fn = this.toggleLeftSidebar;
                 break;
+            case "toggle-command-palette":
+                fn = this.toggleCommandPalette;
+                break;
             case "save-document":
                 fn = this.saveDocument;
                 break;
@@ -21,6 +24,25 @@ export class Commands {
                 fn = () => { };
         }
         return fn.bind(this);
+    }
+    isCommandPaletteOpen() {
+        const commandPalette = document.getElementById("command-palette");
+        if (!commandPalette)
+            return false;
+        return !commandPalette.classList.contains("hidden");
+    }
+    toggleCommandPalette() {
+        var _a;
+        const commandPalette = document.getElementById("command-palette");
+        if (!commandPalette)
+            return;
+        if (commandPalette.classList.contains("hidden")) {
+            commandPalette.classList.remove("hidden");
+        }
+        else {
+            commandPalette.classList.add("hidden");
+        }
+        (_a = commandPalette.getElementsByTagName("input")[0]) === null || _a === void 0 ? void 0 : _a.focus();
     }
     toggleLeftSidebar() {
         const sidebar = document.getElementById("sidebar");

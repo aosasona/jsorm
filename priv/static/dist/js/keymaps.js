@@ -3,8 +3,8 @@ export const Meta = "Meta";
 export const Alt = "Alt";
 export const Shift = "Shift";
 const keyIntercepts = [];
-export function registerIntercept(key, description, fn) {
-    keyIntercepts.push({ key, description, fn });
+export function registerIntercept(key, fn) {
+    keyIntercepts.push({ key, fn });
 }
 const hotKeys = [];
 export function registerCombination(keys, description, fn) {
@@ -44,7 +44,7 @@ function interceptKeyPress(event, key, fn) {
     if (event.key === key) {
         event.preventDefault();
         event.stopPropagation();
-        fn();
+        fn(event);
     }
 }
 function handleHotKey(event, hotKey) {

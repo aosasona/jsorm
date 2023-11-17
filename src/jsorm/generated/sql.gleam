@@ -4,7 +4,7 @@
 import sqlight
 import gleam/result
 import gleam/dynamic
-import jsorm/error.{type Error}
+import jsorm/error.{Error}
 
 pub type QueryResult(t) =
   Result(List(t), Error)
@@ -164,7 +164,7 @@ pub fn get_documents_by_user(
   decoder decoder: dynamic.Decoder(a),
 ) -> QueryResult(a) {
   let query =
-    "select id, description
+    "select id, description, is_public, unixepoch(updated_at) as updated_at
 from documents
 where user_id = $1 or is_public = true
 order by updated_at desc

@@ -76,22 +76,29 @@ pub fn new(
   )
 }
 
-pub type SidebarListItem {
-  SidebarListItem(id: String, description: String)
+pub type ListItem {
+  ListItem(
+    id: String,
+    description: String,
+    is_public: Bool,
+    last_updated_at: Int,
+  )
 }
 
 pub fn find_by_user(
   db: Connection,
   user_id: Int,
-) -> Result(List(SidebarListItem), Error) {
+) -> Result(List(ListItem), Error) {
   case
     sql.get_documents_by_user(
       db,
       [sqlight.int(user_id)],
-      dynamic.decode2(
-        SidebarListItem,
+      dynamic.decode4(
+        ListItem,
         dynamic.element(0, dynamic.string),
         dynamic.element(1, dynamic.string),
+        dynamic.element(2, sqlight.decode_bool),
+        dynamic.element(3, dynamic.int),
       ),
     )
   {

@@ -2,6 +2,7 @@ import jsorm/pages/layout
 import jsorm/models/document.{type Document}
 import jsorm/components/button as btn
 import jsorm/components/tabler
+import jsorm/components/palette.{Props as PaletteProps}
 import jsorm/components/keybindings.{bindings}
 import gleam/option
 import gleam/list
@@ -71,6 +72,13 @@ fn header_component() -> html.Node(t) {
                 variant: btn.Primary,
                 attrs: [id("save-document-btn")],
               )),
+              btn.component(btn.Props(
+                text: "Sign out",
+                render_as: btn.Link,
+                variant: btn.Ghost,
+                attrs: [attrs.href("/sign-out")],
+                class: "",
+              )),
             ],
           ),
         ],
@@ -92,19 +100,11 @@ fn sidebar_section(
   )
 }
 
-fn sidebar_component(docs: List(document.SidebarListItem)) -> html.Node(t) {
+// TODO: move document list to command palette
+fn sidebar_component() -> html.Node(t) {
   aside(
     [id("sidebar"), class("sidebar sidebar-closed")],
     [
-      sidebar_section(
-        "Documents",
-        [
-          div(
-            [class("w-full h-max flex flex-col gap-3")],
-            make_markup(docs, []),
-          ),
-        ],
-      ),
       div(
         [class("py-5")],
         [
@@ -126,52 +126,13 @@ fn sidebar_component(docs: List(document.SidebarListItem)) -> html.Node(t) {
   )
 }
 
-fn make_markup(
-  docs: List(document.SidebarListItem),
-  state: List(Node(t)),
-) -> List(Node(t)) {
-  case docs {
-    [head, ..tail] -> {
-      let state =
-        list.concat([
-          state,
-          [
-            div(
-              [
-                class(
-                  "truncate text-ellipsis py-2.5 px-4 rounded-lg bg-stone-900 hover:ring-1 hover:ring-yellow-400 ring-inset",
-                ),
-              ],
-              [
-                html.a(
-                  [attrs.href("/editor/" <> head.id), class("")],
-                  [
-                    div(
-                      [],
-                      [html.p_text([class("text-ellipsis")], head.description)],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ])
-      make_markup(tail, state)
-    }
-    [] -> state
-  }
-}
-
-pub fn page(
-  document: Document,
-  documents: List(document.SidebarListItem),
-) -> Node(t) {
+pub fn page(document: Document, documents: List(document.ListItem)) -> Node(t) {
   html.Fragment([
     layout.header(option.unwrap(document.description, "Editor")),
     html.Body(
       [class("md:h-screen flex overflow-hidden")],
       [
-        sidebar_component(documents),
+        sidebar_component(),
         main(
           [class("h-full flex-grow md:flex md:flex-col")],
           [
@@ -199,6 +160,7 @@ pub fn page(
           [html.Text(keybindings.as_json(bindings()))],
         ),
         keybindings.component(),
+        palette.component(PaletteProps(documents: documents)),
       ],
     ),
   ])

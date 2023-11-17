@@ -31,8 +31,13 @@ pub fn bindings() -> List(Binding) {
       action: "save-document",
     ),
     Binding(
-      description: "Toggle left sidebar",
+      description: "Toggle command palette",
       combos: [#(ctrl, "k"), #(meta, "k")],
+      action: "toggle-command-palette",
+    ),
+    Binding(
+      description: "Toggle left sidebar",
+      combos: [#(ctrl, "h"), #(meta, "h")],
       action: "toggle-left-sidebar",
     ),
   ]
@@ -115,7 +120,7 @@ pub fn component() -> html.Node(t) {
   div(
     [
       class(
-        "lg:w-[300px] fixed bottom-5 right-5 bg-yellow-400 text-stone-900 px-4 pt-3 pb-4 z-[99999] rounded-lg drop-shadow-lg select-none hidden",
+        "md:w-[325px] fixed bottom-5 right-5 bg-yellow-400 text-stone-900 px-4 pt-3 pb-4 z-[99999] rounded-lg drop-shadow-lg select-none hidden",
       ),
       attrs.Attr(
         "_",
@@ -125,7 +130,7 @@ pub fn component() -> html.Node(t) {
     ],
     [
       div(
-        [class("flex items-center justify-between pb-2")],
+        [class("flex items-center justify-between pb-2.5")],
         [
           h1_text([class("text-lg font-bold")], "Keyboard shortcuts"),
           html.button(
