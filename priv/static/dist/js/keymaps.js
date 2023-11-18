@@ -2,6 +2,7 @@ export const Ctrl = "Ctrl";
 export const Meta = "Meta";
 export const Alt = "Alt";
 export const Shift = "Shift";
+const palette = document.getElementById("command-palette");
 const keyIntercepts = [];
 export function registerIntercept(key, fn) {
     keyIntercepts.push({ key, fn });
@@ -73,10 +74,45 @@ function isModifierKey(key) {
     return key === Ctrl || key === Alt || key === Meta || key === Shift;
 }
 export function handleTab(editor) {
-    const start = editor === null || editor === void 0 ? void 0 : editor.selectionStart;
-    const end = editor === null || editor === void 0 ? void 0 : editor.selectionEnd;
-    if (start && end && editor) {
-        editor.value = editor.value.substring(0, start) + "\t" + editor.value.substring(end);
-        editor.selectionStart = editor.selectionEnd = start + 1;
+    if (document.activeElement == editor) {
+        const start = editor === null || editor === void 0 ? void 0 : editor.selectionStart;
+        const end = editor === null || editor === void 0 ? void 0 : editor.selectionEnd;
+        if (start && end && editor) {
+            editor.value = editor.value.substring(0, start) + "\t" + editor.value.substring(end);
+            editor.selectionStart = editor.selectionEnd = start + 1;
+        }
+    }
+    else if (palette && !palette.classList.contains("hidden")) {
+        const items = palette.getElementsByTagName("button");
+        // if a button is focused, go back to the input or vice versa
+        if (items.length > 0) {
+            const active = document.activeElement;
+            if (active && active.tagName === "BUTTON") {
+                palette.getElementsByTagName("input")[0].focus();
+            }
+            else {
+                items[0].focus();
+            }
+        }
     }
 }
+export function navigatePalette(direction) {
+    var _a;
+    if (!palette || palette.classList.contains("hidden"))
+        return;
+    const items = palette.getElementsByTagName("button");
+    if (items.length === 0)
+        return;
+    const arrItems = Array.from(items);
+    const selectedIndex = arrItems.indexOf(document.activeElement);
+    if (selectedIndex === -1) {
+        (_a = items.item(0)) === null || _a === void 0 ? void 0 : _a.focus();
+        return;
+    }
+    let nextIndex = direction === "up" ? selectedIndex - 1 : selectedIndex + 1;
+    if ((selectedIndex == 0 && direction == "up") || (nextIndex == items.length && direction == "down")) {
+        return;
+    }
+    arrItems[nextIndex].focus();
+}
+export function handlePaletteNavigation() { }

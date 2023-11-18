@@ -9,7 +9,7 @@ pub fn main() {
 }
 
 const module_header = "// THIS FILE IS GENERATED. DO NOT EDIT.
-// Regenerate with `gleam run -m codegen`"
+// Regenerate with `gleam run -m sqlgen`"
 
 fn generate_sql_queries_module() -> Nil {
   let module_path = "src/jsorm/generated/sql.gleam"

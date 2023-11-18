@@ -52,14 +52,14 @@ export class Commands {
 		if (!commandPalette) return;
 		if (commandPalette.classList.contains("hidden")) {
 			commandPalette.classList.remove("hidden");
+			const commandPaletteInput = commandPalette.getElementsByTagName("input")[0];
+			if (commandPaletteInput) {
+				commandPaletteInput.focus();
+				commandPaletteInput.value = "";
+			}
 		} else {
 			commandPalette.classList.add("hidden");
-		}
-
-		const commandPaletteInput = commandPalette.getElementsByTagName("input")[0];
-		if (commandPaletteInput) {
-			commandPaletteInput.focus();
-			commandPaletteInput.value = "";
+			this.editor?.focus();
 		}
 	}
 

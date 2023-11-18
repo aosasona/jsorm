@@ -9,6 +9,8 @@ export type HotKey = [LeaderKey, string];
 type KeyInterceptDefinition = { key: string; fn: () => void };
 type HotKeyDefinition = { keys: HotKey; description: string | null; fn: () => void };
 
+const palette = document.getElementById("command-palette") as HTMLDivElement;
+
 const keyIntercepts: KeyInterceptDefinition[] = [];
 export function registerIntercept(key: string, fn: (e?: KeyboardEvent) => void) {
 	keyIntercepts.push({ key, fn });
@@ -90,10 +92,47 @@ function isModifierKey(key: string) {
 }
 
 export function handleTab(editor: HTMLTextAreaElement | null): void {
-	const start = editor?.selectionStart;
-	const end = editor?.selectionEnd;
-	if (start && end && editor) {
-		editor.value = editor.value.substring(0, start) + "\t" + editor.value.substring(end);
-		editor.selectionStart = editor.selectionEnd = start + 1;
+	if (document.activeElement == editor) {
+		const start = editor?.selectionStart;
+		const end = editor?.selectionEnd;
+		if (start && end && editor) {
+			editor.value = editor.value.substring(0, start) + "\t" + editor.value.substring(end);
+			editor.selectionStart = editor.selectionEnd = start + 1;
+		}
+	} else if (palette && !palette.classList.contains("hidden")) {
+		const items = palette.getElementsByTagName("button");
+		// if a button is focused, go back to the input or vice versa
+		if (items.length > 0) {
+			const active = document.activeElement as HTMLButtonElement;
+			if (active && active.tagName === "BUTTON") {
+				palette.getElementsByTagName("input")[0].focus();
+			} else {
+				items[0].focus();
+			}
+		}
 	}
 }
+
+export function navigatePalette(direction: "up" | "down") {
+	if (!palette || palette.classList.contains("hidden")) return;
+
+	const items = palette.getElementsByTagName("button");
+	if (items.length === 0) return;
+
+	const arrItems = Array.from(items);
+	const selectedIndex = arrItems.indexOf(document.activeElement as HTMLButtonElement);
+
+	if (selectedIndex === -1) {
+		items.item(0)?.focus();
+		return;
+	}
+
+	let nextIndex = direction === "up" ? selectedIndex - 1 : selectedIndex + 1;
+	if ((selectedIndex == 0 && direction == "up") || (nextIndex == items.length && direction == "down")) {
+		return;
+	}
+
+	arrItems[nextIndex].focus();
+}
+
+export function handlePaletteNavigation() { }

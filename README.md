@@ -1,22 +1,7 @@
 # jsorm
 
-[![Package Version](https://img.shields.io/hexpm/v/jsorm)](https://hex.pm/packages/jsorm)
-[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/jsorm/)
+A minimal JSON formatter in Gleam and HTMX
 
-## Quick start
+## Note
 
-```sh
-gleam run   # Run the project
-gleam test  # Run the tests
-gleam shell # Run an Erlang shell
-```
-
-## Installation
-
-If available on Hex this package can be added to your Gleam project:
-
-```sh
-gleam add jsorm
-```
-
-and its documentation can be found at <https://hexdocs.pm/jsorm>.
+There are still a lot of things I'd love to do here but I can't for now because I need to focus on working on my main project, so I have implemented the basic minimum functionalities I needed.

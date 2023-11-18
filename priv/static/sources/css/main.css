@@ -30,6 +30,28 @@ a:hover {
 	@apply bg-stone-700;
 }
 
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background-color: #1c1917;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: #44403c;
+	border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-color: #fbbf24;
+}
+
+::-webkit-scrollbar-thumb:active,
+::-webkit-scrollbar-thumb:focus {
+	background-color: #fbbf24;
+}
+
 .child {
 	@apply ml-4;
 }
@@ -43,11 +65,19 @@ a:hover {
 
 .command-palette {
 	transform: translate(-50%, -50%);
-	@apply w-[95%] max-w-[650px] h-[60vh] md:h-[35vh] md:max-h-[450px] fixed top-[50%] left-[50%] bg-stone-900 bg-opacity-60 backdrop-blur-xl text-stone-100 border border-stone-800 rounded-lg shadow-xl z-[999999] overflow-hidden;
+	@apply w-[90%] max-w-[650px] h-[60vh] md:h-[35vh] md:max-h-[450px] min-h-[200px] fixed top-[50%] left-[50%] bg-stone-900 bg-opacity-60 backdrop-blur-xl text-stone-100 border border-stone-800 rounded-lg shadow-xl z-[999999] overflow-hidden;
 }
 
 .command-palette-item {
-	@apply px-4 py-2 hover:bg-stone-800;
+	@apply w-full text-left px-5 py-3 space-y-1.5 hover:bg-stone-800 border-b border-b-stone-800 outline-none cursor-pointer;
+}
+
+.command-palette-item:last-child {
+	@apply border-none;
+}
+
+.command-palette-item:focus {
+	@apply bg-yellow-400 border-none text-stone-900 outline-none;
 }
 
 .sidebar {

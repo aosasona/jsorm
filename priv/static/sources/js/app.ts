@@ -33,6 +33,8 @@ function attachToEditor() {
 
 	keymaps.registerIntercept("Tab", () => keymaps.handleTab(editor));
 	keymaps.registerIntercept("Escape", () => (cmd.isCommandPaletteOpen() ? cmd.toggleCommandPalette() : {}));
+	keymaps.registerIntercept("ArrowUp", () => keymaps.navigatePalette("up"));
+	keymaps.registerIntercept("ArrowDown", () => keymaps.navigatePalette("down"));
 
 	for (const binding of bindings) {
 		const fn = cmd.getCommandByAction(binding.action);

@@ -86,20 +86,6 @@ fn header_component() -> html.Node(t) {
   )
 }
 
-fn sidebar_section(
-  title title: String,
-  children children: List(html.Node(t)),
-) -> html.Node(t) {
-  section(
-    [class("w-full flex-1 grow")],
-    [
-      h2_text([class("text-yellow-400 font-bold text-lg")], title),
-      div([class("w-full")], children),
-    ],
-  )
-}
-
-// TODO: move document list to command palette
 fn sidebar_component() -> html.Node(t) {
   aside(
     [id("sidebar"), class("sidebar sidebar-closed")],
@@ -107,6 +93,10 @@ fn sidebar_component() -> html.Node(t) {
       div(
         [class("py-5")],
         [
+          html.p_text(
+            [class("text-yellow-400 text-center mt-10 mb-14")],
+            "Nothing here yet...",
+          ),
           html.button(
             [
               attrs.type_("button"),

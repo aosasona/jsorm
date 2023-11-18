@@ -32,19 +32,21 @@ export class Commands {
         return !commandPalette.classList.contains("hidden");
     }
     toggleCommandPalette() {
+        var _a;
         const commandPalette = document.getElementById("command-palette");
         if (!commandPalette)
             return;
         if (commandPalette.classList.contains("hidden")) {
             commandPalette.classList.remove("hidden");
+            const commandPaletteInput = commandPalette.getElementsByTagName("input")[0];
+            if (commandPaletteInput) {
+                commandPaletteInput.focus();
+                commandPaletteInput.value = "";
+            }
         }
         else {
             commandPalette.classList.add("hidden");
-        }
-        const commandPaletteInput = commandPalette.getElementsByTagName("input")[0];
-        if (commandPaletteInput) {
-            commandPaletteInput.focus();
-            commandPaletteInput.value = "";
+            (_a = this.editor) === null || _a === void 0 ? void 0 : _a.focus();
         }
     }
     toggleLeftSidebar() {
