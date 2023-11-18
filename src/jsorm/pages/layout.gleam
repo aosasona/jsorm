@@ -1,16 +1,17 @@
 import nakai/html
 import nakai/html/attrs
-import gleam/option.{None, Some}
 import jsorm/components/button
 import jsorm/components/tabler
 import jsorm/components/link
-import jsorm/web
+import jsorm/web.{type Context}
+import gleam/option.{None, Some}
+import wisp
 
 pub type Props {
-  Props(title: String, ctx: web.Context)
+  Props(title: String, ctx: Context, req: wisp.Request)
 }
 
-const description = "A minimal JSON explorer & formatter"
+const description = "A minimal JSON explorer"
 
 const meta_image = "/assets/images/meta.png"
 
@@ -78,7 +79,9 @@ pub fn header(title: String) -> html.Node(t) {
   ])
 }
 
-fn nav(ctx: web.Context) -> html.Node(t) {
+fn nav(ctx: Context, request: wisp.Request) -> html.Node(t) {
+  let query = web.copy_query_params(request, redirect: True, include: [])
+
   let auth_btn = case ctx.user {
     Some(_) ->
       button.component(button.Props(
@@ -93,7 +96,7 @@ fn nav(ctx: web.Context) -> html.Node(t) {
         text: "Sign in",
         render_as: button.Link,
         variant: button.Primary,
-        attrs: [attrs.href("/sign-in")],
+        attrs: [attrs.href("/sign-in" <> query)],
         class: "mr-5",
       ))
   }
@@ -157,7 +160,7 @@ pub fn render(child: html.Node(t), props: Props) -> html.Node(t) {
     header(title),
     html.Body(
       [attrs.class("mt-[9vh]"), attrs.Attr("hx-ext", "response-targets")],
-      [nav(props.ctx), child],
+      [nav(props.ctx, props.req), child],
     ),
     footer(),
   ])

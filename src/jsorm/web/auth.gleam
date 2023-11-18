@@ -8,6 +8,7 @@ import jsorm/models/auth_token
 import jsorm/models/token_requests_log
 import jsorm/lib/auth
 import jsorm/lib/validator
+import jsorm/lib/uri
 import jsorm/mail
 import ids/ulid
 import gleam/io
@@ -59,7 +60,7 @@ fn render_signin(req: Request, ctx: Context) -> Response {
     |> result.unwrap("")
 
   pages.login(default_email)
-  |> layout.render(layout.Props(title: "Sign in", ctx: ctx))
+  |> layout.render(layout.Props(title: "Sign in", ctx: ctx, req: req))
   |> web.render(200)
 }
 
@@ -77,12 +78,6 @@ pub fn verify_otp(req: Request, ctx: Context) -> Response {
     None -> 0
   }
 
-  let target =
-    request.get_query(req)
-    |> result.unwrap([])
-    |> list.key_find("redirect")
-    |> result.unwrap("e")
-
   case auth_token.find_by_user(ctx.db, uid) {
     Ok(auth_token) -> {
       case auth_token == otp {
@@ -93,7 +88,7 @@ pub fn verify_otp(req: Request, ctx: Context) -> Response {
                 [
                   attrs.Attr(
                     "_",
-                    "init js window.location.replace('/" <> target <> "')",
+                    "init js window.location.replace((new URL(window.location.href)).searchParams.get('redirect') || '/editor')",
                   ),
                 ],
                 [html.p_text([], "redirecting..")],
@@ -142,7 +137,7 @@ fn send_otp(req: Request, ctx: Context) -> Response {
         status: status.Success,
         class: "mb-6",
       )),
-      login.otp_form_component(email),
+      login.otp_form_component(req, email),
     ],
   )
   |> web.render(200)

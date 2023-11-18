@@ -2,10 +2,12 @@ import nakai/html
 import nakai/html/attrs
 import jsorm/pages/layout
 import jsorm/web.{type Context}
+import wisp
 
 fn get_message(code: Int) -> String {
   case code {
-    code if code >= 200 && code < 300 -> "Success"
+    code if code >= 200 && code < 300 ->
+      "Nothing went wrong but this page is not implemented yet"
     401 -> "Unauthorized"
     403 -> "Forbidden"
     404 -> "Page not found"
@@ -28,7 +30,7 @@ fn get_subtext(code: Int) -> String {
   }
 }
 
-pub fn page(ctx: Context, code: Int) -> html.Node(t) {
+pub fn page(ctx: Context, req: wisp.Request, code: Int) -> html.Node(t) {
   let message = get_message(code)
 
   html.div(
@@ -45,5 +47,5 @@ pub fn page(ctx: Context, code: Int) -> html.Node(t) {
       html.p_text([attrs.class("text-base text-stone-500")], get_subtext(code)),
     ],
   )
-  |> layout.render(layout.Props(title: message, ctx: ctx))
+  |> layout.render(layout.Props(title: message, ctx: ctx, req: req))
 }

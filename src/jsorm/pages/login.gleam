@@ -1,4 +1,5 @@
 import jsorm/lib/uri
+import jsorm/web
 import nakai/html.{div, form, h1_text}
 import nakai/html/attrs.{
   autocomplete, autofocus, class, disabled, id, placeholder, type_, value,
@@ -59,7 +60,7 @@ fn login_page(email: String) -> html.Node(a) {
   )
 }
 
-pub fn otp_form_component(email: String) {
+pub fn otp_form_component(ctx, email: String) {
   html.Fragment([
     form(
       [attrs.Attr("hx-post", "/sign-in/verify")],
@@ -140,8 +141,12 @@ pub fn otp_form_component(email: String) {
     ),
     html.a_text(
       [
-        attrs.href("?email=" <> uri.encode(email)),
         attrs.class("block text-sm text-yellow-400 underline text-center mt-4"),
+        attrs.id("change-email-link"),
+        attrs.Attr(
+          "_",
+          "init js document.querySelector('#change-email-link').href = '?email=" <> email <> "&' + (new URLSearchParams(window.location.search))?.toString()?.replace('?', '')",
+        ),
       ],
       "Wrong email address?",
     ),

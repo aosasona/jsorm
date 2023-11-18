@@ -10,6 +10,7 @@ pub fn render_index(req: Request, ctx: Context) -> Response {
   |> layout.render(layout.Props(
     title: "Jsorm - A minimal JSON explorer",
     ctx: ctx,
+    req: req,
   ))
   |> web.render(200)
 }

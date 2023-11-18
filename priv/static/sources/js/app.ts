@@ -22,10 +22,7 @@ function run() {
 function attachToEditor() {
 	editor = document.querySelector("#editor");
 
-	if (!editor) {
-		console.error("Editor instance not found in DOM");
-		return;
-	}
+	if (!editor) return;
 
 	// Set cursor to end of text on load
 	editor.focus();
