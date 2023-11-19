@@ -61,6 +61,7 @@ fn header_component() -> html.Node(t) {
                 [
                   class("text-yellow-400 text-2xl transition-all"),
                   id("sidebar-toggle"),
+                  attrs.title("Toggle sidebar"),
                   attrs.Attr("data-status", "closed"),
                 ],
                 [tabler.icon(name: "layout-sidebar-left-expand", class: "")],
@@ -107,8 +108,11 @@ fn sidebar_component(document: Document) -> html.Node(t) {
         [class("flex flex-col h-full")],
         [
           form(
-            [class("px-1 py-3"), id("edit-details-form")],
-            // attrs.Attr("onsubmit", ""),
+            [
+              class("px-1 py-3"),
+              id("edit-details-form"),
+              attrs.Attr("onsubmit", ""),
+            ],
             [
               html.h2_text(
                 [class("font-bold text-lg text-yellow-400 mt-1 mb-4")],
@@ -155,10 +159,11 @@ fn sidebar_component(document: Document) -> html.Node(t) {
             ],
           ),
           div(
-            [class("mt-auto self-start py-3")],
+            [class("mt-auto self-start flex items-center gap-x-2 py-3")],
             [
               html.button(
                 [
+                  attrs.title("Keyboard shortcuts"),
                   attrs.type_("button"),
                   attrs.Attr(
                     "_",
@@ -171,6 +176,16 @@ fn sidebar_component(document: Document) -> html.Node(t) {
                     class: "text-yellow-400 text-2xl transition-all p-2 aspect-square hover:bg-stone-900 rounded-lg",
                   ),
                 ],
+              ),
+              html.a(
+                [
+                  attrs.href("/editor"),
+                  attrs.title("Create new document"),
+                  class(
+                    "text-yellow-400 text-xl transition-all p-2 aspect-square hover:bg-stone-900 rounded-lg",
+                  ),
+                ],
+                [tabler.icon(name: "plus", class: "")],
               ),
             ],
           ),

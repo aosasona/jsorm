@@ -50,7 +50,7 @@ function attachToEditor() {
 
 	cmd.updatePreview({ showToast: false });
 	handleExpandedAction();
-	cmd.handleEditDetails();
+	cmd.editDetails();
 
 	window.onbeforeunload = () => {
 		keymaps.destroy();

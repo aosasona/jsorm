@@ -43,7 +43,7 @@ export class Commands {
 				break;
 			default:
 				console.error(`Unknown binding action: ${action}`);
-				fn = () => { };
+				fn = () => {};
 		}
 
 		return fn.bind(this);
@@ -145,7 +145,7 @@ export class Commands {
 			});
 	}
 
-	public handleEditDetails() {
+	public editDetails() {
 		const form = document.querySelector("#edit-details-form") as HTMLFormElement;
 		if (!form) return;
 
@@ -165,7 +165,7 @@ export class Commands {
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ document_id, title, is_public: isPublic }),
+				body: JSON.stringify({ document_id, title, is_public: isPublic ?? false }),
 			})
 				.then((res) => res.json())
 				.then((data: EditDetailsResponse) => {
