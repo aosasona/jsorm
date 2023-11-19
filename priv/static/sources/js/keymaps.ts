@@ -105,6 +105,7 @@ export function handleTab(e: KeyboardEvent, editor: HTMLTextAreaElement | null):
 		e.stopPropagation();
 
 		const items = document.getElementById("documents-list")?.getElementsByTagName("button");
+		if (!items || items.length === 0) return;
 		// if a button is focused, go back to the input or vice versa
 		if (items.length > 0) {
 			const active = document.activeElement as HTMLButtonElement;
@@ -123,7 +124,7 @@ export function navigatePalette(e: KeyboardEvent, direction: "up" | "down") {
 	e.stopPropagation();
 
 	const items = document.getElementById("documents-list")?.getElementsByTagName("button");
-	if (items.length === 0) return;
+	if (!items || items.length === 0) return;
 
 	const arrItems = Array.from(items);
 	const selectedIndex = arrItems.indexOf(document.activeElement as HTMLButtonElement);

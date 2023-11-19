@@ -20,6 +20,17 @@ type SaveRequest {
   )
 }
 
+type EditDetailsRequest {
+  EditDetailsRequest(document_id: String, title: String, is_public: Bool)
+}
+
+fn auth(req, ctx: Context, next) {
+  case auth.get_auth_status(req, ctx.db) {
+    auth.LoggedIn(#(user, _)) -> next(user)
+    _ -> response.unauthorized()
+  }
+}
+
 pub fn handle_request(req: Request, ctx: Context) -> Response {
   case req.method {
     http.Put -> save(req, ctx)
@@ -27,16 +38,60 @@ pub fn handle_request(req: Request, ctx: Context) -> Response {
   }
 }
 
+pub fn edit_details(req: Request, ctx: Context) -> Response {
+  use <- wisp.require_method(req, http.Patch)
+  use raw_data <- wisp.require_json(req)
+  use user <- auth(req, ctx)
+
+  let decoder =
+    dynamic.decode3(
+      EditDetailsRequest,
+      dynamic.field("document_id", dynamic.string),
+      dynamic.field("title", dynamic.string),
+      dynamic.field("is_public", dynamic.bool),
+    )
+
+  use data <-
+    fn(next) {
+      case decoder(raw_data) {
+        Ok(data) -> next(data)
+        Error(e) -> {
+          io.debug(e)
+          response.bad_request()
+        }
+      }
+    }
+
+  case
+    document.update_details(
+      ctx.db,
+      user_id: user.id,
+      document_id: data.document_id,
+      description: data.title,
+      is_public: data.is_public,
+    )
+  {
+    Ok(doc) ->
+      response.ok(
+        message: "Saved!",
+        data: json.object([
+          #("document_id", json.string(doc.id)),
+          #("title", json.nullable(from: doc.description, of: json.string)),
+          #("is_public", json.bool(doc.is_public)),
+        ]),
+        code: 200,
+      )
+    Error(e) -> {
+      io.debug(e)
+      response.internal_server_error()
+    }
+  }
+}
+
 pub fn search(req: Request, ctx: Context) -> Response {
   use <- wisp.require_method(req, http.Post)
   use formdata <- wisp.require_form(req)
-  use user <-
-    fn(next) {
-      case auth.get_auth_status(req, ctx.db) {
-        auth.LoggedIn(#(user, _)) -> next(user)
-        _ -> response.unauthorized()
-      }
-    }
+  use user <- auth(req, ctx)
 
   case list.key_find(formdata.values, "query") {
     Ok(q) ->
@@ -59,16 +114,7 @@ pub fn search(req: Request, ctx: Context) -> Response {
 pub fn save(req: Request, ctx: Context) -> Response {
   use <- wisp.require_method(req, http.Put)
   use raw_data <- wisp.require_json(req)
-
-  use user <-
-    fn(next) {
-      case auth.get_auth_status(req, ctx.db) {
-        auth.LoggedIn(#(user, _)) -> next(user)
-        _ -> {
-          wisp.internal_server_error()
-        }
-      }
-    }
+  use user <- auth(req, ctx)
 
   let decoder =
     dynamic.decode3(

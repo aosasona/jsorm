@@ -132,6 +132,35 @@ pub fn find_by_user(
   }
 }
 
+pub fn update_details(
+  db: Connection,
+  user_id user_id: Int,
+  document_id document_id: String,
+  description description: String,
+  is_public is_public: Bool,
+) -> Result(Document, Error) {
+  case
+    sql.update_document_details(
+      db,
+      [
+        sqlight.text(description),
+        sqlight.bool(is_public),
+        sqlight.text(document_id),
+        sqlight.int(user_id),
+      ],
+      db_decoder(),
+    )
+  {
+    Ok([]) -> Error(error.NotFoundError)
+    Ok([doc]) -> Ok(doc)
+    Ok(d) ->
+      Error(error.MatchError(
+        "Expected exactly one document, got " <> int.to_string(list.length(d)),
+      ))
+    Error(err) -> Error(err)
+  }
+}
+
 pub fn find_by_id_and_user(
   db: Connection,
   document_id doc_id: String,

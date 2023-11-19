@@ -23,6 +23,7 @@ pub fn handle_request(req: Request, ctx: Context) -> Response {
       editor.render_editor(req, ctx, Some(document_id))
     ["documents"] -> documents.handle_request(req, ctx)
     ["documents", "search"] -> documents.search(req, ctx)
+    ["documents", "details"] -> documents.edit_details(req, ctx)
     ["sign-in"] -> auth.sign_in(req, ctx)
     ["sign-in", "verify"] -> auth.verify_otp(req, ctx)
     ["sign-out"] -> auth.sign_out(req, ctx)

@@ -39,6 +39,7 @@ function attachToEditor() {
     (_f = $("#save-document-btn")) === null || _f === void 0 ? void 0 : _f.addEventListener("click", () => cmd.saveDocument());
     cmd.updatePreview({ showToast: false });
     handleExpandedAction();
+    cmd.handleEditDetails();
     window.onbeforeunload = () => {
         keymaps.destroy();
     };

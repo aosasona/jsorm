@@ -695,6 +695,10 @@ video {
   margin-top: auto;
 }
 
+.ml-2{
+  margin-left: 0.5rem;
+}
+
 .block{
   display: block;
 }
@@ -1180,11 +1184,6 @@ video {
   --tw-ring-color: rgb(68 64 60 / var(--tw-ring-opacity));
 }
 
-.blur{
-  --tw-blur: blur(8px);
-  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
-}
-
 .drop-shadow-lg{
   --tw-drop-shadow: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
@@ -1502,6 +1501,10 @@ button:focus{
 .focus\:outline-none:focus{
   outline: 2px solid transparent;
   outline-offset: 2px;
+}
+
+.focus\:outline-yellow-400:focus{
+  outline-color: #facc15;
 }
 
 .focus\:ring-2:focus{

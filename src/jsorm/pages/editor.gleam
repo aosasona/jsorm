@@ -107,7 +107,8 @@ fn sidebar_component(document: Document) -> html.Node(t) {
         [class("flex flex-col h-full")],
         [
           form(
-            [class("px-1 py-3")],
+            [class("px-1 py-3"), id("edit-details-form")],
+            // attrs.Attr("onsubmit", ""),
             [
               html.h2_text(
                 [class("font-bold text-lg text-yellow-400 mt-1 mb-4")],
@@ -125,12 +126,31 @@ fn sidebar_component(document: Document) -> html.Node(t) {
                   ),
                 ],
               )),
+              div(
+                [class("flex items-center mt-4")],
+                [
+                  html.input([
+                    attrs.name("is_public"),
+                    id("is-public"),
+                    class("outline-none focus:outline-yellow-400"),
+                    attrs.type_("checkbox"),
+                    case document.is_public {
+                      True -> attrs.checked()
+                      False -> attrs.Attr("", "")
+                    },
+                  ]),
+                  html.label_text(
+                    [attrs.for("is-public"), class("ml-2 inline-block")],
+                    "Allow public access",
+                  ),
+                ],
+              ),
               btn.component(btn.Props(
                 text: "Save",
                 render_as: btn.Button,
                 variant: btn.Primary,
                 class: "w-full mt-6",
-                attrs: [],
+                attrs: [attrs.type_("submit")],
               )),
             ],
           ),

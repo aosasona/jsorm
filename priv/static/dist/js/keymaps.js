@@ -87,6 +87,8 @@ export function handleTab(e, editor) {
         e.preventDefault();
         e.stopPropagation();
         const items = (_a = document.getElementById("documents-list")) === null || _a === void 0 ? void 0 : _a.getElementsByTagName("button");
+        if (!items || items.length === 0)
+            return;
         // if a button is focused, go back to the input or vice versa
         if (items.length > 0) {
             const active = document.activeElement;
@@ -106,7 +108,7 @@ export function navigatePalette(e, direction) {
     e.preventDefault();
     e.stopPropagation();
     const items = (_a = document.getElementById("documents-list")) === null || _a === void 0 ? void 0 : _a.getElementsByTagName("button");
-    if (items.length === 0)
+    if (!items || items.length === 0)
         return;
     const arrItems = Array.from(items);
     const selectedIndex = arrItems.indexOf(document.activeElement);

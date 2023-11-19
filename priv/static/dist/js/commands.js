@@ -118,13 +118,57 @@ export class Commands {
             toast.error((data === null || data === void 0 ? void 0 : data.error) || "An unknown error occurred");
         })
             .catch((err) => {
-            toast.error(err);
+            console.error(err);
+            toast.error("An unknown error occurred!");
         })
             .finally(() => {
             if (!saveBtn)
                 return;
             saveBtn.removeAttribute("disabled");
             saveBtn.textContent = "Save";
+        });
+    }
+    handleEditDetails() {
+        const form = document.querySelector("#edit-details-form");
+        if (!form)
+            return;
+        form.addEventListener("submit", (e) => {
+            var _a;
+            e.preventDefault();
+            e.stopPropagation();
+            const data = new FormData(form);
+            const document_id = this.editor.dataset.documentId;
+            if (!document_id)
+                return toast.error("No document ID found, please refresh the page and try again");
+            const title = data.get("title");
+            const isPublic = data.get("is_public") && data.get("is_public") === "on";
+            (_a = form.querySelector("button")) === null || _a === void 0 ? void 0 : _a.setAttribute("disabled", "true");
+            fetch("/documents/details", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ document_id, title, is_public: isPublic }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                var _a, _b, _c, _d;
+                if (data === null || data === void 0 ? void 0 : data.ok) {
+                    toast.success("Details updated");
+                    (_a = form.querySelector("[name='title']")) === null || _a === void 0 ? void 0 : _a.setAttribute("value", (_b = data === null || data === void 0 ? void 0 : data.data) === null || _b === void 0 ? void 0 : _b.title);
+                    (_c = form.querySelector("[name='is_public']")) === null || _c === void 0 ? void 0 : _c.setAttribute("checked", ((_d = data === null || data === void 0 ? void 0 : data.data) === null || _d === void 0 ? void 0 : _d.is_public) ? "checked" : "");
+                    return;
+                }
+                toast.error((data === null || data === void 0 ? void 0 : data.error) || "An unknown error occurred");
+            })
+                .catch((err) => {
+                console.error(err);
+                toast.error("An unknown error occurred!");
+            })
+                .finally(() => {
+                var _a;
+                (_a = form.querySelector("button")) === null || _a === void 0 ? void 0 : _a.removeAttribute("disabled");
+            });
         });
     }
     updatePreview({ showToast } = { showToast: true }) {

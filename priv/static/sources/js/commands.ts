@@ -1,15 +1,23 @@
 import * as toast from "./toast.js";
 import * as markupfns from "./markup.js";
 
-type SaveResponse = {
+type Response<T> = {
 	ok: boolean;
 	error?: string;
-	data: {
-		document_id: string;
-		content: string;
-		updated_at: string;
-	};
+	data: T;
 };
+
+type SaveResponse = Response<{
+	document_id: string;
+	content: string;
+	updated_at: string;
+}>;
+
+type EditDetailsResponse = Response<{
+	document_id: string;
+	title: string;
+	is_public: boolean;
+}>;
 
 export class Commands {
 	private editor: HTMLTextAreaElement;
@@ -127,7 +135,8 @@ export class Commands {
 				toast.error(data?.error || "An unknown error occurred");
 			})
 			.catch((err) => {
-				toast.error(err);
+				console.error(err);
+				toast.error("An unknown error occurred!");
 			})
 			.finally(() => {
 				if (!saveBtn) return;
@@ -136,6 +145,48 @@ export class Commands {
 			});
 	}
 
+	public handleEditDetails() {
+		const form = document.querySelector("#edit-details-form") as HTMLFormElement;
+		if (!form) return;
+
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+
+			const data = new FormData(form);
+			const document_id = this.editor.dataset.documentId;
+			if (!document_id) return toast.error("No document ID found, please refresh the page and try again");
+			const title = data.get("title");
+			const isPublic = data.get("is_public") && data.get("is_public") === "on";
+
+			form.querySelector("button")?.setAttribute("disabled", "true");
+			fetch("/documents/details", {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ document_id, title, is_public: isPublic }),
+			})
+				.then((res) => res.json())
+				.then((data: EditDetailsResponse) => {
+					if (data?.ok) {
+						toast.success("Details updated");
+						form.querySelector("[name='title']")?.setAttribute("value", data?.data?.title);
+						form.querySelector("[name='is_public']")?.setAttribute("checked", data?.data?.is_public ? "checked" : "");
+						return;
+					}
+
+					toast.error(data?.error || "An unknown error occurred");
+				})
+				.catch((err) => {
+					console.error(err);
+					toast.error("An unknown error occurred!");
+				})
+				.finally(() => {
+					form.querySelector("button")?.removeAttribute("disabled");
+				});
+		});
+	}
 	public updatePreview({ showToast } = { showToast: true }) {
 		const doc = this.editor.value;
 		if (!doc) {
