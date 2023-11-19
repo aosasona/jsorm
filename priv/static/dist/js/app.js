@@ -24,10 +24,10 @@ function attachToEditor() {
     editor.setSelectionRange(editor.value.length, editor.value.length);
     const cmd = new Commands(editor);
     const bindings = _safeJSONParse((_b = (_a = $("#keymaps")) === null || _a === void 0 ? void 0 : _a.innerHTML) !== null && _b !== void 0 ? _b : "[]");
-    keymaps.registerIntercept("Tab", () => keymaps.handleTab(editor));
+    keymaps.registerIntercept("Tab", (e) => keymaps.handleTab(e, editor));
     keymaps.registerIntercept("Escape", () => (cmd.isCommandPaletteOpen() ? cmd.toggleCommandPalette() : {}));
-    keymaps.registerIntercept("ArrowUp", () => keymaps.navigatePalette("up"));
-    keymaps.registerIntercept("ArrowDown", () => keymaps.navigatePalette("down"));
+    keymaps.registerIntercept("ArrowUp", (e) => keymaps.navigatePalette(e, "up"));
+    keymaps.registerIntercept("ArrowDown", (e) => keymaps.navigatePalette(e, "down"));
     for (const binding of bindings) {
         const fn = cmd.getCommandByAction(binding.action);
         keymaps.registerCombination(binding.combos, binding.description, fn);
@@ -40,3 +40,4 @@ function attachToEditor() {
         keymaps.destroy();
     };
 }
+function handleExpandedAction() { }

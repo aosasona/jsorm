@@ -43,8 +43,6 @@ export function destroy() {
 }
 function interceptKeyPress(event, key, fn) {
     if (event.key === key) {
-        event.preventDefault();
-        event.stopPropagation();
         fn(event);
     }
 }
@@ -73,8 +71,10 @@ function getModifierKey(key) {
 function isModifierKey(key) {
     return key === Ctrl || key === Alt || key === Meta || key === Shift;
 }
-export function handleTab(editor) {
+export function handleTab(e, editor) {
     if (document.activeElement == editor) {
+        e.preventDefault();
+        e.stopPropagation();
         const start = editor === null || editor === void 0 ? void 0 : editor.selectionStart;
         const end = editor === null || editor === void 0 ? void 0 : editor.selectionEnd;
         if (start && end && editor) {
@@ -83,6 +83,8 @@ export function handleTab(editor) {
         }
     }
     else if (palette && !palette.classList.contains("hidden")) {
+        e.preventDefault();
+        e.stopPropagation();
         const items = palette.getElementsByTagName("button");
         // if a button is focused, go back to the input or vice versa
         if (items.length > 0) {
@@ -96,10 +98,12 @@ export function handleTab(editor) {
         }
     }
 }
-export function navigatePalette(direction) {
+export function navigatePalette(e, direction) {
     var _a;
     if (!palette || palette.classList.contains("hidden"))
         return;
+    e.preventDefault();
+    e.stopPropagation();
     const items = palette.getElementsByTagName("button");
     if (items.length === 0)
         return;

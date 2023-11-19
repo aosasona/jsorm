@@ -6,13 +6,13 @@ export const Shift = "Shift";
 type LeaderKey = typeof Ctrl | typeof Meta | typeof Alt | typeof Shift;
 export type HotKey = [LeaderKey, string];
 
-type KeyInterceptDefinition = { key: string; fn: () => void };
+type KeyInterceptDefinition = { key: string; fn: (e: KeyboardEvent) => void };
 type HotKeyDefinition = { keys: HotKey; description: string | null; fn: () => void };
 
 const palette = document.getElementById("command-palette") as HTMLDivElement;
 
 const keyIntercepts: KeyInterceptDefinition[] = [];
-export function registerIntercept(key: string, fn: (e?: KeyboardEvent) => void) {
+export function registerIntercept(key: string, fn: (e: KeyboardEvent) => void) {
 	keyIntercepts.push({ key, fn });
 }
 
@@ -56,10 +56,8 @@ export function destroy() {
 	});
 }
 
-function interceptKeyPress(event: KeyboardEvent, key: string, fn: (e?: KeyboardEvent) => void) {
+function interceptKeyPress(event: KeyboardEvent, key: string, fn: (e: KeyboardEvent) => void) {
 	if (event.key === key) {
-		event.preventDefault();
-		event.stopPropagation();
 		fn(event);
 	}
 }
@@ -91,8 +89,11 @@ function isModifierKey(key: string) {
 	return key === Ctrl || key === Alt || key === Meta || key === Shift;
 }
 
-export function handleTab(editor: HTMLTextAreaElement | null): void {
+export function handleTab(e: KeyboardEvent, editor: HTMLTextAreaElement | null): void {
 	if (document.activeElement == editor) {
+		e.preventDefault();
+		e.stopPropagation();
+
 		const start = editor?.selectionStart;
 		const end = editor?.selectionEnd;
 		if (start && end && editor) {
@@ -100,6 +101,8 @@ export function handleTab(editor: HTMLTextAreaElement | null): void {
 			editor.selectionStart = editor.selectionEnd = start + 1;
 		}
 	} else if (palette && !palette.classList.contains("hidden")) {
+		e.preventDefault();
+		e.stopPropagation();
 		const items = palette.getElementsByTagName("button");
 		// if a button is focused, go back to the input or vice versa
 		if (items.length > 0) {
@@ -113,8 +116,10 @@ export function handleTab(editor: HTMLTextAreaElement | null): void {
 	}
 }
 
-export function navigatePalette(direction: "up" | "down") {
+export function navigatePalette(e: KeyboardEvent, direction: "up" | "down") {
 	if (!palette || palette.classList.contains("hidden")) return;
+	e.preventDefault();
+	e.stopPropagation();
 
 	const items = palette.getElementsByTagName("button");
 	if (items.length === 0) return;

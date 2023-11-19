@@ -32,9 +32,9 @@ export function toMarkUp(doc: Record<string, unknown>, isNested: boolean = false
 
 function makeObjectMarkup(key: string, value: Record<string, unknown>, isNested: boolean): string {
 	let result = "";
-	result += `<div class="${getIndentationClass(isNested)}" id="field-obj" data-expanded="1">
-  <div class="flex items-center m-0 -ml-1" id="field-obj-title">
-    <i class="inline-block mr-1 text-lg text-yellow-400 ti ti-caret-down-filled" id="expanded-icon"></i>
+	result += `<div class="${getIndentationClass(isNested)}" id="object-markup-container" data-expanded="1">
+  <div class="flex items-center m-0 -ml-1" id="object-markup-title">
+    <i class="inline-block mr-1 text-lg text-yellow-400 ti ti-caret-down-filled" id="expanded-status-icon"></i>
     <b>${key}</b>
   </div>
   `;
