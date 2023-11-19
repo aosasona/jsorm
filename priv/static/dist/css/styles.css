@@ -1318,8 +1318,7 @@ a:hover {
 }
 
 .command-palette-item:hover{
-  --tw-bg-opacity: 1;
-  background-color: rgb(41 37 36 / var(--tw-bg-opacity));
+  background-color: rgb(41 37 36 / 0.4);
 }
 
 .command-palette-item:last-child{

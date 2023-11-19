@@ -1,12 +1,15 @@
-import jsorm/web.{type Context}
+import jsorm/components/palette
 import jsorm/lib/response
 import jsorm/models/document
 import jsorm/lib/auth
+import jsorm/web.{type Context}
 import gleam/dynamic
 import gleam/io
 import gleam/option.{None, Some}
 import gleam/json
+import gleam/list
 import gleam/http
+import nakai/html
 import wisp.{type Request, type Response}
 
 type SaveRequest {
@@ -21,6 +24,35 @@ pub fn handle_request(req: Request, ctx: Context) -> Response {
   case req.method {
     http.Put -> save(req, ctx)
     _ -> wisp.method_not_allowed(allowed: [http.Put])
+  }
+}
+
+pub fn search(req: Request, ctx: Context) -> Response {
+  use <- wisp.require_method(req, http.Post)
+  use formdata <- wisp.require_form(req)
+  use user <-
+    fn(next) {
+      case auth.get_auth_status(req, ctx.db) {
+        auth.LoggedIn(#(user, _)) -> next(user)
+        _ -> response.unauthorized()
+      }
+    }
+
+  case list.key_find(formdata.values, "query") {
+    Ok(q) ->
+      case document.search(ctx.db, user_id: user.id, keyword: q) {
+        Ok(docs) ->
+          html.Fragment(palette.make_documents_list(docs, []))
+          |> web.render(200)
+        Error(e) -> {
+          io.debug(e)
+          response.internal_server_error()
+        }
+      }
+    Error(e) -> {
+      io.debug(e)
+      response.bad_request()
+    }
   }
 }
 

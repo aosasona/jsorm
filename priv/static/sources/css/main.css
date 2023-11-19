@@ -69,7 +69,7 @@ a:hover {
 }
 
 .command-palette-item {
-	@apply w-full text-left px-5 py-3 space-y-1.5 hover:bg-stone-800 border-b border-b-stone-800 outline-none cursor-pointer;
+	@apply w-full text-left px-5 py-3 space-y-1.5 hover:bg-stone-800/40 border-b border-b-stone-800 outline-none cursor-pointer;
 }
 
 .command-palette-item:last-child {

@@ -85,6 +85,30 @@ pub type ListItem {
   )
 }
 
+pub fn search(
+  db: Connection,
+  user_id user_id: Int,
+  keyword keyword: String,
+) -> Result(List(ListItem), Error) {
+  case
+    sql.search_documents(
+      db,
+      [sqlight.int(user_id), sqlight.text(keyword)],
+      dynamic.decode4(
+        ListItem,
+        dynamic.element(0, dynamic.string),
+        dynamic.element(1, dynamic.string),
+        dynamic.element(2, sqlight.decode_bool),
+        dynamic.element(3, dynamic.int),
+      ),
+    )
+  {
+    Ok([]) -> Ok([])
+    Ok(docs) -> Ok(docs)
+    Error(e) -> Error(e)
+  }
+}
+
 pub fn find_by_user(
   db: Connection,
   user_id: Int,

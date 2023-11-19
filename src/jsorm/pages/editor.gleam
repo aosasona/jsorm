@@ -6,7 +6,7 @@ import jsorm/components/palette.{Props as PaletteProps}
 import jsorm/components/keybindings.{bindings}
 import gleam/option
 import nakai/html.{
-  type Node, aside, button, div, h2_text, main, nav, section, textarea_text,
+  type Node, aside, button, div, main, nav, section, textarea_text,
 }
 import nakai/html/attrs.{class, id}
 

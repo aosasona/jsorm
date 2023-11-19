@@ -22,6 +22,7 @@ pub fn handle_request(req: Request, ctx: Context) -> Response {
     ["e", document_id] | ["editor", document_id] ->
       editor.render_editor(req, ctx, Some(document_id))
     ["documents"] -> documents.handle_request(req, ctx)
+    ["documents", "search"] -> documents.search(req, ctx)
     ["sign-in"] -> auth.sign_in(req, ctx)
     ["sign-in", "verify"] -> auth.verify_otp(req, ctx)
     ["sign-out"] -> auth.sign_out(req, ctx)

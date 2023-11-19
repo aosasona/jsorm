@@ -56,6 +56,7 @@ export class Commands {
 			if (commandPaletteInput) {
 				commandPaletteInput.focus();
 				commandPaletteInput.value = "";
+				commandPaletteInput.dispatchEvent(new Event("input"));
 			}
 		} else {
 			commandPalette.classList.add("hidden");

@@ -2,8 +2,8 @@ import birl/time
 import jsorm/models/document.{type ListItem}
 import jsorm/components/tabler
 import gleam/list
-import nakai/html.{type Node, a, button, div, input, p, p_text, span_text}
-import nakai/html/attrs.{class, id, type_}
+import nakai/html.{type Node, button, div, input, p, p_text, span_text}
+import nakai/html/attrs.{class, id, name, type_}
 
 pub type Props {
   Props(documents: List(ListItem))
@@ -16,10 +16,15 @@ pub fn component(props: Props) -> Node(a) {
     [class("command-palette hidden"), id("command-palette")],
     [
       input([
+        type_("search"),
+        name("query"),
         class(
           "w-full bg-stone-900 border-b border-b-stone-800 text-base text-stone-200 placeholder-stone-500 outline-none focus:outline-none px-5 py-3.5",
         ),
         attrs.placeholder("Search..."),
+        attrs.Attr("hx-post", "/documents/search"),
+        attrs.Attr("hx-trigger", "input changed delay:250ms, query"),
+        attrs.Attr("hx-target", "#documents-list"),
       ]),
       div(
         [class("overflow-y-auto pb-10"), id("documents-list")],
@@ -29,7 +34,7 @@ pub fn component(props: Props) -> Node(a) {
   )
 }
 
-fn make_documents_list(
+pub fn make_documents_list(
   items: List(ListItem),
   state: List(Node(_)),
 ) -> List(Node(_)) {

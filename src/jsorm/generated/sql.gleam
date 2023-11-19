@@ -1,5 +1,5 @@
 // THIS FILE IS GENERATED. DO NOT EDIT.
-// Regenerate with `gleam run -m codegen`
+// Regenerate with `gleam run -m sqlgen`
 
 import sqlight
 import gleam/result
@@ -38,6 +38,22 @@ VALUES
 ON CONFLICT (id) DO UPDATE
   SET content = $2, description = $3, tags = $4, updated_at = datetime()
 RETURNING *;
+"
+  sqlight.query(query, db, arguments, decoder)
+  |> result.map_error(error.DatabaseError)
+}
+
+pub fn search_documents(
+  db: sqlight.Connection,
+  args arguments: List(sqlight.Value),
+  decoder decoder: dynamic.Decoder(a),
+) -> QueryResult(a) {
+  let query =
+    "select id, description, is_public, unixepoch(updated_at) as updated_at
+from documents
+where user_id = $1 and description like '%' || $2 || '%'
+order by updated_at desc
+;
 "
   sqlight.query(query, db, arguments, decoder)
   |> result.map_error(error.DatabaseError)
