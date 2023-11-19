@@ -21,7 +21,7 @@ type SaveRequest {
 }
 
 type EditDetailsRequest {
-  EditDetailsRequest(document_id: String, title: String, is_public: Bool)
+  EditDetailsRequest(document_id: String, title: String, is_public: Int)
 }
 
 fn auth(req, ctx: Context, next) {
@@ -48,7 +48,7 @@ pub fn edit_details(req: Request, ctx: Context) -> Response {
       EditDetailsRequest,
       dynamic.field("document_id", dynamic.string),
       dynamic.field("title", dynamic.string),
-      dynamic.field("is_public", dynamic.bool),
+      dynamic.field("is_public", dynamic.int),
     )
 
   use data <-

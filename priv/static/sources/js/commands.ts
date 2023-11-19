@@ -43,7 +43,7 @@ export class Commands {
 				break;
 			default:
 				console.error(`Unknown binding action: ${action}`);
-				fn = () => {};
+				fn = () => { };
 		}
 
 		return fn.bind(this);
@@ -157,7 +157,8 @@ export class Commands {
 			const document_id = this.editor.dataset.documentId;
 			if (!document_id) return toast.error("No document ID found, please refresh the page and try again");
 			const title = data.get("title");
-			const isPublic = data.get("is_public") && data.get("is_public") === "on";
+			const isPublic = data.get("is_public") && data.get("is_public") === "on" ? 1 : 0;
+			console.log({ document_id, title, isPublic });
 
 			form.querySelector("button")?.setAttribute("disabled", "true");
 			fetch("/documents/details", {
@@ -165,14 +166,12 @@ export class Commands {
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ document_id, title, is_public: isPublic ?? false }),
+				body: JSON.stringify({ document_id, title, is_public: isPublic }),
 			})
 				.then((res) => res.json())
 				.then((data: EditDetailsResponse) => {
 					if (data?.ok) {
 						toast.success("Details updated");
-						form.querySelector("[name='title']")?.setAttribute("value", data?.data?.title);
-						form.querySelector("[name='is_public']")?.setAttribute("checked", data?.data?.is_public ? "checked" : "");
 						return;
 					}
 

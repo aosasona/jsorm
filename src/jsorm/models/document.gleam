@@ -137,14 +137,14 @@ pub fn update_details(
   user_id user_id: Int,
   document_id document_id: String,
   description description: String,
-  is_public is_public: Bool,
+  is_public is_public: Int,
 ) -> Result(Document, Error) {
   case
     sql.update_document_details(
       db,
       [
         sqlight.text(description),
-        sqlight.bool(is_public),
+        sqlight.int(is_public),
         sqlight.text(document_id),
         sqlight.int(user_id),
       ],
