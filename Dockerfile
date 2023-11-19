@@ -1,7 +1,5 @@
 FROM ghcr.io/gleam-lang/gleam:v0.32.2-erlang-alpine
 
-# copy litefs binary
-COPY --from=flyio/litefs:0.5 /usr/local/bin/litefs /usr/local/bin/litefs
 
 # Add project code
 COPY . /source
@@ -14,8 +12,7 @@ RUN cd /source \
   && cd .. && rm -r /source \
   && apk del gcc build-base
 
-COPY litefs.yml /etc/litefs.yml
-
 # Run
 WORKDIR /app
-ENTRYPOINT litefs mount
+ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["run"]
