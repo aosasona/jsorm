@@ -15,17 +15,35 @@ pub fn component(props: Props) -> Node(a) {
   div(
     [class("command-palette hidden"), id("command-palette")],
     [
-      input([
-        type_("search"),
-        name("query"),
-        class(
-          "w-full bg-stone-900 border-b border-b-stone-800 text-base text-stone-200 placeholder-stone-500 outline-none focus:outline-none px-5 py-3.5",
-        ),
-        attrs.placeholder("Search..."),
-        attrs.Attr("hx-post", "/documents/search"),
-        attrs.Attr("hx-trigger", "input changed delay:250ms, query"),
-        attrs.Attr("hx-target", "#documents-list"),
-      ]),
+      div(
+        [
+          class(
+            "w-full flex items-center bg-stone-900 border-b border-b-stone-800 gap-x-2",
+          ),
+        ],
+        [
+          input([
+            type_("search"),
+            name("query"),
+            class(
+              "flex-1 bg-stone-900 text-base text-stone-200 placeholder-stone-500 outline-none focus:outline-none px-5 py-3.5",
+            ),
+            attrs.placeholder("Search..."),
+            attrs.Attr("hx-post", "/documents/search"),
+            attrs.Attr("hx-trigger", "input changed delay:250ms, query"),
+            attrs.Attr("hx-target", "#documents-list"),
+          ]),
+          button(
+            [
+              class(
+                "w-14 text-yellow-400 text-2xl transition-all lg:hidden aspect-square",
+              ),
+              id("palette-toggle-inner"),
+            ],
+            [tabler.icon(name: "x", class: "")],
+          ),
+        ],
+      ),
       div(
         [class("overflow-y-auto pb-10"), id("documents-list")],
         make_documents_list(props.documents, []),

@@ -15,7 +15,7 @@ function run() {
     }
 }
 function attachToEditor() {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e, _f;
     editor = document.querySelector("#editor");
     if (!editor)
         return;
@@ -34,7 +34,9 @@ function attachToEditor() {
     }
     keymaps.init();
     (_c = $("#sidebar-toggle")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", cmd.toggleLeftSidebar);
-    (_d = $("#save-document-btn")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", () => cmd.saveDocument());
+    (_d = $("#palette-toggle")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", cmd.toggleCommandPalette);
+    (_e = $("#palette-toggle-inner")) === null || _e === void 0 ? void 0 : _e.addEventListener("click", cmd.toggleCommandPalette);
+    (_f = $("#save-document-btn")) === null || _f === void 0 ? void 0 : _f.addEventListener("click", () => cmd.saveDocument());
     cmd.updatePreview({ showToast: false });
     handleExpandedAction();
     window.onbeforeunload = () => {

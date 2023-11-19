@@ -53,16 +53,28 @@ fn header_component() -> html.Node(t) {
           ),
         ],
         [
-          button(
+          div(
+            [class("flex items-center gap-x-4")],
             [
-              class("text-yellow-400 text-2xl transition-all"),
-              id("sidebar-toggle"),
-              attrs.Attr("data-status", "closed"),
+              button(
+                [
+                  class("text-yellow-400 text-2xl transition-all"),
+                  id("sidebar-toggle"),
+                  attrs.Attr("data-status", "closed"),
+                ],
+                [tabler.icon(name: "layout-sidebar-left-expand", class: "")],
+              ),
+              button(
+                [
+                  class("text-yellow-400 text-2xl transition-all lg:hidden"),
+                  id("palette-toggle"),
+                ],
+                [tabler.icon(name: "command", class: "")],
+              ),
             ],
-            [tabler.icon(name: "layout-sidebar-left-expand", class: "")],
           ),
           div(
-            [class("flex items-center justify-center gap-x-2")],
+            [class("flex items-center gap-x-2")],
             [
               btn.component(btn.Props(
                 text: "Save",

@@ -44,6 +44,8 @@ function attachToEditor() {
 	keymaps.init();
 
 	$("#sidebar-toggle")?.addEventListener("click", cmd.toggleLeftSidebar);
+	$("#palette-toggle")?.addEventListener("click", cmd.toggleCommandPalette);
+	$("#palette-toggle-inner")?.addEventListener("click", cmd.toggleCommandPalette);
 	$("#save-document-btn")?.addEventListener("click", () => cmd.saveDocument());
 
 	cmd.updatePreview({ showToast: false });
