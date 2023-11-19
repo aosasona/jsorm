@@ -78,12 +78,14 @@ export class Commands {
 			sidebar?.setAttribute("data-status", "closed");
 			sidebarToggleIcon?.classList.remove("ti-layout-sidebar-right-expand");
 			sidebarToggleIcon?.classList.add("ti-layout-sidebar-left-expand");
+			this.editor?.focus();
 		} else {
 			sidebar?.classList.remove("sidebar-closed");
 			sidebar?.classList.add("sidebar-opened");
 			sidebar?.setAttribute("data-status", "open");
 			sidebarToggleIcon?.classList.remove("ti-layout-sidebar-left-expand");
 			sidebarToggleIcon?.classList.add("ti-layout-sidebar-right-expand");
+			sidebar?.getElementsByTagName("input")?.[0].focus();
 		}
 	}
 

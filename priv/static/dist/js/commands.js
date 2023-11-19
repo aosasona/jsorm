@@ -51,6 +51,7 @@ export class Commands {
         }
     }
     toggleLeftSidebar() {
+        var _a, _b;
         const sidebar = document.getElementById("sidebar");
         if (!sidebar)
             return;
@@ -65,6 +66,7 @@ export class Commands {
             sidebar === null || sidebar === void 0 ? void 0 : sidebar.setAttribute("data-status", "closed");
             sidebarToggleIcon === null || sidebarToggleIcon === void 0 ? void 0 : sidebarToggleIcon.classList.remove("ti-layout-sidebar-right-expand");
             sidebarToggleIcon === null || sidebarToggleIcon === void 0 ? void 0 : sidebarToggleIcon.classList.add("ti-layout-sidebar-left-expand");
+            (_a = this.editor) === null || _a === void 0 ? void 0 : _a.focus();
         }
         else {
             sidebar === null || sidebar === void 0 ? void 0 : sidebar.classList.remove("sidebar-closed");
@@ -72,6 +74,7 @@ export class Commands {
             sidebar === null || sidebar === void 0 ? void 0 : sidebar.setAttribute("data-status", "open");
             sidebarToggleIcon === null || sidebarToggleIcon === void 0 ? void 0 : sidebarToggleIcon.classList.remove("ti-layout-sidebar-left-expand");
             sidebarToggleIcon === null || sidebarToggleIcon === void 0 ? void 0 : sidebarToggleIcon.classList.add("ti-layout-sidebar-right-expand");
+            (_b = sidebar === null || sidebar === void 0 ? void 0 : sidebar.getElementsByTagName("input")) === null || _b === void 0 ? void 0 : _b[0].focus();
         }
     }
     saveDocument() {

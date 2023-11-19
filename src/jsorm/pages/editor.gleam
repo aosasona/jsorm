@@ -1,12 +1,13 @@
 import jsorm/pages/layout
 import jsorm/models/document.{type Document}
 import jsorm/components/button as btn
+import jsorm/components/input
 import jsorm/components/tabler
 import jsorm/components/palette.{Props as PaletteProps}
 import jsorm/components/keybindings.{bindings}
 import gleam/option
 import nakai/html.{
-  type Node, aside, button, div, main, nav, section, textarea_text,
+  type Node, aside, button, div, form, main, nav, section, textarea_text,
 }
 import nakai/html/attrs.{class, id}
 
@@ -98,26 +99,58 @@ fn header_component() -> html.Node(t) {
   )
 }
 
-fn sidebar_component() -> html.Node(t) {
+fn sidebar_component(document: Document) -> html.Node(t) {
   aside(
     [id("sidebar"), class("sidebar sidebar-closed")],
     [
       div(
-        [class("py-5")],
+        [class("flex flex-col h-full")],
         [
-          html.p_text(
-            [class("text-yellow-400 text-center mt-10 mb-14")],
-            "Nothing here yet...",
-          ),
-          html.button(
+          form(
+            [class("px-1 py-3")],
             [
-              attrs.type_("button"),
-              attrs.Attr("_", "on click toggle .hidden on #keyboard-shortcuts"),
+              html.h2_text(
+                [class("font-bold text-lg text-yellow-400 mt-1 mb-4")],
+                "Edit details",
+              ),
+              input.component(input.Props(
+                id: "document-description",
+                name: "title",
+                label: "Title",
+                variant: input.Text,
+                attrs: [
+                  attrs.value(
+                    document.description
+                    |> option.unwrap(or: ""),
+                  ),
+                ],
+              )),
+              btn.component(btn.Props(
+                text: "Save",
+                render_as: btn.Button,
+                variant: btn.Primary,
+                class: "w-full mt-6",
+                attrs: [],
+              )),
             ],
+          ),
+          div(
+            [class("mt-auto self-start py-3")],
             [
-              tabler.icon(
-                name: "keyboard",
-                class: "text-yellow-400 text-2xl transition-all p-2 aspect-square hover:bg-stone-900 rounded-lg",
+              html.button(
+                [
+                  attrs.type_("button"),
+                  attrs.Attr(
+                    "_",
+                    "on click toggle .hidden on #keyboard-shortcuts",
+                  ),
+                ],
+                [
+                  tabler.icon(
+                    name: "keyboard",
+                    class: "text-yellow-400 text-2xl transition-all p-2 aspect-square hover:bg-stone-900 rounded-lg",
+                  ),
+                ],
               ),
             ],
           ),
@@ -133,7 +166,7 @@ pub fn page(document: Document, documents: List(document.ListItem)) -> Node(t) {
     html.Body(
       [class("md:h-screen flex overflow-hidden")],
       [
-        sidebar_component(),
+        sidebar_component(document),
         main(
           [class("h-full flex-grow md:flex md:flex-col")],
           [

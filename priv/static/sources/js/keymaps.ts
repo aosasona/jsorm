@@ -103,7 +103,8 @@ export function handleTab(e: KeyboardEvent, editor: HTMLTextAreaElement | null):
 	} else if (palette && !palette.classList.contains("hidden")) {
 		e.preventDefault();
 		e.stopPropagation();
-		const items = palette.getElementsByTagName("button");
+
+		const items = document.getElementById("documents-list")?.getElementsByTagName("button");
 		// if a button is focused, go back to the input or vice versa
 		if (items.length > 0) {
 			const active = document.activeElement as HTMLButtonElement;
@@ -121,7 +122,7 @@ export function navigatePalette(e: KeyboardEvent, direction: "up" | "down") {
 	e.preventDefault();
 	e.stopPropagation();
 
-	const items = palette.getElementsByTagName("button");
+	const items = document.getElementById("documents-list")?.getElementsByTagName("button");
 	if (items.length === 0) return;
 
 	const arrItems = Array.from(items);

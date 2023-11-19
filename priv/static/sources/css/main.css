@@ -22,8 +22,16 @@ input {
 	@apply transition-all duration-200 ease-in-out;
 }
 
+a {
+	@apply outline-none focus:outline focus:outline-yellow-400;
+}
+
 a:hover {
 	text-decoration: none;
+}
+
+button {
+	@apply outline-none focus:outline focus:outline-yellow-400 rounded-md;
 }
 
 ::selection {
@@ -65,11 +73,11 @@ a:hover {
 
 .command-palette {
 	transform: translate(-50%, -50%);
-	@apply w-[90%] max-w-[650px] h-[60vh] md:h-[35vh] md:max-h-[450px] min-h-[200px] fixed top-[50%] left-[50%] bg-stone-900 bg-opacity-60 backdrop-blur-xl text-stone-100 border border-stone-800 rounded-lg shadow-xl z-[999999] overflow-hidden;
+	@apply w-[90%] max-w-[650px] h-[60vh] md:h-[30vh] md:max-h-[450px] min-h-[200px] fixed top-[50%] left-[50%] bg-stone-900 bg-opacity-60 backdrop-blur-xl text-stone-100 border border-stone-800 rounded-lg shadow-xl z-[999999] overflow-hidden;
 }
 
 .command-palette-item {
-	@apply w-full text-left px-5 py-3 space-y-1.5 hover:bg-stone-800/40 border-b border-b-stone-800 outline-none cursor-pointer;
+	@apply w-full text-left px-5 py-3 space-y-1.5 hover:bg-stone-800/40 border-b border-b-stone-800 outline-none cursor-pointer rounded-none;
 }
 
 .command-palette-item:last-child {

@@ -72,6 +72,7 @@ function isModifierKey(key) {
     return key === Ctrl || key === Alt || key === Meta || key === Shift;
 }
 export function handleTab(e, editor) {
+    var _a;
     if (document.activeElement == editor) {
         e.preventDefault();
         e.stopPropagation();
@@ -85,7 +86,7 @@ export function handleTab(e, editor) {
     else if (palette && !palette.classList.contains("hidden")) {
         e.preventDefault();
         e.stopPropagation();
-        const items = palette.getElementsByTagName("button");
+        const items = (_a = document.getElementById("documents-list")) === null || _a === void 0 ? void 0 : _a.getElementsByTagName("button");
         // if a button is focused, go back to the input or vice versa
         if (items.length > 0) {
             const active = document.activeElement;
@@ -99,18 +100,18 @@ export function handleTab(e, editor) {
     }
 }
 export function navigatePalette(e, direction) {
-    var _a;
+    var _a, _b;
     if (!palette || palette.classList.contains("hidden"))
         return;
     e.preventDefault();
     e.stopPropagation();
-    const items = palette.getElementsByTagName("button");
+    const items = (_a = document.getElementById("documents-list")) === null || _a === void 0 ? void 0 : _a.getElementsByTagName("button");
     if (items.length === 0)
         return;
     const arrItems = Array.from(items);
     const selectedIndex = arrItems.indexOf(document.activeElement);
     if (selectedIndex === -1) {
-        (_a = items.item(0)) === null || _a === void 0 ? void 0 : _a.focus();
+        (_b = items.item(0)) === null || _b === void 0 ? void 0 : _b.focus();
         return;
     }
     let nextIndex = direction === "up" ? selectedIndex - 1 : selectedIndex + 1;
