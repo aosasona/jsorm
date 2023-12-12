@@ -18,7 +18,7 @@ fn editor_component(document: Document) -> Node(t) {
       textarea_text(
         [
           class(
-            "h-full w-full text-yellow-400 bg-stone-900 resize-none focus:outline-none p-4 lg:px-6",
+            "h-full w-full text-yellow-400 bg-stone-900 resize-none focus:outline-none px-5 pt-4 lg:px-6 pb-16 md:pb-36",
           ),
           id("editor"),
           attrs.Attr("data-document-id", document.id),
@@ -36,7 +36,9 @@ fn editor_component(document: Document) -> Node(t) {
 fn preview_component() -> html.Node(t) {
   section(
     [
-      class("w-full h-[50vh] md:h-auto p-4 lg:p-6 pb-6 overflow-y-auto"),
+      class(
+        "w-full h-[50vh] md:h-auto px-5 pt-4 lg:px-6 pb-32 md:pb-36 overflow-y-auto",
+      ),
       id("preview"),
     ],
     [],

@@ -63,6 +63,7 @@ export class Commands {
 		if (!commandPalette) return;
 		if (commandPalette.classList.contains("hidden")) {
 			commandPalette.classList.remove("hidden");
+			commandPalette.classList.add("command-palette-opened");
 			const commandPaletteInput = commandPalette.getElementsByTagName("input")[0];
 			if (commandPaletteInput) {
 				commandPaletteInput.focus();
@@ -70,6 +71,7 @@ export class Commands {
 				commandPaletteInput.dispatchEvent(new Event("input"));
 			}
 		} else {
+			commandPalette.classList.remove("command-palette-opened");
 			commandPalette.classList.add("hidden");
 			this.editor?.focus();
 		}
