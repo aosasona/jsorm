@@ -927,10 +927,6 @@ video {
   padding: 0.5rem;
 }
 
-.p-4{
-  padding: 1rem;
-}
-
 .px-1{
   padding-left: 0.25rem;
   padding-right: 0.25rem;
@@ -1001,8 +997,8 @@ video {
   padding-bottom: 2rem;
 }
 
-.pb-10{
-  padding-bottom: 2.5rem;
+.pb-16{
+  padding-bottom: 4rem;
 }
 
 .pb-2{
@@ -1013,16 +1009,20 @@ video {
   padding-bottom: 0.625rem;
 }
 
+.pb-32{
+  padding-bottom: 8rem;
+}
+
 .pb-4{
   padding-bottom: 1rem;
 }
 
-.pb-6{
-  padding-bottom: 1.5rem;
-}
-
 .pt-3{
   padding-top: 0.75rem;
+}
+
+.pt-4{
+  padding-top: 1rem;
 }
 
 .text-center{
@@ -1112,6 +1112,11 @@ video {
 .text-stone-500{
   --tw-text-opacity: 1;
   color: rgb(120 113 108 / var(--tw-text-opacity));
+}
+
+.text-stone-600{
+  --tw-text-opacity: 1;
+  color: rgb(87 83 78 / var(--tw-text-opacity));
 }
 
 .text-stone-900{
@@ -1312,7 +1317,7 @@ button:focus{
   left: 50%;
   z-index: 999999;
   height: 60vh;
-  min-height: 200px;
+  min-height: 225px;
   width: 90%;
   overflow: hidden;
   border-radius: 0.5rem;
@@ -1333,19 +1338,32 @@ button:focus{
 
 @media (min-width: 768px){
   .command-palette{
-    height: 35vh;
-    max-height: 500px;
-    max-width: 650px;
+    height: 375px;
+    width: 550px;
+  }
+}
+
+@media (min-width: 1024px){
+  .command-palette{
+    width: 650px;
   }
 }
 
 @media (min-width: 1536px){
   .command-palette{
-    max-width: 750px;
+    height: 400px;
+    width: 700px;
   }
 }
 
+.command-palette.command-palette-opened{
+  display: flex;
+  flex-direction: column;
+}
+
 .command-palette-item{
+  transition-duration: 100ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
   cursor: pointer;
 }
@@ -1615,6 +1633,10 @@ button:focus{
   .md\:gap-0{
     gap: 0px;
   }
+
+  .md\:pb-36{
+    padding-bottom: 9rem;
+  }
 }
 
 @media (min-width: 1024px){
@@ -1662,10 +1684,6 @@ button:focus{
 
   .lg\:gap-6{
     gap: 1.5rem;
-  }
-
-  .lg\:p-6{
-    padding: 1.5rem;
   }
 
   .lg\:px-2{

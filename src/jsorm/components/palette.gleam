@@ -10,8 +10,6 @@ pub type Props {
 }
 
 pub fn component(props: Props) -> Node(a) {
-  let Props(_) = props
-
   div(
     [class("command-palette hidden"), id("command-palette")],
     [
@@ -45,7 +43,7 @@ pub fn component(props: Props) -> Node(a) {
         ],
       ),
       div(
-        [class("overflow-y-auto pb-10"), id("documents-list")],
+        [class("h-full overflow-y-auto"), id("documents-list")],
         make_documents_list(props.documents, []),
       ),
     ],
