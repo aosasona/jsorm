@@ -1,7 +1,7 @@
 import gleam/bool
 import gleam/option.{None, Some}
 import jsorm/pages
-import jsorm/web.{type Context, Context, render}
+import jsorm/web.{type Context, render}
 import jsorm/web/auth
 import jsorm/web/editor
 import jsorm/web/documents
