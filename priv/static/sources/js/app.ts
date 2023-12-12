@@ -14,7 +14,7 @@ function run() {
 	toast.init();
 
 	// If we're on the editor page, attach to the editor - /e/:id, /editor/:id, /editor or /e
-	if (location.pathname.match(/^\/(e|editor)(\/[a-zA-Z0-9_]+)?$/)) {
+	if (location.pathname.match(/^\/(e|editor)(\/[a-zA-Z0-9_-]+)?$/)) {
 		attachToEditor();
 	}
 }
