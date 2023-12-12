@@ -6,7 +6,8 @@ import nakai/html/attrs.{class, id}
 
 const ctrl = "Ctrl"
 
-// const alt = "Alt"
+const alt = "Alt"
+
 //
 // const shift = "Shift"
 
@@ -21,14 +22,19 @@ pub type Binding {
 pub fn bindings() -> List(Binding) {
   [
     Binding(
-      description: "Update preview without saving",
-      combos: [#(ctrl, enter), #(meta, enter)],
-      action: "update-preview",
+      description: "New document",
+      combos: [#(ctrl, "n")],
+      action: "new-document",
     ),
     Binding(
       description: "Save document and update preview",
       combos: [#(ctrl, "s"), #(meta, "s")],
       action: "save-document",
+    ),
+    Binding(
+      description: "Update preview without saving",
+      combos: [#(ctrl, enter), #(meta, enter)],
+      action: "update-preview",
     ),
     Binding(
       description: "Toggle command palette",

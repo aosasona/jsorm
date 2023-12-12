@@ -29,17 +29,20 @@ export class Commands {
 	public getCommandByAction(action: string) {
 		let fn: () => void;
 		switch (action) {
-			case "toggle-left-sidebar":
-				fn = this.toggleLeftSidebar;
-				break;
-			case "toggle-command-palette":
-				fn = this.toggleCommandPalette;
+			case "new-document":
+				fn = this.newDocument;
 				break;
 			case "save-document":
 				fn = this.saveDocument;
 				break;
 			case "update-preview":
 				fn = this.updatePreview;
+				break;
+			case "toggle-left-sidebar":
+				fn = this.toggleLeftSidebar;
+				break;
+			case "toggle-command-palette":
+				fn = this.toggleCommandPalette;
 				break;
 			default:
 				console.error(`Unknown binding action: ${action}`);
@@ -70,6 +73,11 @@ export class Commands {
 			commandPalette.classList.add("hidden");
 			this.editor?.focus();
 		}
+	}
+
+	public newDocument() {
+		this.saveDocument();
+		window.location.href = "/e";
 	}
 
 	public toggleLeftSidebar() {
