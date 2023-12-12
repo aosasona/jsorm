@@ -1,4 +1,4 @@
-import birl/time
+import birl
 import jsorm/models/document.{type ListItem}
 import jsorm/components/tabler
 import gleam/list
@@ -84,8 +84,8 @@ pub fn make_documents_list(
               [class("text-xs opacity-70")],
               "Last updated " <> {
                 doc.last_updated_at
-                |> time.from_unix
-                |> time.legible_difference(time.now(), _)
+                |> birl.from_unix
+                |> birl.legible_difference(birl.now(), _)
               },
             ),
           ],
