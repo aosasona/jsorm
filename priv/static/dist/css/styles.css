@@ -570,8 +570,24 @@ video {
   }
 }
 
+.visible{
+  visibility: visible;
+}
+
 .fixed{
   position: fixed;
+}
+
+.absolute{
+  position: absolute;
+}
+
+.relative{
+  position: relative;
+}
+
+.sticky{
+  position: sticky;
 }
 
 .bottom-5{
@@ -596,6 +612,10 @@ video {
 
 .right-6{
   right: 1.5rem;
+}
+
+.start-1{
+  inset-inline-start: 0.25rem;
 }
 
 .top-0{
@@ -711,6 +731,10 @@ video {
   display: flex;
 }
 
+.table{
+  display: table;
+}
+
 .contents{
   display: contents;
 }
@@ -784,6 +808,10 @@ video {
   flex-grow: 1;
 }
 
+.transform{
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
 .cursor-pointer{
   cursor: pointer;
 }
@@ -854,6 +882,12 @@ video {
 
 .overflow-y-auto{
   overflow-y: auto;
+}
+
+.truncate{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .rounded{
@@ -1083,6 +1117,11 @@ video {
 
 .lowercase{
   text-transform: lowercase;
+}
+
+.ordinal{
+  --tw-ordinal: ordinal;
+  font-variant-numeric: var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction);
 }
 
 .leading-tight{

@@ -3,7 +3,7 @@ import * as toast from "./toast.js";
 import { Commands } from "./commands.js";
 import { _safeJSONParse } from "./markup.js";
 let editor = null;
-window.onload = run;
+document.addEventListener("DOMContentLoaded", run);
 function $(selector) {
     return document.querySelector(selector);
 }
@@ -15,7 +15,7 @@ function run() {
     }
 }
 function attachToEditor() {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b;
     editor = document.querySelector("#editor");
     if (!editor)
         return;
@@ -33,16 +33,20 @@ function attachToEditor() {
         keymaps.registerCombination(binding.combos, binding.description, fn);
     }
     keymaps.init();
-    (_c = $("#sidebar-toggle")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", cmd.toggleLeftSidebar);
-    (_d = $("#palette-toggle")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", cmd.toggleCommandPalette);
-    (_e = $("#palette-toggle-inner")) === null || _e === void 0 ? void 0 : _e.addEventListener("click", cmd.toggleCommandPalette);
-    (_f = $("#save-document-btn")) === null || _f === void 0 ? void 0 : _f.addEventListener("click", () => cmd.saveDocument());
+    handleEventListener("#sidebar-toggle", "click", cmd.toggleLeftSidebar);
+    handleEventListener("#palette-toggle", "click", cmd.toggleCommandPalette);
+    handleEventListener("#palette-toggle-inner", "click", cmd.toggleCommandPalette);
+    handleEventListener("#save-document-btn", "click", () => cmd.saveDocument());
     cmd.updatePreview({ showToast: false });
     handleExpandedAction();
     cmd.editDetails();
-    window.onbeforeunload = () => {
-        keymaps.destroy();
-    };
+}
+function handleEventListener(selector, event, callback) {
+    let obj = typeof selector === "string" ? $(selector) : selector;
+    if (!obj)
+        return;
+    obj.addEventListener(event, callback);
+    //TODO: handle deinit later
 }
 function handleExpandedAction() {
     const objs = document.querySelectorAll("#object-markup-title");

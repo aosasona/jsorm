@@ -50,24 +50,18 @@ pub fn bindings() -> List(Binding) {
 }
 
 pub fn as_json(bindings: List(Binding)) -> String {
-  json.array(
-    from: bindings,
-    of: fn(binding) {
-      json.object([
-        #("description", json.string(binding.description)),
-        #(
-          "combos",
-          json.array(
-            from: binding.combos,
-            of: fn(combo) {
-              json.array(from: [combo.0, combo.1], of: json.string)
-            },
-          ),
-        ),
-        #("action", json.string(binding.action)),
-      ])
-    },
-  )
+  json.array(from: bindings, of: fn(binding) {
+    json.object([
+      #("description", json.string(binding.description)),
+      #(
+        "combos",
+        json.array(from: binding.combos, of: fn(combo) {
+          json.array(from: [combo.0, combo.1], of: json.string)
+        }),
+      ),
+      #("action", json.string(binding.action)),
+    ])
+  })
   |> json.to_string
 }
 
@@ -84,19 +78,15 @@ fn combos_to_markup(
 
       combos_to_markup(
         rest,
-        list.append(
-          state,
-          [
-            div(
-              [
-                class(
-                  "bg-stone-800 text-stone-200 px-2 py-1 rounded inline-block",
-                ),
-              ],
-              [html.p([], [primary, html.Text(" + "), html.Text(secondary)])],
-            ),
-          ],
-        ),
+        list.append(state, [
+          div(
+            [
+              class("bg-stone-800 text-stone-200 px-2 py-1 rounded inline-block",
+              ),
+            ],
+            [html.p([], [primary, html.Text(" + "), html.Text(secondary)])],
+          ),
+        ]),
       )
     }
     [] -> div([class("flex items-center gap-2")], state)
@@ -107,13 +97,10 @@ fn make_list(bindings: List(Binding), state: List(Node(t))) -> List(Node(t)) {
   case bindings {
     [binding, ..others] -> {
       let item =
-        div(
-          [],
-          [
-            html.h3_text([class("mb-1")], binding.description),
-            div([], [combos_to_markup(binding.combos, [])]),
-          ],
-        )
+        div([], [
+          html.h3_text([class("mb-1")], binding.description),
+          div([], [combos_to_markup(binding.combos, [])]),
+        ])
 
       let state = list.append(state, [item])
       make_list(others, state)
@@ -135,21 +122,18 @@ pub fn component() -> html.Node(t) {
       id("keyboard-shortcuts"),
     ],
     [
-      div(
-        [class("flex items-center justify-between pb-2.5")],
-        [
-          h1_text([class("text-lg font-bold")], "Keyboard shortcuts"),
-          html.button(
-            [
-              attrs.Attr(
-                "_",
-                "on click set localStorage.hasSeenKBList to false then toggle .hidden on #keyboard-shortcuts",
-              ),
-            ],
-            [tabler.icon(name: "x", class: "text-xl")],
-          ),
-        ],
-      ),
+      div([class("flex items-center justify-between pb-2.5")], [
+        h1_text([class("text-lg font-bold")], "Keyboard shortcuts"),
+        html.button(
+          [
+            attrs.Attr(
+              "_",
+              "on click set localStorage.hasSeenKBList to false then toggle .hidden on #keyboard-shortcuts",
+            ),
+          ],
+          [tabler.icon(name: "x", class: "text-xl")],
+        ),
+      ]),
       div(
         [class("max-h-[60vh] overflow-y-auto flex flex-col gap-y-3")],
         make_list(bindings(), []),

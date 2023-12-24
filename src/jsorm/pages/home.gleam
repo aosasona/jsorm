@@ -10,30 +10,26 @@ pub fn page() -> html.Node(t) {
       ),
     ],
     [
-      div(
-        [class("mt-40 lg:mt-0")],
-        [
-          h1_text(
-            [
-              class(
-                "text-center lg:text-left text-5xl lg:text-7xl font-black leading-tight max-w-2xl mx-auto lg:mx-0",
-              ),
-            ],
-            "A minimal JSON explorer",
-          ),
-          button.component(button.Props(
-            text: "Launch",
-            render_as: button.Link,
-            variant: button.Primary,
-            attrs: [attrs.href("/editor")],
-            class: "block w-max mx-auto lg:mx-0 mt-6 lg:mt-8",
-          )),
-        ],
-      ),
-      div(
-        [class("mt-10 mb-16 lg:my-0 rounded-lg overflow-hidden")],
-        [img([attrs.src("/assets/images/mockup.png")])],
-      ),
+      div([class("mt-40 lg:mt-0")], [
+        h1_text(
+          [
+            class(
+              "text-center lg:text-left text-5xl lg:text-7xl font-black leading-tight max-w-2xl mx-auto lg:mx-0",
+            ),
+          ],
+          "A minimal JSON explorer",
+        ),
+        button.component(button.Props(
+          text: "Launch",
+          render_as: button.Link,
+          variant: button.Primary,
+          attrs: [attrs.href("/editor")],
+          class: "block w-max mx-auto lg:mx-0 mt-6 lg:mt-8",
+        )),
+      ]),
+      div([class("mt-10 mb-16 lg:my-0 rounded-lg overflow-hidden")], [
+        img([attrs.src("/assets/images/mockup.png")]),
+      ]),
     ],
   )
 }

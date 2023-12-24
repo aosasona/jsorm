@@ -57,7 +57,8 @@ pub fn save_token(
     Ok([doc]) -> Ok(doc)
     Ok(d) ->
       Error(error.MatchError(
-        "Expected exactly one document, got " <> int.to_string(list.length(d)),
+        "Expected exactly one document, got "
+        <> int.to_string(list.length(d)),
       ))
     Error(err) -> Error(err)
   }
@@ -75,7 +76,8 @@ pub fn find_by_user(db: sqlight.Connection, user_id: Int) -> Result(String, _) {
     Ok([]) -> Ok("")
     Ok(d) ->
       Error(error.MatchError(
-        "Expected exactly one document, got " <> int.to_string(list.length(d)),
+        "Expected exactly one document, got "
+        <> int.to_string(list.length(d)),
       ))
     Error(err) -> Error(err)
   }

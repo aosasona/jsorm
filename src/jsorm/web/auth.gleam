@@ -8,7 +8,6 @@ import jsorm/models/auth_token
 import jsorm/models/token_requests_log
 import jsorm/lib/auth
 import jsorm/lib/validator
-import jsorm/lib/uri
 import jsorm/mail
 import ids/ulid
 import gleam/io
@@ -129,17 +128,14 @@ fn send_otp(req: Request, ctx: Context) -> Response {
   use <- auth.save_otp(ctx.db, user.id, code)
   use <- log_token_request(ctx.db, user.id)
 
-  html.div(
-    [],
-    [
-      status.component(status.Props(
-        message: "Please check your email for the OTP",
-        status: status.Success,
-        class: "mb-6",
-      )),
-      login.otp_form_component(req, email),
-    ],
-  )
+  html.div([], [
+    status.component(status.Props(
+      message: "Please check your email for the OTP",
+      status: status.Success,
+      class: "mb-6",
+    )),
+    login.otp_form_component(req, email),
+  ])
   |> web.render(200)
 }
 
@@ -175,13 +171,17 @@ fn rate_limit(
 
   let err_msg = case r_type {
     Throttle ->
-      "You can only make " <> int.to_string(max) <> " request every " <> int.to_string(
-        seconds,
-      ) <> " seconds"
+      "You can only make "
+      <> int.to_string(max)
+      <> " request every "
+      <> int.to_string(seconds)
+      <> " seconds"
     HardLimit ->
-      "You can only make " <> int.to_string(max) <> " requests every " <> int.to_string(
-        seconds / 60 / 60,
-      ) <> " hours"
+      "You can only make "
+      <> int.to_string(max)
+      <> " requests every "
+      <> int.to_string(seconds / 60 / 60)
+      <> " hours"
   }
 
   case
@@ -251,7 +251,8 @@ fn validate_email(formdata: wisp.FormData, next: fn(String) -> Response) {
       {
         #(True, errors) ->
           render_error(
-            "Email address " <> {
+            "Email address "
+            <> {
               list.first(errors)
               |> result.unwrap("must be valid")
             },

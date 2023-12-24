@@ -26,7 +26,9 @@ fn get_classes(variant: Variant) -> String {
     Text | Email ->
       "block w-full bg-stone-800 px-3 py-2.5 rounded-md border-0 text-stone-100 shadow-sm outline-none focus:outline-none ring-1 ring-inset ring-stone-700 placeholder:text-stone-600 focus:ring-2 focus:ring-inset focus:ring-yellow-400 sm:text-sm sm:leading-6"
     Hidden -> ""
-  } <> " " <> general_class
+  }
+  <> " "
+  <> general_class
 }
 
 pub fn component(props: Props(t)) -> html.Node(t) {
@@ -44,10 +46,9 @@ pub fn component(props: Props(t)) -> html.Node(t) {
         [attrs.for(props.name), attrs.class("text-sm text-stone-400 block")],
         [html.Text(props.label)],
       ),
-      html.div(
-        [attrs.class("mt-2")],
-        [
-          html.input(list.concat([
+      html.div([attrs.class("mt-2")], [
+        html.input(
+          list.concat([
             attrs,
             [
               attrs.id(props.id),
@@ -59,9 +60,9 @@ pub fn component(props: Props(t)) -> html.Node(t) {
               }),
               attrs.class(get_classes(props.variant) <> " " <> extra_classes),
             ],
-          ])),
-        ],
-      ),
+          ]),
+        ),
+      ]),
     ],
   )
 }

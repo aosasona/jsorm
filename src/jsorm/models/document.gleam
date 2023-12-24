@@ -1,4 +1,4 @@
-import birl/time
+import birl
 import jsorm/generated/sql
 import gleam/option.{type Option, Some}
 import gleam/dynamic
@@ -60,8 +60,8 @@ pub fn new(
   let doc_id = nanoid.generate()
 
   let now =
-    time.utc_now()
-    |> time.to_naive
+    birl.utc_now()
+    |> birl.to_naive
 
   Document(
     id: doc_id,
@@ -155,7 +155,8 @@ pub fn update_details(
     Ok([doc]) -> Ok(doc)
     Ok(d) ->
       Error(error.MatchError(
-        "Expected exactly one document, got " <> int.to_string(list.length(d)),
+        "Expected exactly one document, got "
+        <> int.to_string(list.length(d)),
       ))
     Error(err) -> Error(err)
   }
@@ -177,7 +178,8 @@ pub fn find_by_id_and_user(
     Ok([doc]) -> Ok(doc)
     Ok(d) ->
       Error(error.MatchError(
-        "Expected exactly one document, got " <> int.to_string(list.length(d)),
+        "Expected exactly one document, got "
+        <> int.to_string(list.length(d)),
       ))
     Error(err) -> Error(err)
   }
@@ -197,9 +199,10 @@ pub fn upsert(
   let description =
     option.unwrap(
       description,
-      "Untitled " <> {
-        time.utc_now()
-        |> time.to_naive
+      "Untitled "
+      <> {
+        birl.utc_now()
+        |> birl.to_naive
       },
     )
 
@@ -224,7 +227,8 @@ pub fn upsert(
     Ok([doc]) -> Ok(doc)
     Ok(d) ->
       Error(error.MatchError(
-        "Expected exactly one document, got " <> int.to_string(list.length(d)),
+        "Expected exactly one document, got "
+        <> int.to_string(list.length(d)),
       ))
     Error(err) -> Error(err)
   }

@@ -4,7 +4,7 @@ import { Commands } from "./commands.js";
 import { _safeJSONParse } from "./markup.js";
 
 let editor: HTMLTextAreaElement | null = null;
-window.onload = run;
+document.addEventListener("DOMContentLoaded", run);
 
 function $(selector: string): HTMLElement | null {
 	return document.querySelector(selector);
@@ -43,18 +43,22 @@ function attachToEditor() {
 
 	keymaps.init();
 
-	$("#sidebar-toggle")?.addEventListener("click", cmd.toggleLeftSidebar);
-	$("#palette-toggle")?.addEventListener("click", cmd.toggleCommandPalette);
-	$("#palette-toggle-inner")?.addEventListener("click", cmd.toggleCommandPalette);
-	$("#save-document-btn")?.addEventListener("click", () => cmd.saveDocument());
+	handleEventListener("#sidebar-toggle", "click", cmd.toggleLeftSidebar);
+	handleEventListener("#palette-toggle", "click", cmd.toggleCommandPalette);
+	handleEventListener("#palette-toggle-inner", "click", cmd.toggleCommandPalette);
+	handleEventListener("#save-document-btn", "click", () => cmd.saveDocument());
 
 	cmd.updatePreview({ showToast: false });
 	handleExpandedAction();
 	cmd.editDetails();
+}
 
-	window.onbeforeunload = () => {
-		keymaps.destroy();
-	};
+function handleEventListener(selector: string | Element, event: string, callback: (e: Event) => void) {
+	let obj = typeof selector === "string" ? $(selector) : selector;
+	if (!obj) return;
+	obj.addEventListener(event, callback);
+
+	//TODO: handle deinit later
 }
 
 function handleExpandedAction() {

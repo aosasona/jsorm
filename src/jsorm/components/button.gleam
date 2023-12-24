@@ -30,7 +30,9 @@ pub fn component(props: Props(t)) -> html.Node(t) {
         "bg-yellow-400 hover:bg-yellow-500 text-stone-900 font-bold rounded-md"
       Ghost ->
         "bg-transparent hover:bg-yellow-400/20 text-yellow-400 hover:text-yelow-400 font-bold rounded-md"
-    } <> " " <> shared_class
+    }
+    <> " "
+    <> shared_class
 
   let el = case props.render_as {
     Button -> html.button_text

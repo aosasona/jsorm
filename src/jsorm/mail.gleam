@@ -25,11 +25,11 @@ pub fn send_otp(
 ) -> Result(_, MailError) {
   let resp =
     instance
-    |> event.track(Event(
-      email: email,
-      event: signin_request_event,
-      data: [#("code", json.string(code))],
-    ))
+    |> event.track(
+      Event(email: email, event: signin_request_event, data: [
+        #("code", json.string(code)),
+      ]),
+    )
     |> hackney.send
 
   case resp {

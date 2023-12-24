@@ -29,27 +29,13 @@ export function registerCombination(keys: HotKey[], description: string | null, 
 
 // All keypresses and hotkeys need to be registered before calling init()
 export function init() {
-	document.addEventListener("keydown", (event) => {
+	document.addEventListener("keydown", (event: KeyboardEvent) => {
 		for (const { key, fn } of keyIntercepts) {
 			interceptKeyPress(event, key, fn);
 		}
 	});
 
-	document.addEventListener("keydown", (event) => {
-		for (const hotKey of hotKeys) {
-			handleHotKey(event, hotKey);
-		}
-	});
-}
-
-export function destroy() {
-	document.removeEventListener("keydown", (event) => {
-		for (const { key, fn } of keyIntercepts) {
-			interceptKeyPress(event, key, fn);
-		}
-	});
-
-	document.removeEventListener("keydown", (event) => {
+	document.addEventListener("keydown", (event: KeyboardEvent) => {
 		for (const hotKey of hotKeys) {
 			handleHotKey(event, hotKey);
 		}

@@ -48,6 +48,7 @@ function makeToast(id: string, type: ToastType, body: string) {
 	toast.addEventListener("click", () => {
 		dismissToast(toast);
 	});
+
 	return toast;
 }
 

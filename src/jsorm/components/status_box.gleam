@@ -34,7 +34,9 @@ pub fn component(props: Props) -> Node(t) {
   html.div(
     [
       class(
-        bg <> " flex items-center gap-2.5 px-3 py-2 rounded-md " <> props.class,
+        bg
+        <> " flex items-center gap-2.5 px-3 py-2 rounded-md "
+        <> props.class,
       ),
     ],
     [

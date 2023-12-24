@@ -15,18 +15,20 @@ pub fn form_component(email: String) {
     ],
     [
       div([id("form-error")], []),
-      input.component(input.Props(
-        id: "email",
-        name: "email",
-        label: "Email address",
-        variant: input.Email,
-        attrs: [
-          value(email),
-          placeholder("john@example.com"),
-          autocomplete("email"),
-          attrs.Attr("required", ""),
-        ],
-      )),
+      input.component(
+        input.Props(
+          id: "email",
+          name: "email",
+          label: "Email address",
+          variant: input.Email,
+          attrs: [
+            value(email),
+            placeholder("john@example.com"),
+            autocomplete("email"),
+            attrs.Attr("required", ""),
+          ],
+        ),
+      ),
       button.component(button.Props(
         text: "Continue",
         render_as: button.Button,
@@ -42,51 +44,46 @@ fn login_page(email: String) -> html.Node(a) {
   div(
     [class("h-[80dvh] lg:h-[85vh] flex flex-col items-center justify-center")],
     [
-      div(
-        [class("w-full container max-w-sm md:max-w-md")],
-        [
-          h1_text([class("text-2xl font-bold mb-6")], "Sign in"),
-          div(
-            [
-              id("#form-container"),
-              attrs.Attr("hx-target", "this"),
-              attrs.Attr("hx-target-error", "#form-error"),
-            ],
-            [form_component(email)],
-          ),
-        ],
-      ),
+      div([class("w-full container max-w-sm md:max-w-md")], [
+        h1_text([class("text-2xl font-bold mb-6")], "Sign in"),
+        div(
+          [
+            id("#form-container"),
+            attrs.Attr("hx-target", "this"),
+            attrs.Attr("hx-target-error", "#form-error"),
+          ],
+          [form_component(email)],
+        ),
+      ]),
     ],
   )
 }
 
 pub fn otp_form_component(ctx, email: String) {
   html.Fragment([
-    form(
-      [attrs.Attr("hx-post", "/sign-in/verify")],
-      [
-        div(
-          [class("mb-4")],
-          [
-            div([id("form-error")], []),
-            input.component(input.Props(
-              id: "email",
-              name: "email",
-              label: "Email address",
-              variant: input.Email,
-              attrs: [
-                placeholder("john@example"),
-                attrs.Attr("required", ""),
-                value(email),
-                class(
-                  "disabled:opacity-40 disabled:cursor-not-allowed disabled:select-none disabled:focus:ring-stone-600 disabled:focus:outline-none",
-                ),
-                attrs.readonly(),
-              ],
-            )),
-          ],
+    form([attrs.Attr("hx-post", "/sign-in/verify")], [
+      div([class("mb-4")], [
+        div([id("form-error")], []),
+        input.component(
+          input.Props(
+            id: "email",
+            name: "email",
+            label: "Email address",
+            variant: input.Email,
+            attrs: [
+              placeholder("john@example"),
+              attrs.Attr("required", ""),
+              value(email),
+              class(
+                "disabled:opacity-40 disabled:cursor-not-allowed disabled:select-none disabled:focus:ring-stone-600 disabled:focus:outline-none",
+              ),
+              attrs.readonly(),
+            ],
+          ),
         ),
-        input.component(input.Props(
+      ]),
+      input.component(
+        input.Props(
           id: "otp",
           name: "otp",
           label: "One-time password",
@@ -99,29 +96,31 @@ pub fn otp_form_component(ctx, email: String) {
             attrs.Attr("minlength", "6"),
             attrs.Attr("maxlength", "6"),
           ],
-        )),
-        button.component(button.Props(
-          text: "Sign in",
-          render_as: button.Button,
-          variant: button.Primary,
-          attrs: [attrs.type_("submit")],
-          class: "w-full mt-8",
-        )),
-      ],
-    ),
+        ),
+      ),
+      button.component(button.Props(
+        text: "Sign in",
+        render_as: button.Button,
+        variant: button.Primary,
+        attrs: [attrs.type_("submit")],
+        class: "w-full mt-8",
+      )),
+    ]),
     html.form(
       [
         attrs.Attr("hx-post", "/sign-in"),
         attrs.Attr("hx-disabled-elt", "#resend-otp-btn"),
       ],
       [
-        input.component(input.Props(
-          id: "email",
-          name: "email",
-          label: "Email address",
-          variant: input.Hidden,
-          attrs: [attrs.value(email)],
-        )),
+        input.component(
+          input.Props(
+            id: "email",
+            name: "email",
+            label: "Email address",
+            variant: input.Hidden,
+            attrs: [attrs.value(email)],
+          ),
+        ),
         button.component(button.Props(
           text: "Resend OTP",
           render_as: button.Button,
@@ -145,7 +144,9 @@ pub fn otp_form_component(ctx, email: String) {
         attrs.id("change-email-link"),
         attrs.Attr(
           "_",
-          "init js document.querySelector('#change-email-link').href = '?email=" <> email <> "&' + (new URLSearchParams(window.location.search))?.toString()?.replace('?', '')",
+          "init js document.querySelector('#change-email-link').href = '?email="
+          <> email
+          <> "&' + (new URLSearchParams(window.location.search))?.toString()?.replace('?', '')",
         ),
       ],
       "Wrong email address?",

@@ -29,18 +29,6 @@ export function init() {
         }
     });
 }
-export function destroy() {
-    document.removeEventListener("keydown", (event) => {
-        for (const { key, fn } of keyIntercepts) {
-            interceptKeyPress(event, key, fn);
-        }
-    });
-    document.removeEventListener("keydown", (event) => {
-        for (const hotKey of hotKeys) {
-            handleHotKey(event, hotKey);
-        }
-    });
-}
 function interceptKeyPress(event, key, fn) {
     if (event.key === key) {
         fn(event);

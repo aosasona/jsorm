@@ -60,10 +60,7 @@ pub fn header(title: String) -> html.Node(t) {
     ]),
     html.link([attrs.rel("stylesheet"), attrs.href("/assets/css/styles.css")]),
     html.Element("script", [attrs.src("/assets/js/htmx.min.js")], []),
-    html.Element(
-      "script",
-      [attrs.src("/assets/js/ext/response-targets.js")],
-      [],
+    html.Element("script", [attrs.src("/assets/js/ext/response-targets.js")], [],
     ),
     html.Element(
       "script",
@@ -72,7 +69,7 @@ pub fn header(title: String) -> html.Node(t) {
     ),
     html.Element(
       "script",
-      [attrs.src("/assets/js/app.js"), attrs.type_("module")],
+      [attrs.src("/assets/js/app.js"), attrs.type_("module"), attrs.defer()],
       [],
     ),
     html.title(title),
@@ -115,39 +112,30 @@ fn nav(ctx: Context, request: wisp.Request) -> html.Node(t) {
         ],
         "jsorm",
       ),
-      html.div(
-        [attrs.class("flex items-center")],
-        [
-          auth_btn,
-          html.a(
-            [
-              attrs.href("https://github.com/aosasona/jsorm"),
-              attrs.target("_blank"),
-            ],
-            [tabler.icon("brand-github", "text-yellow-400 text-xl")],
-          ),
-        ],
-      ),
+      html.div([attrs.class("flex items-center")], [
+        auth_btn,
+        html.a(
+          [
+            attrs.href("https://github.com/aosasona/jsorm"),
+            attrs.target("_blank"),
+          ],
+          [tabler.icon("brand-github", "text-yellow-400 text-xl")],
+        ),
+      ]),
     ],
   )
 }
 
 pub fn footer() -> html.Node(t) {
-  html.footer(
-    [attrs.class("w-full")],
-    [
-      html.div(
-        [attrs.class("text-center text-xs py-8")],
-        [
-          html.Text("Built by "),
-          link.component(
-            "Ayodeji",
-            link.Props(href: "https://trulyao.dev", new_tab: True),
-          ),
-        ],
+  html.footer([attrs.class("w-full")], [
+    html.div([attrs.class("text-center text-xs py-8")], [
+      html.Text("Built by "),
+      link.component(
+        "Ayodeji",
+        link.Props(href: "https://trulyao.dev", new_tab: True),
       ),
-    ],
-  )
+    ]),
+  ])
 }
 
 pub fn render(child: html.Node(t), props: Props) -> html.Node(t) {

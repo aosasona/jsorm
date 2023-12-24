@@ -26,7 +26,8 @@ pub fn main() {
       db: db,
       plunk: plunk_instance,
       secret: get_app_secret(),
-      dist_directory: priv_directory <> "/static/dist",
+      dist_directory: priv_directory
+      <> "/static/dist",
       session_token: None,
       user: None,
     )
