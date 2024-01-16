@@ -1,5 +1,4 @@
-import jsorm/lib/uri
-import jsorm/web
+import gleam/string
 import nakai/html.{div, form, h1_text}
 import nakai/html/attrs.{
   autocomplete, autofocus, class, disabled, id, placeholder, type_, value,
@@ -8,6 +7,8 @@ import jsorm/components/input
 import jsorm/components/button
 
 pub fn form_component(email: String) {
+  let email = string.lowercase(email)
+
   form(
     [
       attrs.Attr("hx-post", "/sign-in"),
@@ -59,7 +60,9 @@ fn login_page(email: String) -> html.Node(a) {
   )
 }
 
-pub fn otp_form_component(ctx, email: String) {
+pub fn otp_form_component(email: String) {
+  let email = string.lowercase(email)
+
   html.Fragment([
     form([attrs.Attr("hx-post", "/sign-in/verify")], [
       div([class("mb-4")], [
@@ -155,5 +158,8 @@ pub fn otp_form_component(ctx, email: String) {
 }
 
 pub fn page(default_email: String) -> html.Node(t) {
-  login_page(default_email)
+  login_page(
+    default_email
+    |> string.lowercase,
+  )
 }

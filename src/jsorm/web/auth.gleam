@@ -60,6 +60,7 @@ fn render_signin(req: Request, ctx: Context) -> Response {
     |> result.unwrap([])
     |> list.key_find("email")
     |> result.unwrap("")
+    |> string.lowercase
 
   pages.login(default_email)
   |> layout.render(layout.Props(title: "Sign in", ctx: ctx, req: req))
@@ -162,7 +163,7 @@ fn send_otp(req: Request, ctx: Context) -> Response {
       status: status.Success,
       class: "mb-6",
     )),
-    login.otp_form_component(req, email),
+    login.otp_form_component(email),
   ])
   |> web.render(200)
 }
@@ -258,7 +259,7 @@ fn create_user_if_not_exists(
   case user.find_by_email(db, email) {
     Some(user) -> next(user)
     None -> {
-      case user.create(db, string.lowercase(email)) {
+      case user.create(db, email) {
         Ok(user) -> {
           next(user)
         }
@@ -286,7 +287,7 @@ fn validate_email(formdata: wisp.FormData, next: fn(String) -> Response) {
             },
             400,
           )
-        #(False, _) -> next(email)
+        #(False, _) -> next(string.lowercase(email))
       }
     }
     Error(_) -> render_error("Email address is required", 400)
