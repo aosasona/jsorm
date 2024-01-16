@@ -11,6 +11,9 @@ import jsorm/lib/validator
 import jsorm/mail
 import ids/ulid
 import gleam/io
+import gleam/bit_array
+import gleam/bool
+import gleam/crypto
 import gleam/string
 import gleam/int
 import gleam/result
@@ -72,45 +75,70 @@ pub fn verify_otp(req: Request, ctx: Context) -> Response {
     list.key_find(formdata.values, "otp")
     |> result.unwrap("")
 
+  // While, in theory, this will not cause issues since it will never be equal to the expected OTP, it saves us from doing the work below by just returning early
+  // I have used a variable here because the default formatting is annoying and puts the `==` on a new line
+  let empty_otp = otp == ""
+  use <- bool.guard(
+    when: empty_otp,
+    return: render_error("Invalid one-time password, please try again", 400),
+  )
+
   let uid = case user.find_by_email(ctx.db, email) {
     Some(user) -> user.id
     None -> 0
   }
 
-  case auth_token.find_by_user(ctx.db, uid) {
-    Ok(auth_token) -> {
-      case auth_token == otp {
-        True -> {
-          case auth.signin_as_user(ctx.db, uid) {
-            Ok(session_token) -> {
-              html.div(
-                [
-                  attrs.Attr(
-                    "_",
-                    "init js window.location.replace((new URL(window.location.href)).searchParams.get('redirect') || '/editor')",
-                  ),
-                ],
-                [html.p_text([], "redirecting..")],
-              )
-              |> web.render(200)
-              |> auth.set_auth_cookie(req, session_token.token)
-            }
-            Error(e) -> {
-              io.println("signin as user")
-              io.debug(e)
-              render_error("Something went wrong, please try again", 500)
-            }
-          }
-        }
-        False ->
-          render_error(
-            "Invalid one-time password, please try again or request a new one",
-            400,
-          )
-      }
+  // Same as above, this will never be equal to the expected OTP (since we will most likely get an error) but it saves us from doing the work below by just returning early
+  let empty_uid = uid == 0
+  use <- bool.guard(
+    when: empty_uid,
+    return: render_error("No user found with that email address", 400),
+  )
+
+  let token_result = auth_token.find_by_user(ctx.db, uid)
+  use <- bool.guard(when: result.is_error(token_result), return: {
+    io.println("find_by_user ")
+    io.debug(token_result)
+    render_error("Something went wrong, please try again", 500)
+  })
+
+  let expected_otp =
+    token_result
+    |> result.unwrap("")
+    |> bit_array.from_string
+
+  // This will ideally never occur since we are checking for the presence of the Error result above already but, just in case
+  let is_empty_otp = bit_array.byte_size(expected_otp) == 0
+  use <- bool.guard(
+    when: is_empty_otp,
+    return: render_error("Something went wrong, please try again", 500),
+  )
+
+  // preventing timing attacks by using secure_compare instead of a direct (==) comparison
+  let user_otp = bit_array.from_string(otp)
+  use <- bool.guard(
+    when: crypto.secure_compare(expected_otp, user_otp)
+    |> bool.negate,
+    return: "Invalid one-time password, please try again or request a new one"
+    |> render_error(400),
+  )
+
+  case auth.signin_as_user(ctx.db, uid) {
+    Ok(session_token) -> {
+      html.div(
+        [
+          attrs.Attr(
+            "_",
+            "init js window.location.replace((new URL(window.location.href)).searchParams.get('redirect') || '/editor')",
+          ),
+        ],
+        [html.p_text([], "redirecting..")],
+      )
+      |> web.render(200)
+      |> auth.set_auth_cookie(req, session_token.token)
     }
     Error(e) -> {
-      io.println("find_by_user ")
+      io.println("signin as user")
       io.debug(e)
       render_error("Something went wrong, please try again", 500)
     }

@@ -54,7 +54,7 @@ pub fn save_token(
       dynamic.element(0, dynamic.string),
     )
   {
-    Ok([doc]) -> Ok(doc)
+    Ok([token]) -> Ok(token)
     Ok(d) ->
       Error(error.MatchError(
         "Expected exactly one document, got "
@@ -72,9 +72,8 @@ pub fn find_by_user(db: sqlight.Connection, user_id: Int) -> Result(String, _) {
       dynamic.element(0, dynamic.string),
     )
   {
-    Ok([doc]) -> Ok(doc)
-    Ok([]) -> Ok("")
-    Ok(d) ->
+    Ok([token]) -> Ok(token)
+    Ok(d) | Ok([] as d) ->
       Error(error.MatchError(
         "Expected exactly one document, got "
         <> int.to_string(list.length(d)),
