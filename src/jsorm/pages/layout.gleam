@@ -60,7 +60,10 @@ pub fn header(title: String) -> html.Node(t) {
     ]),
     html.link([attrs.rel("stylesheet"), attrs.href("/assets/css/styles.css")]),
     html.Element("script", [attrs.src("/assets/js/htmx.min.js")], []),
-    html.Element("script", [attrs.src("/assets/js/ext/response-targets.js")], [],
+    html.Element(
+      "script",
+      [attrs.src("/assets/js/ext/response-targets.js")],
+      [],
     ),
     html.Element(
       "script",

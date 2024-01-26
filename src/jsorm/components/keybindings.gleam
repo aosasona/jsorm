@@ -81,7 +81,8 @@ fn combos_to_markup(
         list.append(state, [
           div(
             [
-              class("bg-stone-800 text-stone-200 px-2 py-1 rounded inline-block",
+              class(
+                "bg-stone-800 text-stone-200 px-2 py-1 rounded inline-block",
               ),
             ],
             [html.p([], [primary, html.Text(" + "), html.Text(secondary)])],

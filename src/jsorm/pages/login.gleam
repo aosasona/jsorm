@@ -148,8 +148,8 @@ pub fn otp_form_component(email: String) {
         attrs.Attr(
           "_",
           "init js document.querySelector('#change-email-link').href = '?email="
-          <> email
-          <> "&' + (new URLSearchParams(window.location.search))?.toString()?.replace('?', '')",
+            <> email
+            <> "&' + (new URLSearchParams(window.location.search))?.toString()?.replace('?', '')",
         ),
       ],
       "Wrong email address?",

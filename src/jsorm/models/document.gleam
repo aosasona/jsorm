@@ -155,8 +155,7 @@ pub fn update_details(
     Ok([doc]) -> Ok(doc)
     Ok(d) ->
       Error(error.MatchError(
-        "Expected exactly one document, got "
-        <> int.to_string(list.length(d)),
+        "Expected exactly one document, got " <> int.to_string(list.length(d)),
       ))
     Error(err) -> Error(err)
   }
@@ -178,8 +177,7 @@ pub fn find_by_id_and_user(
     Ok([doc]) -> Ok(doc)
     Ok(d) ->
       Error(error.MatchError(
-        "Expected exactly one document, got "
-        <> int.to_string(list.length(d)),
+        "Expected exactly one document, got " <> int.to_string(list.length(d)),
       ))
     Error(err) -> Error(err)
   }
@@ -200,10 +198,10 @@ pub fn upsert(
     option.unwrap(
       description,
       "Untitled "
-      <> {
-        birl.utc_now()
-        |> birl.to_naive
-      },
+        <> {
+          birl.utc_now()
+          |> birl.to_naive
+        },
     )
 
   case
@@ -227,8 +225,7 @@ pub fn upsert(
     Ok([doc]) -> Ok(doc)
     Ok(d) ->
       Error(error.MatchError(
-        "Expected exactly one document, got "
-        <> int.to_string(list.length(d)),
+        "Expected exactly one document, got " <> int.to_string(list.length(d)),
       ))
     Error(err) -> Error(err)
   }

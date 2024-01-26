@@ -61,9 +61,7 @@ pub fn make_documents_list(
             id(doc.id),
             attrs.Attr(
               "onclick",
-              "window.location.href = '/editor/"
-              <> doc.id
-              <> "'",
+              "window.location.href = '/editor/" <> doc.id <> "'",
             ),
           ],
           [
@@ -77,11 +75,11 @@ pub fn make_documents_list(
             p_text(
               [class("text-xs opacity-70")],
               "Last updated "
-              <> {
-                doc.last_updated_at
-                |> birl.from_unix
-                |> birl.legible_difference(birl.now(), _)
-              },
+                <> {
+                  doc.last_updated_at
+                  |> birl.from_unix
+                  |> birl.legible_difference(birl.now(), _)
+                },
             ),
           ],
         )

@@ -67,13 +67,10 @@ pub fn copy_query_params(
           list.concat([
             q,
             [
-              #(
-                "redirect",
-                case req.path {
-                  "/" -> "/editor"
-                  _ -> req.path
-                },
-              ),
+              #("redirect", case req.path {
+                "/" -> "/editor"
+                _ -> req.path
+              }),
             ],
           ])
         // if it doesn't exist and we are not including the redirect param, leave it

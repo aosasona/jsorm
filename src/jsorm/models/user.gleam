@@ -31,7 +31,10 @@ pub fn json_decoder() -> dynamic.Decoder(User) {
 
 pub fn find_by_email(db: sqlight.Connection, email: String) -> Option(User) {
   case
-    sql.get_user_by_email(db, args: [sqlight.text(email)], decoder: db_decoder(),
+    sql.get_user_by_email(
+      db,
+      args: [sqlight.text(email)],
+      decoder: db_decoder(),
     )
   {
     Ok([user]) -> Some(user)

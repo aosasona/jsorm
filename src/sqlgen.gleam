@@ -42,17 +42,13 @@ fn generate_sql_function(file: String) -> Result(String, _) {
     |> string.replace("\\", "\\\\")
     |> string.replace("\"", "\\\"")
   let lines = [
-    "pub fn "
-    <> name
-    <> "(",
+    "pub fn " <> name <> "(",
     "  db: sqlight.Connection,",
     "  args arguments: List(sqlight.Value),",
     "  decoder decoder: dynamic.Decoder(a),",
     ") -> QueryResult(a) {",
     "  let query =",
-    "    \""
-    <> escaped
-    <> "\"",
+    "    \"" <> escaped <> "\"",
     "  sqlight.query(query, db, arguments, decoder)",
     "  |> result.map_error(error.DatabaseError)",
     "}",

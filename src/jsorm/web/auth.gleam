@@ -281,10 +281,10 @@ fn validate_email(formdata: wisp.FormData, next: fn(String) -> Response) {
         #(True, errors) ->
           render_error(
             "Email address "
-            <> {
-              list.first(errors)
-              |> result.unwrap("must be valid")
-            },
+              <> {
+                list.first(errors)
+                |> result.unwrap("must be valid")
+              },
             400,
           )
         #(False, _) -> next(string.lowercase(email))

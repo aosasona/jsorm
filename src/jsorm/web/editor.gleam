@@ -21,13 +21,10 @@ pub fn render_editor(
     Some(user) -> #(Some(user), fn(res: Response) { res })
     None -> {
       case auth.signin_as_guest(ctx.db) {
-        Ok(#(token, u)) -> #(
-          Some(u),
-          fn(res: Response) {
-            res
-            |> auth.set_auth_cookie(req, token.token)
-          },
-        )
+        Ok(#(token, u)) -> #(Some(u), fn(res: Response) {
+          res
+          |> auth.set_auth_cookie(req, token.token)
+        })
         Error(e) -> {
           io.debug(e)
           #(None, fn(res) { res })

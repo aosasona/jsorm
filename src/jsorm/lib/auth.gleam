@@ -53,7 +53,10 @@ pub fn remove_session_token(
   db: sqlight.Connection,
   token: String,
 ) -> Result(_, error.Error) {
-  sql.delete_session_token(db, args: [sqlight.text(token)], decoder: dynamic.int,
+  sql.delete_session_token(
+    db,
+    args: [sqlight.text(token)],
+    decoder: dynamic.int,
   )
 }
 
