@@ -155,7 +155,7 @@ export class Commands {
 			});
 	}
 
-	public editDetails() {
+	public handleEditDetails() {
 		const form = document.querySelector("#edit-details-form") as HTMLFormElement;
 		if (!form) return;
 
@@ -216,6 +216,8 @@ export class Commands {
 			preview.innerHTML = markup;
 		}
 
+		this.handleExpandedAction();
+
 		if (showToast) {
 			toast.success("Preview updated");
 		}
@@ -228,5 +230,28 @@ export class Commands {
 		} catch (e) {
 			return false;
 		}
+	}
+
+	private handleExpandedAction() {
+		const objs = document.querySelectorAll("#object-markup-title");
+		objs.forEach((obj) => {
+			obj.addEventListener("click", (_) => {
+				const expanded = parseInt(obj.parentElement?.getAttribute("data-expanded") ?? "0");
+				const markup = obj.parentElement?.querySelector("#object-markup");
+				const icon = obj.querySelector("#expanded-status-icon");
+
+				if (!markup || !icon) return;
+
+				if (expanded) {
+					markup.classList.add("hidden");
+					obj.parentElement?.setAttribute("data-expanded", "0");
+					icon.classList.replace("ti-caret-down-filled", "ti-caret-right-filled");
+				} else {
+					markup.classList.remove("hidden");
+					obj.parentElement?.setAttribute("data-expanded", "1");
+					icon.classList.replace("ti-caret-right-filled", "ti-caret-down-filled");
+				}
+			});
+		});
 	}
 }

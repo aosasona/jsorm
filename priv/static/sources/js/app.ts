@@ -49,8 +49,7 @@ function attachToEditor() {
 	handleEventListener("#save-document-btn", "click", () => cmd.saveDocument());
 
 	cmd.updatePreview({ showToast: false });
-	handleExpandedAction();
-	cmd.editDetails();
+	cmd.handleEditDetails();
 }
 
 function handleEventListener(selector: string | Element, event: string, callback: (e: Event) => void) {
@@ -59,27 +58,4 @@ function handleEventListener(selector: string | Element, event: string, callback
 	obj.addEventListener(event, callback);
 
 	//TODO: handle deinit later
-}
-
-function handleExpandedAction() {
-	const objs = document.querySelectorAll("#object-markup-title");
-	objs.forEach((obj) => {
-		obj.addEventListener("click", (_) => {
-			const expanded = parseInt(obj.parentElement?.getAttribute("data-expanded") ?? "0");
-			const markup = obj.parentElement?.querySelector("#object-markup");
-			const icon = obj.querySelector("#expanded-status-icon");
-
-			if (!markup || !icon) return;
-
-			if (expanded) {
-				markup.classList.add("hidden");
-				obj.parentElement?.setAttribute("data-expanded", "0");
-				icon.classList.replace("ti-caret-down-filled", "ti-caret-right-filled");
-			} else {
-				markup.classList.remove("hidden");
-				obj.parentElement?.setAttribute("data-expanded", "1");
-				icon.classList.replace("ti-caret-right-filled", "ti-caret-down-filled");
-			}
-		});
-	});
 }
