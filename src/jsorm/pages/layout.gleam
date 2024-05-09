@@ -1,10 +1,10 @@
-import nakai/html
-import nakai/html/attrs
-import jsorm/components/button
-import jsorm/components/tabler
-import jsorm/components/link
-import jsorm/web.{type Context}
 import gleam/option.{None, Some}
+import jsorm/components/button
+import jsorm/components/link
+import jsorm/components/tabler
+import jsorm/web.{type Context}
+import nakai/attr as attrs
+import nakai/html
 import wisp
 
 pub type Props {
@@ -17,7 +17,7 @@ const meta_image = "/assets/images/meta.png"
 
 const website_url = "https://jsorm.wyte.space"
 
-pub fn header(title: String) -> html.Node(t) {
+pub fn header(title: String) -> html.Node {
   html.Head([
     html.meta([attrs.charset("utf-8")]),
     html.meta([
@@ -79,7 +79,7 @@ pub fn header(title: String) -> html.Node(t) {
   ])
 }
 
-fn nav(ctx: Context, request: wisp.Request) -> html.Node(t) {
+fn nav(ctx: Context, request: wisp.Request) -> html.Node {
   let query = web.copy_query_params(request, redirect: True, include: [])
 
   let auth_btn = case ctx.user {
@@ -129,7 +129,7 @@ fn nav(ctx: Context, request: wisp.Request) -> html.Node(t) {
   )
 }
 
-pub fn footer() -> html.Node(t) {
+pub fn footer() -> html.Node {
   html.footer([attrs.class("w-full")], [
     html.div([attrs.class("text-center text-xs py-8")], [
       html.Text("Built by "),
@@ -141,7 +141,7 @@ pub fn footer() -> html.Node(t) {
   ])
 }
 
-pub fn render(child: html.Node(t), props: Props) -> html.Node(t) {
+pub fn render(child: html.Node, props: Props) -> html.Node {
   let title = case props.title {
     "" -> "Jsorm"
     title -> title

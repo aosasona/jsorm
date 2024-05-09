@@ -1,5 +1,5 @@
+import nakai/attr as attrs
 import nakai/html
-import nakai/html/attrs
 
 pub type Variant {
   Primary
@@ -17,13 +17,13 @@ pub type Props(a) {
     variant: Variant,
     render_as: As,
     class: String,
-    attrs: List(attrs.Attr(a)),
+    attrs: List(attrs.Attr),
   )
 }
 
 const shared_class = "disabled:opacity-50 disabled:cursor-not-allowed  py-2 px-5 select-none"
 
-pub fn component(props: Props(t)) -> html.Node(t) {
+pub fn component(props: Props(t)) -> html.Node {
   let class =
     case props.variant {
       Primary ->

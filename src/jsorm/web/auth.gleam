@@ -1,31 +1,31 @@
-import jsorm/pages
-import jsorm/web.{type Context}
-import jsorm/components/status_box as status
-import jsorm/pages/layout
-import jsorm/pages/login
-import jsorm/models/user
-import jsorm/models/auth_token
-import jsorm/models/token_requests_log
-import jsorm/lib/auth
-import jsorm/lib/validator
-import jsorm/mail
-import ids/ulid
-import gleam/io
 import gleam/bit_array
 import gleam/bool
 import gleam/crypto
-import gleam/string
-import gleam/int
-import gleam/result
-import gleam/list
-import gleam/http/request
-import gleam/option.{None, Some}
 import gleam/http.{Get, Post}
-import plunk
-import wisp.{type Request, type Response}
+import gleam/http/request
+import gleam/int
+import gleam/io
+import gleam/list
+import gleam/option.{None, Some}
+import gleam/result
+import gleam/string
+import ids/ulid
+import jsorm/components/status_box as status
+import jsorm/lib/auth
+import jsorm/lib/validator
+import jsorm/mail
+import jsorm/models/auth_token
+import jsorm/models/token_requests_log
+import jsorm/models/user
+import jsorm/pages
+import jsorm/pages/layout
+import jsorm/pages/login
+import jsorm/web.{type Context}
+import nakai/attr as attrs
 import nakai/html
-import nakai/html/attrs
+import plunk
 import sqlight
+import wisp.{type Request, type Response}
 
 type RatelimitType {
   Throttle
@@ -99,7 +99,7 @@ pub fn verify_otp(req: Request, ctx: Context) -> Response {
   let token_result = auth_token.find_by_user(ctx.db, uid)
   use <- bool.guard(when: result.is_error(token_result), return: {
     io.println("find_by_user ")
-    io.debug(token_result)
+    let _ = io.debug(token_result)
     render_error("Something went wrong, please try again", 500)
   })
 
@@ -119,9 +119,9 @@ pub fn verify_otp(req: Request, ctx: Context) -> Response {
   let user_otp = bit_array.from_string(otp)
   use <- bool.guard(
     when: crypto.secure_compare(expected_otp, user_otp)
-    |> bool.negate,
+      |> bool.negate,
     return: "Invalid one-time password, please try again or request a new one"
-    |> render_error(400),
+      |> render_error(400),
   )
 
   case auth.signin_as_user(ctx.db, uid) {
@@ -282,9 +282,9 @@ fn validate_email(formdata: wisp.FormData, next: fn(String) -> Response) {
           render_error(
             "Email address "
               <> {
-                list.first(errors)
-                |> result.unwrap("must be valid")
-              },
+              list.first(errors)
+              |> result.unwrap("must be valid")
+            },
             400,
           )
         #(False, _) -> next(string.lowercase(email))

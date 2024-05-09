@@ -1,7 +1,7 @@
-import nakai/html
-import nakai/html/attrs
 import jsorm/pages/layout
 import jsorm/web.{type Context}
+import nakai/attr as attrs
+import nakai/html
 import wisp
 
 fn get_message(code: Int) -> String {
@@ -30,7 +30,7 @@ fn get_subtext(code: Int) -> String {
   }
 }
 
-pub fn page(ctx: Context, req: wisp.Request, code: Int) -> html.Node(t) {
+pub fn page(ctx: Context, req: wisp.Request, code: Int) -> html.Node {
   let message = get_message(code)
 
   html.div(

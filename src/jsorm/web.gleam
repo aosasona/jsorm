@@ -1,11 +1,11 @@
-import jsorm/models/user.{type User}
-import jsorm/lib/auth
-import jsorm/lib/uri
 import gleam/http/request
 import gleam/list
-import gleam/string
-import gleam/result
 import gleam/option.{type Option, Some}
+import gleam/result
+import gleam/string
+import jsorm/lib/auth
+import jsorm/lib/uri
+import jsorm/models/user.{type User}
 import nakai
 import nakai/html.{type Node}
 import plunk
@@ -23,7 +23,7 @@ pub type Context {
   )
 }
 
-pub fn render(page: Node(t), code: Int) {
+pub fn render(page: Node, code: Int) {
   page
   |> nakai.to_string_builder
   |> wisp.html_response(code)

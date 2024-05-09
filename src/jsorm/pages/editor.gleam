@@ -1,37 +1,37 @@
-import jsorm/pages/layout
-import jsorm/models/document.{type Document}
+import gleam/option
 import jsorm/components/button as btn
 import jsorm/components/input
-import jsorm/components/tabler
-import jsorm/components/palette.{Props as PaletteProps}
 import jsorm/components/keybindings.{bindings}
-import gleam/option
+import jsorm/components/palette.{Props as PaletteProps}
+import jsorm/components/tabler
+import jsorm/models/document.{type Document}
+import jsorm/pages/layout
+import nakai/attr.{class, id}
 import nakai/html.{
   type Node, aside, button, div, form, main, nav, section, textarea_text,
 }
-import nakai/html/attrs.{class, id}
 
-fn editor_component(document: Document) -> Node(t) {
+fn editor_component(document: Document) -> Node {
   section([class("w-full h-[50vh] md:h-auto")], [
     textarea_text(
       [
         class(
-          "h-full w-full text-yellow-400 bg-stone-900 resize-none focus:outline-none px-5 pt-4 lg:px-6 pb-16 md:pb-36",
+          "h-full w-full text-yellow-400 bg-stone-900 resize-none whitespace-pre-wrap focus:outline-none px-5 pt-4 lg:px-6 pb-16 md:pb-36",
         ),
         id("editor"),
-        attrs.Attr("data-document-id", document.id),
-        attrs.Attr("data-description", option.unwrap(document.description, "")),
+        attr.Attr("data-document-id", document.id),
+        attr.Attr("data-description", option.unwrap(document.description, "")),
       ],
       document.content,
     ),
   ])
 }
 
-fn preview_component() -> html.Node(t) {
+fn preview_component() -> html.Node {
   section(
     [
       class(
-        "w-full h-[50vh] md:h-auto px-5 pt-4 lg:px-6 pb-32 md:pb-36 overflow-y-auto",
+        "w-full h-[50vh] md:h-auto px-5 pt-4 lg:px-6 pb-32 md:pb-36 overflow-y-auto border-l border-l-stone-800",
       ),
       id("preview"),
     ],
@@ -39,7 +39,7 @@ fn preview_component() -> html.Node(t) {
   )
 }
 
-fn header_component() -> html.Node(t) {
+fn header_component() -> html.Node {
   html.header([], [
     nav(
       [
@@ -53,8 +53,8 @@ fn header_component() -> html.Node(t) {
             [
               class("text-yellow-400 text-2xl transition-all"),
               id("sidebar-toggle"),
-              attrs.title("Toggle sidebar"),
-              attrs.Attr("data-status", "closed"),
+              attr.title("Toggle sidebar"),
+              attr.Attr("data-status", "closed"),
             ],
             [tabler.icon(name: "layout-sidebar-left-expand", class: "")],
           ),
@@ -80,7 +80,7 @@ fn header_component() -> html.Node(t) {
             text: "Sign out",
             render_as: btn.Link,
             variant: btn.Ghost,
-            attrs: [attrs.href("/sign-out")],
+            attrs: [attr.href("/sign-out")],
             class: "",
           )),
         ]),
@@ -89,15 +89,11 @@ fn header_component() -> html.Node(t) {
   ])
 }
 
-fn sidebar_component(document: Document) -> html.Node(t) {
+fn sidebar_component(document: Document) -> html.Node {
   aside([id("sidebar"), class("sidebar sidebar-closed")], [
     div([class("flex flex-col h-full")], [
       form(
-        [
-          class("px-1 py-3"),
-          id("edit-details-form"),
-          attrs.Attr("onsubmit", ""),
-        ],
+        [class("px-1 py-3"), id("edit-details-form"), attr.Attr("onsubmit", "")],
         [
           html.h2_text(
             [class("font-bold text-lg text-yellow-400 mt-1 mb-4")],
@@ -110,7 +106,7 @@ fn sidebar_component(document: Document) -> html.Node(t) {
               label: "Title",
               variant: input.Text,
               attrs: [
-                attrs.value(
+                attr.value(
                   document.description
                   |> option.unwrap(or: ""),
                 ),
@@ -119,17 +115,17 @@ fn sidebar_component(document: Document) -> html.Node(t) {
           ),
           div([class("flex items-center mt-4")], [
             html.input([
-              attrs.name("is_public"),
+              attr.name("is_public"),
               id("is-public"),
               class("outline-none focus:outline-yellow-400"),
-              attrs.type_("checkbox"),
+              attr.type_("checkbox"),
               case document.is_public {
-                True -> attrs.checked()
-                False -> attrs.Attr("", "")
+                True -> attr.checked()
+                False -> attr.Attr("", "")
               },
             ]),
             html.label_text(
-              [attrs.for("is-public"), class("ml-2 inline-block")],
+              [attr.for("is-public"), class("ml-2 inline-block")],
               "Allow public access",
             ),
           ]),
@@ -139,7 +135,7 @@ fn sidebar_component(document: Document) -> html.Node(t) {
               render_as: btn.Button,
               variant: btn.Primary,
               class: "w-full mt-6",
-              attrs: [attrs.type_("submit")],
+              attrs: [attr.type_("submit")],
             ),
           ),
         ],
@@ -147,9 +143,9 @@ fn sidebar_component(document: Document) -> html.Node(t) {
       div([class("mt-auto self-start flex items-center gap-x-2 py-3")], [
         html.button(
           [
-            attrs.title("Keyboard shortcuts"),
-            attrs.type_("button"),
-            attrs.Attr("_", "on click toggle .hidden on #keyboard-shortcuts"),
+            attr.title("Keyboard shortcuts"),
+            attr.type_("button"),
+            attr.Attr("_", "on click toggle .hidden on #keyboard-shortcuts"),
           ],
           [
             tabler.icon(
@@ -160,8 +156,8 @@ fn sidebar_component(document: Document) -> html.Node(t) {
         ),
         html.a(
           [
-            attrs.href("/editor"),
-            attrs.title("Create new document"),
+            attr.href("/editor"),
+            attr.title("Create new document"),
             class(
               "text-yellow-400 text-xl transition-all p-2 aspect-square hover:bg-stone-900 rounded-lg",
             ),
@@ -173,26 +169,21 @@ fn sidebar_component(document: Document) -> html.Node(t) {
   ])
 }
 
-pub fn page(document: Document, documents: List(document.ListItem)) -> Node(t) {
+pub fn page(document: Document, documents: List(document.ListItem)) -> Node {
   html.Fragment([
     layout.header(option.unwrap(document.description, "Editor")),
     html.Body([class("md:h-screen flex overflow-hidden")], [
       sidebar_component(document),
-      main([class("h-full flex-grow md:flex md:flex-col")], [
+      main([class("h-full w-full flex-grow md:flex md:flex-col")], [
         header_component(),
-        main([class("h-full md:flex md:flex-1 gap-4 md:gap-0")], [
-          editor_component(document),
-          div(
-            [
-              class(
-                "w-full h-1 md:w-1.5 md:h-full md:block bg-stone-800 hover:cursor-col-resize",
-              ),
-              id("editor-divider"),
-            ],
-            [],
-          ),
-          preview_component(),
-        ]),
+        main(
+          [
+            class(
+              "h-full w-full grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-0",
+            ),
+          ],
+          [editor_component(document), preview_component()],
+        ),
       ]),
       div([id("keymaps"), class("hidden")], [
         html.Text(keybindings.as_json(bindings())),

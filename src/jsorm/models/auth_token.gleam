@@ -1,9 +1,8 @@
-import jsorm/generated/sql
-import gleam/io
+import gleam/dynamic
 import gleam/int
 import gleam/list
-import gleam/dynamic
 import jsorm/error
+import jsorm/generated/sql
 import sqlight
 
 pub type AuthToken {

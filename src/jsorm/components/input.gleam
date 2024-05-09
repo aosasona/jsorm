@@ -1,7 +1,7 @@
-import jsorm/lib/component_utils
-import nakai/html
-import nakai/html/attrs
 import gleam/list
+import jsorm/lib/component_utils
+import nakai/attr as attrs
+import nakai/html
 
 pub type Variant {
   Hidden
@@ -15,7 +15,7 @@ pub type Props(a) {
     label: String,
     name: String,
     variant: Variant,
-    attrs: List(attrs.Attr(a)),
+    attrs: List(attrs.Attr),
   )
 }
 
@@ -31,7 +31,7 @@ fn get_classes(variant: Variant) -> String {
   <> general_class
 }
 
-pub fn component(props: Props(t)) -> html.Node(t) {
+pub fn component(props: Props(t)) -> html.Node {
   let #(extra_classes, attrs) = component_utils.extract_class(props.attrs)
 
   html.div(

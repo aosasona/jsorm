@@ -1,8 +1,8 @@
 import gleam/json
 import gleam/list
 import jsorm/components/tabler
+import nakai/attr.{class, id}
 import nakai/html.{type Node, div, h1_text}
-import nakai/html/attrs.{class, id}
 
 const ctrl = "Ctrl"
 
@@ -23,7 +23,7 @@ pub fn bindings() -> List(Binding) {
   [
     Binding(
       description: "New document",
-      combos: [#(ctrl, "n")],
+      combos: [#(alt, "n")],
       action: "new-document",
     ),
     Binding(
@@ -65,10 +65,7 @@ pub fn as_json(bindings: List(Binding)) -> String {
   |> json.to_string
 }
 
-fn combos_to_markup(
-  combos: List(#(String, String)),
-  state: List(Node(a)),
-) -> Node(a) {
+fn combos_to_markup(combos: List(#(String, String)), state: List(Node)) -> Node {
   case combos {
     [#(leader, secondary), ..rest] -> {
       let primary = case leader {
@@ -94,7 +91,7 @@ fn combos_to_markup(
   }
 }
 
-fn make_list(bindings: List(Binding), state: List(Node(t))) -> List(Node(t)) {
+fn make_list(bindings: List(Binding), state: List(Node)) -> List(Node) {
   case bindings {
     [binding, ..others] -> {
       let item =
@@ -110,13 +107,13 @@ fn make_list(bindings: List(Binding), state: List(Node(t))) -> List(Node(t)) {
   }
 }
 
-pub fn component() -> html.Node(t) {
+pub fn component() -> html.Node {
   div(
     [
       class(
         "md:w-[325px] fixed bottom-5 right-5 bg-yellow-400 text-stone-900 px-4 pt-3 pb-4 z-[99999] rounded-lg drop-shadow-lg select-none hidden",
       ),
-      attrs.Attr(
+      attr.Attr(
         "_",
         "on load if localStorage.hasSeenKBList is null then remove .hidden from me",
       ),
@@ -127,7 +124,7 @@ pub fn component() -> html.Node(t) {
         h1_text([class("text-lg font-bold")], "Keyboard shortcuts"),
         html.button(
           [
-            attrs.Attr(
+            attr.Attr(
               "_",
               "on click set localStorage.hasSeenKBList to false then toggle .hidden on #keyboard-shortcuts",
             ),

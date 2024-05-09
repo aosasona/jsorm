@@ -1,15 +1,15 @@
 import birl
-import jsorm/models/document.{type ListItem}
-import jsorm/components/tabler
 import gleam/list
+import jsorm/components/tabler
+import jsorm/models/document.{type ListItem}
+import nakai/attr.{class, id, name, type_}
 import nakai/html.{type Node, button, div, input, p, p_text, span_text}
-import nakai/html/attrs.{class, id, name, type_}
 
 pub type Props {
   Props(documents: List(ListItem))
 }
 
-pub fn component(props: Props) -> Node(a) {
+pub fn component(props: Props) -> Node {
   div([class("command-palette hidden"), id("command-palette")], [
     div(
       [
@@ -24,10 +24,10 @@ pub fn component(props: Props) -> Node(a) {
           class(
             "flex-1 bg-stone-900 text-base text-stone-200 placeholder-stone-500 outline-none focus:outline-none px-5 py-3.5",
           ),
-          attrs.placeholder("Search..."),
-          attrs.Attr("hx-post", "/documents/search"),
-          attrs.Attr("hx-trigger", "input changed delay:250ms, query"),
-          attrs.Attr("hx-target", "#documents-list"),
+          attr.placeholder("Search..."),
+          attr.Attr("hx-post", "/documents/search"),
+          attr.Attr("hx-trigger", "input changed delay:250ms, query"),
+          attr.Attr("hx-target", "#documents-list"),
         ]),
         button(
           [
@@ -49,8 +49,8 @@ pub fn component(props: Props) -> Node(a) {
 
 pub fn make_documents_list(
   items: List(ListItem),
-  state: List(Node(_)),
-) -> List(Node(_)) {
+  state: List(Node),
+) -> List(Node) {
   case items {
     [doc, ..rest] -> {
       let markup =
@@ -59,7 +59,7 @@ pub fn make_documents_list(
             class("command-palette-item"),
             type_("button"),
             id(doc.id),
-            attrs.Attr(
+            attr.Attr(
               "onclick",
               "window.location.href = '/editor/" <> doc.id <> "'",
             ),
@@ -76,10 +76,10 @@ pub fn make_documents_list(
               [class("text-xs opacity-70")],
               "Last updated "
                 <> {
-                  doc.last_updated_at
-                  |> birl.from_unix
-                  |> birl.legible_difference(birl.now(), _)
-                },
+                doc.last_updated_at
+                |> birl.from_unix
+                |> birl.legible_difference(birl.now(), _)
+              },
             ),
           ],
         )

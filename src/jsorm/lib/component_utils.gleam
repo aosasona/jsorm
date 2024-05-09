@@ -1,14 +1,11 @@
 import gleam/list
-import nakai/html/attrs
+import nakai/attr as attrs
 
-pub fn extract_class(
-  attrs: List(attrs.Attr(a)),
-) -> #(String, List(attrs.Attr(a))) {
+pub fn extract_class(attrs: List(attrs.Attr)) -> #(String, List(attrs.Attr)) {
   let extra_classes = case list.find(attrs, fn(attr) { attr.name == "class" }) {
     Ok(attr) ->
       case attr {
         attrs.Attr(_, value) -> value
-        attrs.Event(_, _) -> ""
       }
     Error(_) -> ""
   }

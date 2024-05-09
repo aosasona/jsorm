@@ -1,6 +1,6 @@
 import jsorm/components/tabler
+import nakai/attr.{class}
 import nakai/html.{type Node}
-import nakai/html/attrs.{class}
 
 pub type Status {
   Success
@@ -12,7 +12,7 @@ pub type Props {
   Props(message: String, status: Status, class: String)
 }
 
-pub fn component(props: Props) -> Node(t) {
+pub fn component(props: Props) -> Node {
   let icon = case props.status {
     Success -> "circle-check"
     Warning -> "alert-triangle"

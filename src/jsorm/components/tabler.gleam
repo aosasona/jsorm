@@ -1,8 +1,8 @@
 import gleam/string
+import nakai/attr as attrs
 import nakai/html.{type Node}
-import nakai/html/attrs
 
-pub fn icon(name icon_name: String, class class: String) -> Node(a) {
+pub fn icon(name icon_name: String, class class: String) -> Node {
   let c =
     { "ti ti-" <> icon_name <> " " <> class }
     |> string.trim

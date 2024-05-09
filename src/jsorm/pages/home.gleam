@@ -1,8 +1,8 @@
 import jsorm/components/button
+import nakai/attr.{class}
 import nakai/html.{div, h1_text, img}
-import nakai/html/attrs.{class}
 
-pub fn page() -> html.Node(t) {
+pub fn page() -> html.Node {
   div(
     [
       class(
@@ -23,12 +23,12 @@ pub fn page() -> html.Node(t) {
           text: "Launch",
           render_as: button.Link,
           variant: button.Primary,
-          attrs: [attrs.href("/editor")],
+          attrs: [attr.href("/editor")],
           class: "block w-max mx-auto lg:mx-0 mt-6 lg:mt-8",
         )),
       ]),
       div([class("mt-10 mb-16 lg:my-0 rounded-lg overflow-hidden")], [
-        img([attrs.src("/assets/images/mockup.png")]),
+        img([attr.src("/assets/images/mockup.png")]),
       ]),
     ],
   )
