@@ -1,14 +1,14 @@
-import jsorm/components/palette
-import jsorm/lib/response
-import jsorm/models/document
-import jsorm/lib/auth
-import jsorm/web.{type Context}
 import gleam/dynamic
+import gleam/http
 import gleam/io
-import gleam/option.{None, Some}
 import gleam/json
 import gleam/list
-import gleam/http
+import gleam/option.{None, Some}
+import jsorm/components/palette
+import jsorm/lib/auth
+import jsorm/lib/response
+import jsorm/models/document
+import jsorm/web.{type Context}
 import nakai/html
 import wisp.{type Request, type Response}
 

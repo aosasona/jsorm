@@ -1,12 +1,12 @@
-import gleam/io
-import jsorm/pages/editor
-import jsorm/error
-import jsorm/web.{type Context}
-import jsorm/models/user.{type User}
-import jsorm/models/document
-import jsorm/lib/auth
-import gleam/option.{type Option, None, Some}
 import gleam/http
+import gleam/io
+import gleam/option.{type Option, None, Some}
+import jsorm/error
+import jsorm/lib/auth
+import jsorm/models/document
+import jsorm/models/user.{type User}
+import jsorm/pages/editor
+import jsorm/web.{type Context}
 import sqlight
 import wisp.{type Request, type Response}
 

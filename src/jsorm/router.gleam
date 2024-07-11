@@ -3,8 +3,8 @@ import gleam/option.{None, Some}
 import jsorm/pages
 import jsorm/web.{type Context, render}
 import jsorm/web/auth
-import jsorm/web/editor
 import jsorm/web/documents
+import jsorm/web/editor
 import jsorm/web/home
 import wisp.{type Request, type Response}
 

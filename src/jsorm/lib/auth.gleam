@@ -1,11 +1,11 @@
-import gleam/option.{type Option, None, Some}
 import gleam/dynamic
+import gleam/option.{type Option, None, Some}
 import gleam/result.{try}
 import jsorm/error
-import jsorm/models/user
-import jsorm/models/auth_token
-import jsorm/lib/session.{type SessionToken, auth_cookie}
 import jsorm/generated/sql
+import jsorm/lib/session.{type SessionToken, auth_cookie}
+import jsorm/models/auth_token
+import jsorm/models/user
 import sqlight
 import wisp.{type Request, type Response}
 

@@ -12,7 +12,7 @@ pub fn ok(
       #("message", json.string(message)),
       #("data", data),
     ])
-    |> json.to_string_builder,
+      |> json.to_string_builder,
     code,
   )
 }
@@ -20,7 +20,7 @@ pub fn ok(
 pub fn error(message message: String, code code: Int) -> wisp.Response {
   wisp.json_response(
     json.object([#("ok", json.bool(False)), #("error", json.string(message))])
-    |> json.to_string_builder,
+      |> json.to_string_builder,
     code,
   )
 }

@@ -1,8 +1,8 @@
+import gleam/dynamic
 import gleam/io
 import gleam/option.{type Option, None, Some}
 import jsorm/error.{SessionError}
 import jsorm/generated/sql
-import gleam/dynamic
 import sqlight
 
 pub type User {

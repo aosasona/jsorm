@@ -1,8 +1,8 @@
 import gleam/io
+import ids/nanoid
+import jsorm/error.{SessionError}
 import jsorm/generated/sql
 import jsorm/models/session
-import jsorm/error.{SessionError}
-import ids/nanoid
 import sqlight
 
 pub const auth_cookie = "__session_token"

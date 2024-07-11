@@ -1,6 +1,6 @@
 import jsorm/pages/error
-import jsorm/pages/login
 import jsorm/pages/home
+import jsorm/pages/login
 
 pub const error = error.page
 

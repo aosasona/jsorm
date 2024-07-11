@@ -1,12 +1,12 @@
 import birl
-import jsorm/generated/sql
-import gleam/option.{type Option, Some}
 import gleam/dynamic
-import gleam/list
 import gleam/int
 import gleam/json
-import jsorm/error.{type Error}
+import gleam/list
+import gleam/option.{type Option, Some}
 import ids/nanoid
+import jsorm/error.{type Error}
+import jsorm/generated/sql
 import sqlight.{type Connection}
 
 pub type Document {
@@ -199,9 +199,9 @@ pub fn upsert(
       description,
       "Untitled "
         <> {
-          birl.utc_now()
-          |> birl.to_naive
-        },
+        birl.utc_now()
+        |> birl.to_naive
+      },
     )
 
   case

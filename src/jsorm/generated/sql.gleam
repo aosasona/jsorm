@@ -1,10 +1,10 @@
 // THIS FILE IS GENERATED. DO NOT EDIT.
 // Regenerate with `gleam run -m sqlgen`
 
-import sqlight
-import gleam/result
 import gleam/dynamic
+import gleam/result
 import jsorm/error.{type Error}
+import sqlight
 
 pub type QueryResult(t) =
   Result(List(t), Error)
@@ -196,9 +196,8 @@ pub fn get_documents_by_user(
   let query =
     "select id, description, is_public, unixepoch(updated_at) as updated_at
 from documents
-where user_id = $1 or is_public = true
-order by updated_at desc
-;
+where user_id = $1
+order by updated_at desc;
 "
   sqlight.query(query, db, arguments, decoder)
   |> result.map_error(error.DatabaseError)

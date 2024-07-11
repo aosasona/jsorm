@@ -1,7 +1,7 @@
 import gleam/erlang/os
-import gleam/result
 import gleam/hackney
 import gleam/json
+import gleam/result
 import plunk
 import plunk/event.{Event}
 import plunk/types

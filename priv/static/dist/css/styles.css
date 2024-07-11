@@ -860,8 +860,8 @@ video {
   overflow-y: auto;
 }
 
-.whitespace-pre-wrap{
-  white-space: pre-wrap;
+.whitespace-pre-line{
+  white-space: pre-line;
 }
 
 .rounded{
@@ -895,11 +895,6 @@ video {
 .border-b-stone-800{
   --tw-border-opacity: 1;
   border-bottom-color: rgb(41 37 36 / var(--tw-border-opacity));
-}
-
-.border-l-stone-600{
-  --tw-border-opacity: 1;
-  border-left-color: rgb(87 83 78 / var(--tw-border-opacity));
 }
 
 .border-l-stone-800{

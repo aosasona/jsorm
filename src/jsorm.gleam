@@ -1,9 +1,9 @@
 import dot_env as dotenv
-import gleam/erlang/process
 import gleam/erlang/os
-import gleam/result
-import gleam/option.{None}
+import gleam/erlang/process
 import gleam/int
+import gleam/option.{None}
+import gleam/result
 import jsorm/database
 import jsorm/mail
 import jsorm/router

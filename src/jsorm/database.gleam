@@ -1,5 +1,5 @@
-import gleam/result
 import gleam/erlang/os
+import gleam/result
 import sqlight
 
 fn get_db_path() -> String {
