@@ -135,17 +135,19 @@ pub fn find_by_user(
 pub fn update_details(
   db: Connection,
   user_id user_id: Int,
+  content content: String,
   document_id document_id: String,
   description description: String,
   is_public is_public: Int,
 ) -> Result(Document, Error) {
   case
-    sql.update_document_details(
+    sql.upsert_document(
       db,
       [
+        sqlight.text(document_id),
+        sqlight.text(content),
         sqlight.text(description),
         sqlight.int(is_public),
-        sqlight.text(document_id),
         sqlight.int(user_id),
       ],
       db_decoder(),

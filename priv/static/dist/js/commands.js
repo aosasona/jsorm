@@ -151,19 +151,28 @@ export class Commands {
                 return toast.error("No document ID found, please refresh the page and try again");
             const title = data.get("title");
             const isPublic = data.get("is_public") && data.get("is_public") === "on" ? 1 : 0;
-            console.log({ document_id, title, isPublic });
+            const content = this.editor.value;
             (_a = form.querySelector("button")) === null || _a === void 0 ? void 0 : _a.setAttribute("disabled", "true");
             fetch("/documents/details", {
-                method: "PATCH",
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ document_id, title, is_public: isPublic }),
+                body: JSON.stringify({
+                    document_id,
+                    content,
+                    title,
+                    is_public: isPublic,
+                }),
             })
                 .then((res) => res.json())
                 .then((data) => {
+                var _a;
                 if (data === null || data === void 0 ? void 0 : data.ok) {
                     toast.success("Details updated");
+                    if (!window.location.href.includes((_a = data.data) === null || _a === void 0 ? void 0 : _a.document_id)) {
+                        window.history.replaceState(null, "", `/e/${data.data.document_id}`);
+                    }
                     return;
                 }
                 toast.error((data === null || data === void 0 ? void 0 : data.error) || "An unknown error occurred");

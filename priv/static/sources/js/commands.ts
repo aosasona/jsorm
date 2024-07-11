@@ -64,7 +64,8 @@ export class Commands {
 		if (commandPalette.classList.contains("hidden")) {
 			commandPalette.classList.remove("hidden");
 			commandPalette.classList.add("command-palette-opened");
-			const commandPaletteInput = commandPalette.getElementsByTagName("input")[0];
+			const commandPaletteInput =
+				commandPalette.getElementsByTagName("input")[0];
 			if (commandPaletteInput) {
 				commandPaletteInput.focus();
 				commandPaletteInput.value = "";
@@ -112,7 +113,10 @@ export class Commands {
 		if (saveBtn?.hasAttribute("disabled")) return;
 
 		const document_id = this.editor.dataset.documentId;
-		if (!document_id) return toast.error("No document ID found, please refresh the page and try again");
+		if (!document_id)
+			return toast.error(
+				"No document ID found, please refresh the page and try again",
+			);
 		const content = this.editor.value;
 		if (!content) return toast.error("No content found!");
 		if (!this.isValidJSON(content)) return toast.error("Invalid JSON");
@@ -138,7 +142,11 @@ export class Commands {
 					this.updatePreview({ showToast: false });
 					// Update document ID in URL if it isn't already present (e.g. when creating a new document)
 					if (!window.location.href.includes(data.data?.document_id)) {
-						window.history.replaceState(null, "", `/e/${data.data.document_id}`);
+						window.history.replaceState(
+							null,
+							"",
+							`/e/${data.data.document_id}`,
+						);
 					}
 					return;
 				}
@@ -156,7 +164,9 @@ export class Commands {
 	}
 
 	public handleEditDetails() {
-		const form = document.querySelector("#edit-details-form") as HTMLFormElement;
+		const form = document.querySelector(
+			"#edit-details-form",
+		) as HTMLFormElement;
 		if (!form) return;
 
 		form.addEventListener("submit", (e) => {
@@ -165,23 +175,39 @@ export class Commands {
 
 			const data = new FormData(form);
 			const document_id = this.editor.dataset.documentId;
-			if (!document_id) return toast.error("No document ID found, please refresh the page and try again");
+			if (!document_id)
+				return toast.error(
+					"No document ID found, please refresh the page and try again",
+				);
 			const title = data.get("title");
-			const isPublic = data.get("is_public") && data.get("is_public") === "on" ? 1 : 0;
-			console.log({ document_id, title, isPublic });
+			const isPublic =
+				data.get("is_public") && data.get("is_public") === "on" ? 1 : 0;
+			const content = this.editor.value;
 
 			form.querySelector("button")?.setAttribute("disabled", "true");
 			fetch("/documents/details", {
-				method: "PATCH",
+				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ document_id, title, is_public: isPublic }),
+				body: JSON.stringify({
+					document_id,
+					content,
+					title,
+					is_public: isPublic,
+				}),
 			})
 				.then((res) => res.json())
 				.then((data: EditDetailsResponse) => {
 					if (data?.ok) {
 						toast.success("Details updated");
+						if (!window.location.href.includes(data.data?.document_id)) {
+							window.history.replaceState(
+								null,
+								"",
+								`/e/${data.data.document_id}`,
+							);
+						}
 						return;
 					}
 
@@ -236,7 +262,9 @@ export class Commands {
 		const objs = document.querySelectorAll("#object-markup-title");
 		objs.forEach((obj) => {
 			obj.addEventListener("click", (_) => {
-				const expanded = parseInt(obj.parentElement?.getAttribute("data-expanded") ?? "0");
+				const expanded = parseInt(
+					obj.parentElement?.getAttribute("data-expanded") ?? "0",
+				);
 				const markup = obj.parentElement?.querySelector("#object-markup");
 				const icon = obj.querySelector("#expanded-status-icon");
 
@@ -245,11 +273,17 @@ export class Commands {
 				if (expanded) {
 					markup.classList.add("hidden");
 					obj.parentElement?.setAttribute("data-expanded", "0");
-					icon.classList.replace("ti-caret-down-filled", "ti-caret-right-filled");
+					icon.classList.replace(
+						"ti-caret-down-filled",
+						"ti-caret-right-filled",
+					);
 				} else {
 					markup.classList.remove("hidden");
 					obj.parentElement?.setAttribute("data-expanded", "1");
-					icon.classList.replace("ti-caret-right-filled", "ti-caret-down-filled");
+					icon.classList.replace(
+						"ti-caret-right-filled",
+						"ti-caret-down-filled",
+					);
 				}
 			});
 		});

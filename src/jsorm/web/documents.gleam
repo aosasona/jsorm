@@ -21,7 +21,12 @@ type SaveRequest {
 }
 
 type EditDetailsRequest {
-  EditDetailsRequest(document_id: String, title: String, is_public: Int)
+  EditDetailsRequest(
+    document_id: String,
+    content: String,
+    title: String,
+    is_public: Int,
+  )
 }
 
 fn auth(req, ctx: Context, next) {
@@ -39,14 +44,15 @@ pub fn handle_request(req: Request, ctx: Context) -> Response {
 }
 
 pub fn edit_details(req: Request, ctx: Context) -> Response {
-  use <- wisp.require_method(req, http.Patch)
+  use <- wisp.require_method(req, http.Put)
   use raw_data <- wisp.require_json(req)
   use user <- auth(req, ctx)
 
   let decoder =
-    dynamic.decode3(
+    dynamic.decode4(
       EditDetailsRequest,
       dynamic.field("document_id", dynamic.string),
+      dynamic.field("content", dynamic.string),
       dynamic.field("title", dynamic.string),
       dynamic.field("is_public", dynamic.int),
     )
@@ -66,6 +72,7 @@ pub fn edit_details(req: Request, ctx: Context) -> Response {
     document.update_details(
       ctx.db,
       user_id: user.id,
+      content: data.content,
       document_id: data.document_id,
       description: data.title,
       is_public: data.is_public,
