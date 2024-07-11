@@ -6,7 +6,7 @@ import nakai/attr.{class, id, name, type_}
 import nakai/html.{type Node, button, div, input, p, p_text, span_text}
 
 pub type Props {
-  Props(documents: List(ListItem))
+  Props(documents: List(ListItem), username: String)
 }
 
 pub fn component(props: Props) -> Node {
@@ -43,6 +43,21 @@ pub fn component(props: Props) -> Node {
     div(
       [class("h-full overflow-y-auto"), id("documents-list")],
       make_documents_list(props.documents, []),
+    ),
+    // Signed in indicator
+    div(
+      [
+        class(
+          "w-full border-t border-t-stone-800 flex gap-2 items-center justify-center py-2.5 px-4",
+        ),
+      ],
+      [
+        div([class("bg-green-400 w-2.5 aspect-square rounded-full")], []),
+        p([class("text-xs text-stone-500")], [
+          span_text([], "Signed in as "),
+          span_text([class("font-bold text-yellow-400")], props.username),
+        ]),
+      ],
     ),
   ])
 }

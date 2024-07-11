@@ -61,7 +61,7 @@ fn load_or_create_document(
           case document.find_by_user(db, user.id) {
             Ok(docs) ->
               next(
-                editor.page(doc, docs)
+                editor.page(user, doc, docs)
                 |> web.render(200),
               )
             Error(e) -> {
@@ -94,7 +94,7 @@ fn load_or_create_document(
       case document.find_by_user(db, user.id) {
         Ok(docs) ->
           document.new(user_id: user.id, parent_id: None)
-          |> editor.page(docs)
+          |> editor.page(user, _, docs)
           |> web.render(200)
           |> next
         Error(e) -> {

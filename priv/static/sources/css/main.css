@@ -73,7 +73,7 @@ button {
 
 .command-palette {
 	transform: translate(-50%, -50%);
-	@apply w-[90%] md:w-[550px] lg:w-[650px] 2xl:w-[700px] h-[60vh] md:h-[375px] 2xl:h-[400px] min-h-[225px] fixed top-[50%] left-[50%] bg-stone-900 bg-opacity-60 backdrop-blur-xl text-stone-100 border border-stone-800 rounded-lg shadow-xl z-[999999] overflow-hidden;
+	@apply w-[90%] md:w-[550px] lg:w-[650px] 2xl:w-[700px] h-[60vh] md:h-[392px] 2xl:h-[420px] min-h-[225px] fixed top-[50%] left-[50%] bg-stone-900 bg-opacity-60 backdrop-blur-xl text-stone-100 border border-stone-800 rounded-lg shadow-xl z-[999999] overflow-hidden;
 }
 
 .command-palette.command-palette-opened {

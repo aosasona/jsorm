@@ -98,8 +98,6 @@ pub fn verify_otp(req: Request, ctx: Context) -> Response {
 
   let token_result = auth_token.find_by_user(ctx.db, uid)
   use <- bool.guard(when: result.is_error(token_result), return: {
-    io.println("find_by_user ")
-    let _ = io.debug(token_result)
     render_error("Something went wrong, please try again", 500)
   })
 

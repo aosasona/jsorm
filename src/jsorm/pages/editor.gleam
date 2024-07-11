@@ -1,3 +1,4 @@
+import gleam/int
 import gleam/option
 import jsorm/components/button as btn
 import jsorm/components/input
@@ -5,6 +6,7 @@ import jsorm/components/keybindings.{bindings}
 import jsorm/components/palette.{Props as PaletteProps}
 import jsorm/components/tabler
 import jsorm/models/document.{type Document}
+import jsorm/models/user.{type User}
 import jsorm/pages/layout
 import nakai/attr.{class, id}
 import nakai/html.{
@@ -169,7 +171,11 @@ fn sidebar_component(document: Document) -> html.Node {
   ])
 }
 
-pub fn page(document: Document, documents: List(document.ListItem)) -> Node {
+pub fn page(
+  user: User,
+  document: Document,
+  documents: List(document.ListItem),
+) -> Node {
   html.Fragment([
     layout.header(option.unwrap(document.description, "Editor")),
     html.Body([class("md:h-screen flex overflow-hidden")], [
@@ -189,7 +195,11 @@ pub fn page(document: Document, documents: List(document.ListItem)) -> Node {
         html.Text(keybindings.as_json(bindings())),
       ]),
       keybindings.component(),
-      palette.component(PaletteProps(documents: documents)),
+      palette.component(
+        PaletteProps(documents: documents, username: {
+          option.unwrap(user.email, "Guest #" <> int.to_string(user.id))
+        }),
+      ),
     ]),
   ])
 }
