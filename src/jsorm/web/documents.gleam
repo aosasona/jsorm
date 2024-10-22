@@ -48,7 +48,7 @@ pub fn edit_details(req: Request, ctx: Context) -> Response {
   use raw_data <- wisp.require_json(req)
   use user <- auth(req, ctx)
 
-  let decoder =
+  let details_decoder =
     dynamic.decode4(
       EditDetailsRequest,
       dynamic.field("document_id", dynamic.string),
@@ -57,9 +57,9 @@ pub fn edit_details(req: Request, ctx: Context) -> Response {
       dynamic.field("is_public", dynamic.int),
     )
 
-  use data <-
-    fn(next) {
-      case decoder(raw_data) {
+  use data: EditDetailsRequest <-
+    fn(next: fn(EditDetailsRequest) -> Response) {
+      case details_decoder(raw_data) {
         Ok(data) -> next(data)
         Error(e) -> {
           io.debug(e)
@@ -123,7 +123,7 @@ pub fn save(req: Request, ctx: Context) -> Response {
   use raw_data <- wisp.require_json(req)
   use user <- auth(req, ctx)
 
-  let decoder =
+  let save_request_decoder =
     dynamic.decode3(
       SaveRequest,
       dynamic.field("document_id", dynamic.string),
@@ -131,9 +131,9 @@ pub fn save(req: Request, ctx: Context) -> Response {
       dynamic.field("content", dynamic.string),
     )
 
-  use data <-
-    fn(next) {
-      case decoder(raw_data) {
+  use data: SaveRequest <-
+    fn(next: fn(SaveRequest) -> Response) {
+      case save_request_decoder(raw_data) {
         Ok(data) -> next(data)
         Error(e) -> {
           io.debug(e)

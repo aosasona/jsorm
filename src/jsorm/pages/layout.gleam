@@ -1,3 +1,4 @@
+import dot_env/env
 import gleam/option.{None, Some}
 import jsorm/components/button
 import jsorm/components/link
@@ -15,9 +16,9 @@ const description = "A minimal JSON explorer"
 
 const meta_image = "/assets/images/meta.png"
 
-const website_url = "https://jsorm.wyte.space"
-
 pub fn header(title: String) -> html.Node {
+  let website_url = env.get_or("WEB_URL", "https://jsorm.trulyao.dev")
+
   html.Head([
     html.meta([attrs.charset("utf-8")]),
     html.meta([
