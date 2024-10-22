@@ -40,7 +40,7 @@ packages = [
 
 [requirements]
 birl = { version = "~> 1.4" }
-dot_env = { version = "~> 0.2" }
+dot_env = { version = ">= 0.5.1 and < 1.0.0" }
 gleam_crypto = { version = "~> 1.0" }
 gleam_erlang = { version = "~> 0.23" }
 gleam_hackney = { version = "~> 1.2" }
@@ -52,7 +52,7 @@ gleeunit = { version = "~> 1.0" }
 ids = { version = "~> 0.12" }
 migrant = { version = "~> 0.2" }
 mist = { version = "~> 0.15" }
-nakai = { version = ">= 0.10.0 and < 1.0.0"}
+nakai = { version = ">= 0.10.0 and < 1.0.0" }
 plunk = { version = "~> 1.2" }
 simplifile = { version = "~> 1.2" }
 sqlight = { version = "~> 0.9" }
