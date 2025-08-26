@@ -260,7 +260,6 @@ export class Commands {
 
     private handleExpandedAction() {
         const objs = document.querySelectorAll(".object-markup-title");
-        console.log(objs);
         objs.forEach((obj) => {
             obj.addEventListener("click", (_) => {
                 const expanded = parseInt(

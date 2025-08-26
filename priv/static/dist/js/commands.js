@@ -220,7 +220,6 @@ export class Commands {
     }
     handleExpandedAction() {
         const objs = document.querySelectorAll(".object-markup-title");
-        console.log(objs);
         objs.forEach((obj) => {
             obj.addEventListener("click", (_) => {
                 var _a, _b, _c, _d, _e;

@@ -60,7 +60,7 @@ function formatValue(value) {
 }
 function makeFieldMarkup(key, value, isNested = false) {
     const displayValue = formatValue(value);
-    return `<div class="${getIndentationClass(isNested)}"><b>${key}</b>: ${displayValue}</div>`;
+    return `<div class="${getIndentationClass(isNested)} whitespace-pre-line"><b>${key}</b>: ${displayValue}</div>`;
 }
 function makeArrayMarkup(key, value, isNested) {
     let result = `<div class="${getIndentationClass(isNested)}"><b>${key}</b>: [`;
@@ -69,7 +69,7 @@ function makeArrayMarkup(key, value, isNested) {
             result += makeObjectMarkup(index.toString(), item, true);
             continue;
         }
-        result += `<div class="${getIndentationClass(true)}">${formatValue(item)}</div>`;
+        result += `<div class="${getIndentationClass(true)} whitespace-pre-line">${formatValue(item)}</div>`;
     }
     result += "]</div>";
     return result;
