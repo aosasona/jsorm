@@ -10,7 +10,7 @@ import jsorm/models/user.{type User}
 import jsorm/pages/layout
 import nakai/attr.{class, id}
 import nakai/html.{
-  type Node, aside, button, div, form, main, nav, section, textarea_text,
+  type Node, aside, button, div, form, main, nav, p, section, textarea_text,
 }
 
 fn editor_component(document: Document) -> Node {
@@ -41,7 +41,9 @@ fn preview_component() -> html.Node {
   )
 }
 
-fn header_component() -> html.Node {
+fn header_component(user: user.User) -> html.Node {
+  let u = user.email |> option.unwrap(or: "Guest #" <> int.to_string(user.id))
+
   html.header([], [
     nav(
       [
@@ -69,6 +71,10 @@ fn header_component() -> html.Node {
           ),
         ]),
         div([class("flex items-center gap-x-2")], [
+          p([class("hidden lg:block")], [
+            html.span_text([class("text-stone-600")], "Signed in as "),
+            html.span_text([class("text-yellow-400")], u),
+          ]),
           btn.component(
             btn.Props(
               text: "Save",
@@ -181,7 +187,7 @@ pub fn page(
     html.Body([class("md:h-screen flex overflow-hidden")], [
       sidebar_component(document),
       main([class("h-full w-full flex-grow md:flex md:flex-col")], [
-        header_component(),
+        header_component(user),
         main(
           [
             class(
