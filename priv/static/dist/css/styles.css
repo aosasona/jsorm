@@ -679,8 +679,16 @@ video {
   margin-right: 0.5rem;
 }
 
+.mr-4{
+  margin-right: 1rem;
+}
+
 .mr-5{
   margin-right: 1.25rem;
+}
+
+.mt-0{
+  margin-top: 0px;
 }
 
 .mt-1{
@@ -721,10 +729,6 @@ video {
 
 .mt-auto{
   margin-top: auto;
-}
-
-.mr-4{
-  margin-right: 1rem;
 }
 
 .block{
@@ -896,8 +900,16 @@ video {
   overflow-y: auto;
 }
 
+.whitespace-pre{
+  white-space: pre;
+}
+
 .whitespace-pre-line{
   white-space: pre-line;
+}
+
+.whitespace-pre-wrap{
+  white-space: pre-wrap;
 }
 
 .rounded{
@@ -1051,6 +1063,11 @@ video {
   padding-bottom: 0.25rem;
 }
 
+.py-1\.5{
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+}
+
 .py-2{
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -1081,9 +1098,9 @@ video {
   padding-bottom: 2rem;
 }
 
-.py-1\.5{
-  padding-top: 0.375rem;
-  padding-bottom: 0.375rem;
+.py-0{
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 
 .pb-16{
