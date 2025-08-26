@@ -219,13 +219,14 @@ export class Commands {
         }
     }
     handleExpandedAction() {
-        const objs = document.querySelectorAll("#object-markup-title");
+        const objs = document.querySelectorAll(".object-markup-title");
+        console.log(objs);
         objs.forEach((obj) => {
             obj.addEventListener("click", (_) => {
                 var _a, _b, _c, _d, _e;
                 const expanded = parseInt((_b = (_a = obj.parentElement) === null || _a === void 0 ? void 0 : _a.getAttribute("data-expanded")) !== null && _b !== void 0 ? _b : "0");
-                const markup = (_c = obj.parentElement) === null || _c === void 0 ? void 0 : _c.querySelector("#object-markup");
-                const icon = obj.querySelector("#expanded-status-icon");
+                const markup = (_c = obj.parentElement) === null || _c === void 0 ? void 0 : _c.querySelector(".object-markup");
+                const icon = obj.querySelector(".expanded-status-icon");
                 if (!markup || !icon)
                     return;
                 if (expanded) {
