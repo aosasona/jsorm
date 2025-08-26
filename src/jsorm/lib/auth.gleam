@@ -19,7 +19,7 @@ pub type AuthStatus {
 }
 
 pub fn set_auth_cookie(res: Response, req: Request, token: String) -> Response {
-  wisp.set_cookie(res, req, auth_cookie, token, wisp.Signed, 60 * 60 * 24 * 7)
+  wisp.set_cookie(res, req, auth_cookie, token, wisp.Signed, 60 * 60 * 24 * 30)
 }
 
 pub fn get_auth_status(req: Request, db: sqlight.Connection) -> AuthStatus {
