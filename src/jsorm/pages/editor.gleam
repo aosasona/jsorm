@@ -71,8 +71,8 @@ fn header_component(user: user.User) -> html.Node {
           ),
         ]),
         div([class("flex items-center gap-x-2")], [
-          p([class("hidden lg:block")], [
-            html.span_text([class("text-stone-600")], "Signed in as "),
+          p([class("hidden lg:block mr-4")], [
+            html.span_text([class("text-stone-500")], "Signed in as "),
             html.span_text([class("text-yellow-400")], u),
           ]),
           btn.component(

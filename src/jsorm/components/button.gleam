@@ -21,7 +21,7 @@ pub type Props(a) {
   )
 }
 
-const shared_class = "disabled:opacity-50 disabled:cursor-not-allowed  py-2 px-5 select-none"
+const shared_class = "disabled:opacity-50 disabled:cursor-not-allowed py-1.5 px-5 leading-normal select-none"
 
 pub fn component(props: Props(t)) -> html.Node {
   let class =
