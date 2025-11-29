@@ -25,7 +25,7 @@ pub type Context {
 
 pub fn render(page: Node, code: Int) {
   page
-  |> nakai.to_string_builder
+  |> nakai.to_string
   |> wisp.html_response(code)
 }
 
@@ -51,33 +51,31 @@ pub fn copy_query_params(
   redirect include_redirect: Bool,
   include other_params: List(#(String, String)),
 ) {
-  let query =
+  let base_params =
     request.get_query(req)
     |> result.unwrap(or: [])
-    |> fn(q) {
-      let q = list.concat([q, other_params])
-      // check if the redirect param is already present in the query string and include_redirect is false
-      case list.key_find(q, "redirect"), include_redirect {
-        // if it exists and we are not including the redirect param, remove it
-        Ok(_), False -> list.filter(q, fn(pair) { pair.0 != "redirect" })
-        // if it exists and we are including the redirect param, leave it
-        Ok(_), True -> q
-        // if it doesn't exist and we are including the redirect param, add it as the current path
-        Error(_), True ->
-          list.concat([
-            q,
-            [
-              #("redirect", case req.path {
-                "/" -> "/editor"
-                _ -> req.path
-              }),
-            ],
-          ])
-        // if it doesn't exist and we are not including the redirect param, leave it
-        Error(_), False -> q
+    |> fn(params) { list.flatten([params, other_params]) }
+
+  let redirect_path = case req.path {
+    "/" -> "/editor"
+    _ -> req.path
+  }
+
+  let params =
+    case include_redirect {
+      True -> {
+        case list.key_find(base_params, "redirect") {
+          Ok(_) -> base_params
+          Error(_) ->
+            list.flatten([base_params, [#("redirect", redirect_path)]])
+        }
       }
+      False -> list.filter(base_params, fn(pair) { pair.0 != "redirect" })
     }
     |> list.filter(fn(pair) { pair.1 != "" })
+
+  let query =
+    params
     |> list.map(fn(pair) { pair.0 <> "=" <> uri.encode(pair.1) })
     |> string.join("&")
 

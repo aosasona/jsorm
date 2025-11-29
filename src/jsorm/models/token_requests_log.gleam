@@ -1,4 +1,4 @@
-import gleam/dynamic
+import gleam/dynamic/decode
 import gleam/result
 import jsorm/error
 import sqlight
@@ -41,7 +41,7 @@ pub fn create(
     query,
     db,
     [sqlight.int(user_id), sqlight.text(to_string(token_type))],
-    dynamic.element(0, dynamic.int),
+    decode.at([0], decode.int),
   )
   |> result.map_error(error.DatabaseError)
   |> unwrap_single_item
@@ -60,7 +60,7 @@ pub fn get_logs_in_duration(
     query,
     db,
     [sqlight.int(user_id), sqlight.int(duration)],
-    dynamic.element(0, dynamic.int),
+    decode.at([0], decode.int),
   )
   |> result.map_error(error.DatabaseError)
   |> unwrap_single_item

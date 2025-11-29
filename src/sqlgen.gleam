@@ -17,8 +17,8 @@ fn generate_sql_queries_module() -> Nil {
   let assert Ok(functions) = list.try_map(files, generate_sql_function)
 
   let imports = [
-    "import sqlight", "import gleam/result", "import gleam/dynamic",
-    "import jsorm/error.{Error}",
+    "import sqlight", "import gleam/result", "import gleam/dynamic/decode",
+    "import jsorm/error.{type Error}",
   ]
   let module =
     string.join(
@@ -36,7 +36,7 @@ fn generate_sql_queries_module() -> Nil {
 
 fn generate_sql_function(file: String) -> Result(String, _) {
   let name = string.replace(file, ".sql", "")
-  use contents <- result.then(simplifile.read("sql/" <> file))
+  use contents <- result.try(simplifile.read("sql/" <> file))
   let escaped =
     contents
     |> string.replace("\\", "\\\\")
@@ -45,7 +45,7 @@ fn generate_sql_function(file: String) -> Result(String, _) {
     "pub fn " <> name <> "(",
     "  db: sqlight.Connection,",
     "  args arguments: List(sqlight.Value),",
-    "  decoder decoder: dynamic.Decoder(a),",
+    "  decoder decoder: decode.Decoder(a),",
     ") -> QueryResult(a) {",
     "  let query =",
     "    \"" <> escaped <> "\"",

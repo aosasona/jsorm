@@ -1,6 +1,5 @@
-import gleam/dynamic
+import gleam/dynamic/decode
 import gleam/http
-import gleam/io
 import gleam/json
 import gleam/list
 import gleam/option.{None, Some}
@@ -29,6 +28,14 @@ type EditDetailsRequest {
   )
 }
 
+fn edit_details_request_decoder() -> decode.Decoder(EditDetailsRequest) {
+  use document_id <- decode.field("document_id", decode.string)
+  use content <- decode.field("content", decode.string)
+  use title <- decode.field("title", decode.string)
+  use is_public <- decode.field("is_public", decode.int)
+  decode.success(EditDetailsRequest(document_id:, content:, title:, is_public:))
+}
+
 fn auth(req, ctx: Context, next) {
   case auth.get_auth_status(req, ctx.db) {
     auth.LoggedIn(#(user, _)) -> next(user)
@@ -48,21 +55,12 @@ pub fn edit_details(req: Request, ctx: Context) -> Response {
   use raw_data <- wisp.require_json(req)
   use user <- auth(req, ctx)
 
-  let details_decoder =
-    dynamic.decode4(
-      EditDetailsRequest,
-      dynamic.field("document_id", dynamic.string),
-      dynamic.field("content", dynamic.string),
-      dynamic.field("title", dynamic.string),
-      dynamic.field("is_public", dynamic.int),
-    )
-
   use data: EditDetailsRequest <-
     fn(next: fn(EditDetailsRequest) -> Response) {
-      case details_decoder(raw_data) {
+      case decode.run(raw_data, edit_details_request_decoder()) {
         Ok(data) -> next(data)
         Error(e) -> {
-          io.debug(e)
+          echo e
           response.bad_request()
         }
       }
@@ -89,7 +87,7 @@ pub fn edit_details(req: Request, ctx: Context) -> Response {
         code: 200,
       )
     Error(e) -> {
-      io.debug(e)
+      echo e
       response.internal_server_error()
     }
   }
@@ -107,12 +105,12 @@ pub fn search(req: Request, ctx: Context) -> Response {
           html.Fragment(palette.make_documents_list(docs, []))
           |> web.render(200)
         Error(e) -> {
-          io.debug(e)
+          echo e
           response.internal_server_error()
         }
       }
     Error(e) -> {
-      io.debug(e)
+      echo e
       response.bad_request()
     }
   }
@@ -123,20 +121,22 @@ pub fn save(req: Request, ctx: Context) -> Response {
   use raw_data <- wisp.require_json(req)
   use user <- auth(req, ctx)
 
-  let save_request_decoder =
-    dynamic.decode3(
-      SaveRequest,
-      dynamic.field("document_id", dynamic.string),
-      dynamic.field("description", dynamic.optional(dynamic.string)),
-      dynamic.field("content", dynamic.string),
+  let save_request_decoder = {
+    use document_id <- decode.field("document_id", decode.string)
+    use description <- decode.field(
+      "description",
+      decode.optional(decode.string),
     )
+    use content <- decode.field("content", decode.string)
+    decode.success(SaveRequest(document_id:, description:, content:))
+  }
 
   use data: SaveRequest <-
     fn(next: fn(SaveRequest) -> Response) {
-      case save_request_decoder(raw_data) {
+      case decode.run(raw_data, save_request_decoder) {
         Ok(data) -> next(data)
         Error(e) -> {
-          io.debug(e)
+          echo e
           response.bad_request()
         }
       }
@@ -164,7 +164,7 @@ pub fn save(req: Request, ctx: Context) -> Response {
         code: 200,
       )
     Error(e) -> {
-      io.debug(e)
+      echo e
       response.internal_server_error()
     }
   }

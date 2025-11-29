@@ -40,6 +40,6 @@ fn default_responses(
 
   // Do not intercept redirects
   use <- bool.guard(when: res.status >= 300 && res.status < 400, return: res)
-  use <- bool.guard(when: res.body != wisp.Empty, return: res)
+  use <- bool.guard(when: res.body != wisp.Text(""), return: res)
   render(pages.error(ctx, req, res.status), res.status)
 }

@@ -1,4 +1,4 @@
-import gleam/dynamic
+import gleam/dynamic/decode
 import gleam/option.{type Option, None, Some}
 import gleam/result.{try}
 import jsorm/error
@@ -53,11 +53,7 @@ pub fn remove_session_token(
   db: sqlight.Connection,
   token: String,
 ) -> Result(_, error.Error) {
-  sql.delete_session_token(
-    db,
-    args: [sqlight.text(token)],
-    decoder: dynamic.int,
-  )
+  sql.delete_session_token(db, args: [sqlight.text(token)], decoder: decode.int)
 }
 
 pub fn signin_as_user(
@@ -88,3 +84,6 @@ pub fn save_otp(
     Error(_) -> wisp.internal_server_error()
   }
 }
+
+@external(erlang, "jsorm_ffi", "generate_otp")
+pub fn generate_otp() -> String

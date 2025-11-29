@@ -1,4 +1,4 @@
-import gleam/erlang/os
+import dot_env/env
 import gleam/hackney
 import gleam/json
 import gleam/result
@@ -14,7 +14,11 @@ pub type MailError {
 pub const signin_request_event = "signin-request"
 
 pub fn init() -> plunk.Instance {
-  let assert Ok(key) = os.get_env("PLUNK_API_KEY")
+  let key = case env.get_string("PLUNK_API_KEY") {
+    Ok(k) -> k
+    Error(e) -> panic as { "PLUNK_API_KEY environment variable not set: " <> e }
+  }
+
   plunk.new(key)
 }
 

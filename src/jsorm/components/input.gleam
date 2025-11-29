@@ -48,7 +48,7 @@ pub fn component(props: Props(t)) -> html.Node {
       ),
       html.div([attrs.class("mt-2")], [
         html.input(
-          list.concat([
+          list.flatten([
             attrs,
             [
               attrs.id(props.id),

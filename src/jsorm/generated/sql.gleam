@@ -1,7 +1,7 @@
 // THIS FILE IS GENERATED. DO NOT EDIT.
 // Regenerate with `gleam run -m sqlgen`
 
-import gleam/dynamic
+import gleam/dynamic/decode
 import gleam/result
 import jsorm/error.{type Error}
 import sqlight
@@ -12,7 +12,7 @@ pub type QueryResult(t) =
 pub fn get_user_by_email(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),
-  decoder decoder: dynamic.Decoder(a),
+  decoder decoder: decode.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "select *
@@ -28,7 +28,7 @@ limit 1
 pub fn upsert_document(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),
-  decoder decoder: dynamic.Decoder(a),
+  decoder decoder: decode.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "INSERT INTO documents
@@ -46,7 +46,7 @@ RETURNING *;
 pub fn search_documents(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),
-  decoder decoder: dynamic.Decoder(a),
+  decoder decoder: decode.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "select id, description, is_public, unixepoch(updated_at) as updated_at
@@ -62,7 +62,7 @@ order by updated_at desc
 pub fn get_auth_token_by_user_id(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),
-  decoder decoder: dynamic.Decoder(a),
+  decoder decoder: decode.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "select token
@@ -79,7 +79,7 @@ where
 pub fn upsert_auth_token(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),
-  decoder decoder: dynamic.Decoder(a),
+  decoder decoder: decode.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "INSERT INTO auth_tokens
@@ -97,7 +97,7 @@ RETURNING token;
 pub fn insert_user(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),
-  decoder decoder: dynamic.Decoder(a),
+  decoder decoder: decode.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "INSERT INTO users
@@ -114,13 +114,12 @@ ON CONFLICT (email) DO NOTHING
 pub fn get_document_by_id(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),
-  decoder decoder: dynamic.Decoder(a),
+  decoder decoder: decode.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "select *
 from documents
-where id = $1 and (user_id = $2 or is_public = true)
-;
+where id = $1 and (user_id = $2 or is_public = 1);
 "
   sqlight.query(query, db, arguments, decoder)
   |> result.map_error(error.DatabaseError)
@@ -129,7 +128,7 @@ where id = $1 and (user_id = $2 or is_public = true)
 pub fn insert_session_token(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),
-  decoder decoder: dynamic.Decoder(a),
+  decoder decoder: decode.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "INSERT INTO session_tokens
@@ -145,7 +144,7 @@ RETURNING id, user_id, token, unixepoch(issued_at) as issued_at;
 pub fn delete_session_token(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),
-  decoder decoder: dynamic.Decoder(a),
+  decoder decoder: decode.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "delete from session_tokens
@@ -160,7 +159,7 @@ returning id
 pub fn update_document_details(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),
-  decoder decoder: dynamic.Decoder(a),
+  decoder decoder: decode.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "update documents set description = $1, is_public = $2
@@ -174,7 +173,7 @@ returning *
 pub fn get_session_user(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),
-  decoder decoder: dynamic.Decoder(a),
+  decoder decoder: decode.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "select u.*
@@ -191,7 +190,7 @@ limit 1
 pub fn get_documents_by_user(
   db: sqlight.Connection,
   args arguments: List(sqlight.Value),
-  decoder decoder: dynamic.Decoder(a),
+  decoder decoder: decode.Decoder(a),
 ) -> QueryResult(a) {
   let query =
     "select id, description, is_public, unixepoch(updated_at) as updated_at

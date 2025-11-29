@@ -1,7 +1,6 @@
-import gleam/io
-import ids/nanoid
 import jsorm/error.{SessionError}
 import jsorm/generated/sql
+import jsorm/lib/nanoid
 import jsorm/models/session
 import sqlight
 
@@ -35,7 +34,7 @@ pub fn create_session(
         user_id: session.user_id,
       ))
     Ok(e) -> {
-      io.debug(e)
+      echo e
       Error(SessionError("No session returned, but no error returned either."))
     }
     Error(e) -> Error(e)

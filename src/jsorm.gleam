@@ -1,9 +1,7 @@
-import dot_env as dotenv
-import gleam/erlang/os
+import dot_env as dot
+import dot_env/env
 import gleam/erlang/process
-import gleam/int
 import gleam/option.{None}
-import gleam/result
 import jsorm/database
 import jsorm/mail
 import jsorm/router
@@ -11,9 +9,14 @@ import jsorm/web.{Context}
 import migrant
 import mist
 import wisp
+import wisp/wisp_mist
 
 pub fn main() {
-  dotenv.load()
+  dot.new()
+  |> dot.set_path(".env")
+  |> dot.set_debug(False)
+  |> dot.load
+
   wisp.configure_logger()
 
   let db = database.connect()
@@ -33,21 +36,18 @@ pub fn main() {
 
   let assert Ok(_) =
     router.handle_request(_, ctx)
-    |> wisp.mist_handler(ctx.secret)
+    |> wisp_mist.handler(ctx.secret)
     |> mist.new
     |> mist.port(get_port())
-    |> mist.start_http
+    |> mist.start
 
   process.sleep_forever()
 }
 
 fn get_port() -> Int {
-  os.get_env("PORT")
-  |> result.then(int.parse)
-  |> result.unwrap(8080)
+  env.get_int_or("PORT", 8080)
 }
 
 fn get_app_secret() -> String {
-  os.get_env("APP_SECRET")
-  |> result.unwrap("")
+  env.get_string_or("APP_SECRET", "")
 }
