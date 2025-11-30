@@ -152,7 +152,7 @@ pub fn update_details(
   description description: String,
   is_public is_public: Int,
 ) -> Result(Document, Error) {
-  case
+  let rows =
     sql.upsert_document(
       db,
       [
@@ -164,7 +164,8 @@ pub fn update_details(
       ],
       db_decoder(),
     )
-  {
+
+  case rows {
     Ok([]) -> Error(error.NotFoundError)
     Ok([doc]) -> Ok(doc)
     Ok(d) ->

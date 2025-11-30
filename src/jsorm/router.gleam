@@ -31,6 +31,16 @@ pub fn handle_request(req: Request, ctx: Context) -> Response {
   }
 }
 
+fn not_error_body(body: wisp.Body) -> Bool {
+  case body {
+    wisp.Text("")
+    | wisp.Text("Not found")
+    | wisp.Text("Unauthorized")
+    | wisp.Text("Internal server error") -> False
+    _ -> True
+  }
+}
+
 fn default_responses(
   req: Request,
   ctx: Context,
@@ -40,6 +50,6 @@ fn default_responses(
 
   // Do not intercept redirects
   use <- bool.guard(when: res.status >= 300 && res.status < 400, return: res)
-  use <- bool.guard(when: res.body != wisp.Text(""), return: res)
+  use <- bool.guard(when: not_error_body(res.body), return: res)
   render(pages.error(ctx, req, res.status), res.status)
 }

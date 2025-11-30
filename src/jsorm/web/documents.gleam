@@ -76,7 +76,7 @@ pub fn edit_details(req: Request, ctx: Context) -> Response {
       is_public: data.is_public,
     )
   {
-    Ok(doc) ->
+    Ok(doc) -> {
       response.ok(
         message: "Saved!",
         data: json.object([
@@ -86,6 +86,7 @@ pub fn edit_details(req: Request, ctx: Context) -> Response {
         ]),
         code: 200,
       )
+    }
     Error(e) -> {
       echo e
       response.internal_server_error()
