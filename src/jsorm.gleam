@@ -38,6 +38,7 @@ pub fn main() {
     router.handle_request(_, ctx)
     |> wisp_mist.handler(ctx.secret)
     |> mist.new
+    |> mist.bind("0.0.0.0")
     |> mist.port(get_port())
     |> mist.start
 
