@@ -31,12 +31,13 @@ pub fn upsert_document(
   decoder decoder: decode.Decoder(a),
 ) -> QueryResult(a) {
   let query =
-    "INSERT INTO documents
-  (id, content, description, tags, user_id, parent_id)
-VALUES
-  ($1, $2, $3, $4, $5, $6)
-ON CONFLICT (id) DO UPDATE
-  SET content = $2, description = $3, tags = $4, updated_at = datetime()
+    "INSERT INTO documents (id, content, description, is_public, user_id)
+VALUES ($1, $2, $3, $4, $5)
+ON CONFLICT(id) DO UPDATE SET
+    content     = excluded.content,
+    description = excluded.description,
+    is_public   = excluded.is_public,
+    updated_at  = CURRENT_TIMESTAMP
 RETURNING *;
 "
   sqlight.query(query, db, arguments, decoder)
