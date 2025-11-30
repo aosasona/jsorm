@@ -1,0 +1,7 @@
+[tools]
+gleam = "1.13.0"
+erlang = "27"
+rebar = "3.21.0"
+
+[tasks.dev]
+run = "npm run dev"
