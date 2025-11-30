@@ -1,10 +1,8 @@
-import gleam/erlang/os
-import gleam/result
+import dot_env/env
 import sqlight
 
 fn get_db_path() -> String {
-  os.get_env("DB_PATH")
-  |> result.unwrap("data.db")
+  env.get_string_or("DB_PATH", "data.db")
 }
 
 pub fn connect() -> sqlight.Connection {

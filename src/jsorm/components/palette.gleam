@@ -99,7 +99,7 @@ pub fn make_documents_list(
           ],
         )
 
-      make_documents_list(rest, list.concat([state, [markup]]))
+      make_documents_list(rest, list.flatten([state, [markup]]))
     }
     [] -> state
   }

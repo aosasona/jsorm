@@ -17,7 +17,7 @@ const description = "A minimal JSON explorer"
 const meta_image = "/assets/images/meta.png"
 
 pub fn header(title: String) -> html.Node {
-  let website_url = env.get_or("WEB_URL", "https://jsorm.trulyao.dev")
+  let website_url = env.get_string_or("WEB_URL", "https://jsorm.trulyao.dev")
 
   html.Head([
     html.meta([attrs.charset("utf-8")]),

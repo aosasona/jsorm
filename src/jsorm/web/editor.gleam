@@ -1,6 +1,7 @@
+import gleam/bool
 import gleam/http
-import gleam/io
 import gleam/option.{type Option, None, Some}
+import gleam/result
 import jsorm/error
 import jsorm/lib/auth
 import jsorm/models/document
@@ -26,7 +27,7 @@ pub fn render_editor(
           |> auth.set_auth_cookie(req, token.token)
         })
         Error(e) -> {
-          io.debug(e)
+          echo e
           #(None, fn(res) { res })
         }
       }
@@ -58,49 +59,58 @@ fn load_or_create_document(
     Some(doc_id) -> {
       case document.find_by_id_and_user(db, doc_id, user.id) {
         Ok(doc) -> {
-          case document.find_by_user(db, user.id) {
-            Ok(docs) ->
-              next(
-                editor.page(user, doc, docs)
-                |> web.render(200),
-              )
-            Error(e) -> {
-              io.debug(e)
+          let docs_result = document.find_by_user(db, user.id)
+
+          use <- bool.lazy_guard(
+            when: result.is_error(docs_result),
+            return: fn() {
+              echo result.unwrap_error(docs_result, error.NotFoundError)
               wisp.internal_server_error()
-            }
-          }
+            },
+          )
+
+          docs_result
+          |> result.unwrap([])
+          |> editor.page(user, doc, _)
+          |> web.render(200)
+          |> next
+        }
+
+        Error(error.NotFoundError) -> wisp.not_found()
+
+        Error(error.MatchError(msg)) -> {
+          wisp.log_error("Error loading document: " <> msg)
+          wisp.internal_server_error()
+        }
+
+        Error(error.DatabaseError(e)) -> {
+          wisp.log_error("Database error loading document: " <> e.message)
+          wisp.internal_server_error()
         }
 
         // There is a bug here if the document exists but the user does not have access to it (e.g. it is private)
         Error(e) -> {
-          case e {
-            error.NotFoundError -> wisp.not_found()
-            _ -> {
-              wisp.log_error(case e {
-                error.MatchError(msg) -> msg
-                error.DatabaseError(e) -> e.message
-                _ -> {
-                  io.debug(e)
-                  "Unknown error"
-                }
-              })
-              wisp.internal_server_error()
-            }
-          }
-        }
-      }
-    }
-    None ->
-      case document.find_by_user(db, user.id) {
-        Ok(docs) ->
-          document.new(user_id: user.id, parent_id: None)
-          |> editor.page(user, _, docs)
-          |> web.render(200)
-          |> next
-        Error(e) -> {
-          io.debug(e)
+          echo e
+          wisp.log_error("Unknown error loading document")
           wisp.internal_server_error()
         }
       }
+    }
+
+    None -> {
+      let docs_result = document.find_by_user(db, user.id)
+
+      use <- bool.lazy_guard(when: result.is_error(docs_result), return: fn() {
+        echo result.unwrap_error(docs_result, error.NotFoundError)
+        wisp.internal_server_error()
+      })
+
+      let docs = docs_result |> result.unwrap([])
+
+      document.new(user_id: user.id, parent_id: None)
+      |> editor.page(user, _, docs)
+      |> web.render(200)
+      |> next
+    }
   }
 }

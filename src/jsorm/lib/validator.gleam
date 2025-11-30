@@ -1,9 +1,10 @@
+import gleam/bool
 import gleam/int
 import gleam/json.{type Json, array, null, string}
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/order
-import gleam/regex
+import gleam/regexp
 import gleam/string
 
 // This is all primarily for string fields, but we could extend it to other types later
@@ -84,10 +85,8 @@ pub fn validate_field(
     }
   })
   |> fn(errors) {
-    case list.length(errors) > 0 {
-      True -> #(True, errors)
-      False -> #(False, [])
-    }
+    use <- bool.guard(when: errors != [], return: #(True, errors))
+    #(False, [])
   }
 }
 
@@ -119,8 +118,8 @@ fn not_equal_to(name: String, value: String, other: String) -> MatchResult {
 }
 
 fn regex(re: String, value: String, error: String) -> MatchResult {
-  let valid = case regex.from_string(re) {
-    Ok(re) -> regex.check(with: re, content: value)
+  let valid = case regexp.from_string(re) {
+    Ok(re) -> regexp.check(with: re, content: value)
     Error(_) -> False
   }
 
@@ -160,9 +159,9 @@ fn max_length(value: String, max: Int) -> MatchResult {
 
 fn email(value: String) -> MatchResult {
   let valid = case
-    regex.from_string("^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})$")
+    regexp.from_string("^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})$")
   {
-    Ok(re) -> regex.check(with: re, content: value)
+    Ok(re) -> regexp.check(with: re, content: value)
     Error(_) -> False
   }
 

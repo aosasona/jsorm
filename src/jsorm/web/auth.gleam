@@ -9,7 +9,6 @@ import gleam/list
 import gleam/option.{None, Some}
 import gleam/result
 import gleam/string
-import ids/ulid
 import jsorm/components/status_box as status
 import jsorm/lib/auth
 import jsorm/lib/validator
@@ -138,7 +137,7 @@ pub fn verify_otp(req: Request, ctx: Context) -> Response {
     }
     Error(e) -> {
       io.println("signin as user")
-      io.debug(e)
+      echo e
       render_error("Something went wrong, please try again", 500)
     }
   }
@@ -174,7 +173,7 @@ fn log_token_request(
   case token_requests_log.create(db, user_id, token_requests_log.AuthToken) {
     Ok(_) -> next()
     Error(e) -> {
-      io.debug(e)
+      echo e
       render_error("Something went wrong, please try again", 500)
     }
   }
@@ -227,23 +226,20 @@ fn rate_limit(
       }
     }
     Error(e) -> {
-      io.debug(e)
+      echo e
       render_error("Something went wrong, please try again", 500)
     }
   }
 }
 
 fn try_send_otp(p: plunk.Instance, email: String, next: fn(String) -> Response) {
-  let code =
-    ulid.generate()
-    |> string.slice(at_index: -6, length: 6)
-    |> string.uppercase
+  let code = auth.generate_otp()
 
   case mail.send_otp(p, email, code) {
     Ok(_) -> next(code)
-    Error(err) -> {
+    Error(e) -> {
       io.print_error("Failed to send OTP")
-      io.debug(err)
+      echo e
       render_error("Failed to send OTP, please try again later", 500)
     }
   }
@@ -261,8 +257,8 @@ fn create_user_if_not_exists(
         Ok(user) -> {
           next(user)
         }
-        Error(err) -> {
-          io.debug(err)
+        Error(e) -> {
+          echo e
           render_error("Failed to send OTP, please try again later", 500)
         }
       }
