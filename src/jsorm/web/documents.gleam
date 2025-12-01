@@ -1,3 +1,4 @@
+import gleam/dynamic
 import gleam/dynamic/decode
 import gleam/http
 import gleam/json
@@ -16,6 +17,7 @@ type SaveRequest {
     document_id: String,
     description: option.Option(String),
     content: String,
+    is_public: option.Option(Bool),
   )
 }
 
@@ -24,7 +26,7 @@ type EditDetailsRequest {
     document_id: String,
     content: String,
     title: String,
-    is_public: Int,
+    is_public: Bool,
   )
 }
 
@@ -32,8 +34,10 @@ fn edit_details_request_decoder() -> decode.Decoder(EditDetailsRequest) {
   use document_id <- decode.field("document_id", decode.string)
   use content <- decode.field("content", decode.string)
   use title <- decode.field("title", decode.string)
-  use is_public <- decode.field("is_public", decode.int)
-  decode.success(EditDetailsRequest(document_id:, content:, title:, is_public:))
+  use is_public <- decode.field("is_public", decode.bool)
+
+  EditDetailsRequest(document_id:, content:, title:, is_public:)
+  |> decode.success()
 }
 
 fn auth(req, ctx: Context, next) {
@@ -50,43 +54,46 @@ pub fn handle_request(req: Request, ctx: Context) -> Response {
   }
 }
 
+fn deserialize(
+  data: dynamic.Dynamic,
+  decoder: decode.Decoder(a),
+  next: fn(a) -> Response,
+) {
+  case decode.run(data, decoder) {
+    Ok(data) -> next(data)
+    Error(e) -> {
+      echo e
+      response.bad_request()
+    }
+  }
+}
+
 pub fn edit_details(req: Request, ctx: Context) -> Response {
   use <- wisp.require_method(req, http.Put)
   use raw_data <- wisp.require_json(req)
   use user <- auth(req, ctx)
 
-  use data: EditDetailsRequest <-
-    fn(next: fn(EditDetailsRequest) -> Response) {
-      case decode.run(raw_data, edit_details_request_decoder()) {
-        Ok(data) -> next(data)
-        Error(e) -> {
-          echo e
-          response.bad_request()
-        }
-      }
-    }
+  use data <- deserialize(raw_data, edit_details_request_decoder())
 
-  case
-    document.update_details(
-      ctx.db,
+  let document =
+    ctx.db
+    |> document.upsert(
+      doc_id: Some(data.document_id),
+      description: Some(data.title),
+      content: Some(data.content),
+      is_public: Some(data.is_public),
+      tags: None,
       user_id: user.id,
-      content: data.content,
-      document_id: data.document_id,
-      description: data.title,
-      is_public: data.is_public,
     )
-  {
-    Ok(doc) -> {
-      response.ok(
-        message: "Saved!",
-        data: json.object([
-          #("document_id", json.string(doc.id)),
-          #("title", json.nullable(from: doc.description, of: json.string)),
-          #("is_public", json.bool(doc.is_public)),
-        ]),
-        code: 200,
-      )
-    }
+
+  case document {
+    Ok(doc) ->
+      json.object([
+        #("document_id", json.string(doc.id)),
+        #("title", json.nullable(from: doc.description, of: json.string)),
+        #("is_public", json.bool(doc.is_public)),
+      ])
+      |> response.ok(message: "Saved!", data: _, code: 200)
     Error(e) -> {
       echo e
       response.internal_server_error()
@@ -129,7 +136,9 @@ pub fn save(req: Request, ctx: Context) -> Response {
       decode.optional(decode.string),
     )
     use content <- decode.field("content", decode.string)
-    decode.success(SaveRequest(document_id:, description:, content:))
+    use is_public <- decode.field("is_public", decode.optional(decode.bool))
+
+    decode.success(SaveRequest(document_id:, description:, content:, is_public:))
   }
 
   use data: SaveRequest <-
@@ -143,27 +152,25 @@ pub fn save(req: Request, ctx: Context) -> Response {
       }
     }
 
-  case
-    document.upsert(
-      ctx.db,
+  let document =
+    ctx.db
+    |> document.upsert(
       doc_id: Some(data.document_id),
       description: data.description,
       content: Some(data.content),
+      is_public: data.is_public,
       tags: None,
       user_id: user.id,
-      parent_id: None,
     )
-  {
+
+  case document {
     Ok(doc) ->
-      response.ok(
-        message: "Saved!",
-        data: json.object([
-          #("document_id", json.string(doc.id)),
-          #("content", json.string(data.content)),
-          #("updated_at", json.string(doc.updated_at)),
-        ]),
-        code: 200,
-      )
+      json.object([
+        #("document_id", json.string(doc.id)),
+        #("content", json.string(data.content)),
+        #("updated_at", json.string(doc.updated_at)),
+      ])
+      |> response.ok(message: "Saved!", data: _, code: 200)
     Error(e) -> {
       echo e
       response.internal_server_error()

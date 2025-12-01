@@ -87,6 +87,7 @@ export class Commands {
         }
     }
     saveDocument() {
+        var _a;
         const saveBtn = document.querySelector("#save-document-btn");
         if (saveBtn === null || saveBtn === void 0 ? void 0 : saveBtn.hasAttribute("disabled"))
             return;
@@ -99,6 +100,7 @@ export class Commands {
         if (!this.isValidJSON(content))
             return toast.error("Invalid JSON");
         const description = this.editor.dataset.description;
+        const isPublic = ((_a = document.querySelector("input[name='is_public']")) === null || _a === void 0 ? void 0 : _a.checked) || false;
         if (saveBtn) {
             saveBtn.setAttribute("disabled", "true");
             saveBtn.textContent = "Saving...";
@@ -108,7 +110,12 @@ export class Commands {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ document_id, content, description }),
+            body: JSON.stringify({
+                document_id,
+                content,
+                description,
+                is_public: isPublic,
+            }),
         })
             .then((res) => res.json())
             .then((data) => {
@@ -150,7 +157,7 @@ export class Commands {
             if (!document_id)
                 return toast.error("No document ID found, please refresh the page and try again");
             const title = data.get("title");
-            const isPublic = data.get("is_public") && data.get("is_public") === "on" ? 1 : 0;
+            const isPublic = data.get("is_public") && data.get("is_public") === "on" ? true : false;
             const content = this.editor.value;
             (_a = form.querySelector("button")) === null || _a === void 0 ? void 0 : _a.setAttribute("disabled", "true");
             fetch("/documents/details", {
