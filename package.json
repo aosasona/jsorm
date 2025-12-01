@@ -7,7 +7,8 @@
     "watch:server": "watchexec -r -e toml,gleam gleam run",
     "watch:tw": "tailwindcss -i ./priv/static/sources/css/main.css -o ./priv/static/dist/css/styles.css --watch",
     "watch:ts": "tsc -w",
-    "gen:sql": "gleam run -m sqlgen"
+    "gen:sql": "gleam run -m sqlgen",
+    "build:assets": "tsc && tailwindcss -i ./priv/static/sources/css/main.css -o ./priv/static/dist/css/styles.css --minify"
   },
   "keywords": [],
   "author": "",
