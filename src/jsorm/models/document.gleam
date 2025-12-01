@@ -85,7 +85,9 @@ pub fn new(
     id: doc_id,
     content: "{}",
     tags: "[]",
-    description: Some("Untitled " <> now),
+    description: Some(
+      "Untitled doc " <> { birl.utc_now() |> birl.to_unix |> int.to_string },
+    ),
     is_public: False,
     user_id: user_id,
     parent_id: parent_id,
@@ -144,38 +146,6 @@ pub fn find_by_user(
   }
 }
 
-pub fn update_details(
-  db: Connection,
-  user_id user_id: Int,
-  content content: String,
-  document_id document_id: String,
-  description description: String,
-  is_public is_public: Int,
-) -> Result(Document, Error) {
-  let rows =
-    sql.upsert_document(
-      db,
-      [
-        sqlight.text(document_id),
-        sqlight.text(content),
-        sqlight.text(description),
-        sqlight.int(is_public),
-        sqlight.int(user_id),
-      ],
-      db_decoder(),
-    )
-
-  case rows {
-    Ok([]) -> Error(error.NotFoundError)
-    Ok([doc]) -> Ok(doc)
-    Ok(d) ->
-      Error(error.MatchError(
-        "Expected exactly one document, got " <> int.to_string(list.length(d)),
-      ))
-    Error(err) -> Error(err)
-  }
-}
-
 pub fn find_by_id_and_user(
   db: Connection,
   document_id doc_id: String,
@@ -204,39 +174,30 @@ pub fn upsert(
   doc_id doc_id: Option(String),
   content content: Option(String),
   description description: Option(String),
+  is_public is_public: Option(Bool),
   tags tags: Option(List(String)),
   user_id user_id: Int,
-  parent_id parent_id: Option(String),
 ) -> Result(Document, Error) {
   let doc_id = option.unwrap(doc_id, nanoid.generate())
   let description =
-    option.unwrap(
-      description,
-      "Untitled "
-        <> {
-        birl.utc_now()
-        |> birl.to_naive
-      },
+    description
+    |> option.unwrap(
+      "Untitled doc " <> { birl.utc_now() |> birl.to_unix |> int.to_string },
     )
 
-  case
-    sql.upsert_document(
-      db,
-      [
-        sqlight.text(doc_id),
-        sqlight.text(option.unwrap(content, "{}")),
-        sqlight.text(description),
-        sqlight.text(
-          option.unwrap(tags, [])
-          |> json.array(json.string)
-          |> json.to_string,
-        ),
-        sqlight.int(user_id),
-        sqlight.nullable(sqlight.text, parent_id),
-      ],
-      db_decoder(),
-    )
-  {
+  let tags =
+    option.unwrap(tags, []) |> json.array(json.string) |> json.to_string
+
+  let params = [
+    sqlight.text(doc_id),
+    sqlight.text(option.unwrap(content, "{}")),
+    sqlight.text(description),
+    sqlight.text(tags),
+    sqlight.bool(option.unwrap(is_public, False)),
+    sqlight.int(user_id),
+  ]
+
+  case sql.upsert_document(db, params, db_decoder()) {
     Ok([doc]) -> Ok(doc)
     Ok(d) ->
       Error(error.MatchError(
