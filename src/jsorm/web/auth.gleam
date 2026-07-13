@@ -186,8 +186,8 @@ fn rate_limit(
   next next: fn() -> Response,
 ) -> Response {
   let max = case r_type {
-    Throttle -> 1
-    HardLimit -> 5
+    Throttle -> 2
+    HardLimit -> 10
   }
 
   let seconds = case r_type {
