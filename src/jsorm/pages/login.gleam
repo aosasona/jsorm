@@ -101,6 +101,25 @@ pub fn otp_form_component(email: String) {
           ],
         ),
       ),
+      html.div(
+        [
+          class("flex items-center mt-4"),
+          attr.title(
+            "Remember me for 6 months (if you are using a private device), default is 12 hours otherwise",
+          ),
+        ],
+        [
+          html.input([
+            attr.type_("checkbox"),
+            attr.id("remember-me"),
+            attr.name("remember_me"),
+            attr.value("on"),
+          ]),
+          html.label([attr.for("remember-me"), class("ml-2")], [
+            html.p_text([class("text-sm text-yellow-400")], "Remember me"),
+          ]),
+        ],
+      ),
       button.component(button.Props(
         text: "Sign in",
         render_as: button.Button,
