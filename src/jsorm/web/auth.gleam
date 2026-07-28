@@ -75,6 +75,14 @@ pub fn verify_otp(req: Request, ctx: Context) -> Response {
     list.key_find(formdata.values, "otp")
     |> result.unwrap("")
 
+  let use_extended_duration =
+    list.key_find(formdata.values, "remember_me")
+    |> result.unwrap("")
+    |> fn(v) {
+      use <- bool.guard(when: v == "on", return: True)
+      False
+    }
+
   // While, in theory, this will not cause issues since it will never be equal to the expected OTP, it saves us from doing the work below by just returning early
   // I have used a variable here because the default formatting is annoying and puts the `==` on a new line
   let empty_otp = otp == ""
@@ -123,6 +131,11 @@ pub fn verify_otp(req: Request, ctx: Context) -> Response {
 
   case auth.signin_as_user(ctx.db, uid) {
     Ok(session_token) -> {
+      let duration = case use_extended_duration {
+        True -> auth.Extended
+        False -> auth.Default
+      }
+
       html.div(
         [
           attrs.Attr(
@@ -133,7 +146,11 @@ pub fn verify_otp(req: Request, ctx: Context) -> Response {
         [html.p_text([], "redirecting..")],
       )
       |> web.render(200)
-      |> auth.set_auth_cookie(req, session_token.token)
+      |> auth.set_auth_cookie(auth.SetAuthCookieOptions(
+        request: req,
+        token: session_token,
+        duration: duration,
+      ))
     }
     Error(e) -> {
       io.println("signin as user")
@@ -186,8 +203,8 @@ fn rate_limit(
   next next: fn() -> Response,
 ) -> Response {
   let max = case r_type {
-    Throttle -> 1
-    HardLimit -> 5
+    Throttle -> 2
+    HardLimit -> 10
   }
 
   let seconds = case r_type {

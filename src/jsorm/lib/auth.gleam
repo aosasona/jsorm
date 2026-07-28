@@ -9,6 +9,12 @@ import jsorm/models/user
 import sqlight
 import wisp.{type Request, type Response}
 
+// 12 hours
+const auth_cookie_duration_12_hours = 43_200
+
+// 180 days; 6 months
+const auth_cookie_duration_180_days = 15_552_000
+
 pub type AuthStatus {
   /// The token is not present in the request at all
   LoggedOut
@@ -18,8 +24,37 @@ pub type AuthStatus {
   InvalidToken
 }
 
-pub fn set_auth_cookie(res: Response, req: Request, token: String) -> Response {
-  wisp.set_cookie(res, req, auth_cookie, token, wisp.Signed, 60 * 60 * 24 * 30)
+pub type DurationPreset {
+  /// This is the default duration for the auth cookie, see `auth_cookie_duration_12_hours`
+  Default
+  /// This is the extended duration for the auth cookie, see `auth_cookie_duration_180_days`
+  Extended
+}
+
+pub type SetAuthCookieOptions {
+  SetAuthCookieOptions(
+    /// The request object to set the cookie on
+    request: Request,
+    /// The session token to set in the cookie
+    token: SessionToken,
+    /// The duration of the cookie
+    duration: DurationPreset,
+  )
+}
+
+pub fn set_auth_cookie(res: Response, options: SetAuthCookieOptions) -> Response {
+  let duration = case options.duration {
+    Default -> auth_cookie_duration_12_hours
+    Extended -> auth_cookie_duration_180_days
+  }
+  wisp.set_cookie(
+    res,
+    options.request,
+    auth_cookie,
+    options.token.token,
+    wisp.Signed,
+    duration,
+  )
 }
 
 pub fn get_auth_status(req: Request, db: sqlight.Connection) -> AuthStatus {
