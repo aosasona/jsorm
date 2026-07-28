@@ -24,7 +24,11 @@ pub fn render_editor(
       case auth.signin_as_guest(ctx.db) {
         Ok(#(token, u)) -> #(Some(u), fn(res: Response) {
           res
-          |> auth.set_auth_cookie(req, token.token, False)
+          |> auth.set_auth_cookie(auth.SetAuthCookieOptions(
+            request: req,
+            token: token,
+            duration: auth.Default,
+          ))
         })
         Error(e) -> {
           echo e

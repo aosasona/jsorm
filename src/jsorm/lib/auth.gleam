@@ -24,23 +24,36 @@ pub type AuthStatus {
   InvalidToken
 }
 
-pub fn set_auth_cookie(
-  res: Response,
-  req: Request,
-  token: String,
-  extend_duration: Bool,
-) -> Response {
-  let auth_cookie_duration = case extend_duration {
-    True -> auth_cookie_duration_180_days
-    False -> auth_cookie_duration_12_hours
+pub type DurationPreset {
+  /// This is the default duration for the auth cookie, see `auth_cookie_duration_12_hours`
+  Default
+  /// This is the extended duration for the auth cookie, see `auth_cookie_duration_180_days`
+  Extended
+}
+
+pub type SetAuthCookieOptions {
+  SetAuthCookieOptions(
+    /// The request object to set the cookie on
+    request: Request,
+    /// The session token to set in the cookie
+    token: SessionToken,
+    /// The duration of the cookie
+    duration: DurationPreset,
+  )
+}
+
+pub fn set_auth_cookie(res: Response, options: SetAuthCookieOptions) -> Response {
+  let duration = case options.duration {
+    Default -> auth_cookie_duration_12_hours
+    Extended -> auth_cookie_duration_180_days
   }
   wisp.set_cookie(
     res,
-    req,
+    options.request,
     auth_cookie,
-    token,
+    options.token.token,
     wisp.Signed,
-    auth_cookie_duration,
+    duration,
   )
 }
 

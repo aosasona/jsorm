@@ -131,6 +131,11 @@ pub fn verify_otp(req: Request, ctx: Context) -> Response {
 
   case auth.signin_as_user(ctx.db, uid) {
     Ok(session_token) -> {
+      let duration = case use_extended_duration {
+        True -> auth.Extended
+        False -> auth.Default
+      }
+
       html.div(
         [
           attrs.Attr(
@@ -141,7 +146,11 @@ pub fn verify_otp(req: Request, ctx: Context) -> Response {
         [html.p_text([], "redirecting..")],
       )
       |> web.render(200)
-      |> auth.set_auth_cookie(req, session_token.token, use_extended_duration)
+      |> auth.set_auth_cookie(auth.SetAuthCookieOptions(
+        request: req,
+        token: session_token,
+        duration: duration,
+      ))
     }
     Error(e) -> {
       io.println("signin as user")
